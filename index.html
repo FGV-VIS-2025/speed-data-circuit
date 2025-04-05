@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>F1 Bar Chart Race</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 30px;
+    }
+    .bar {
+      fill-opacity: 0.7;
+    }
+    .label {
+      font-size: 14px;
+      fill: #111;
+    }
+    select, button, input[type=range] {
+      margin-right: 10px;
+      padding: 5px;
+      font-size: 14px;
+    }
+    input[type=range] {
+      width: 200px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <h2>F1 Bar Chart Race - Top 10 Pilotos</h2>
+
+  <label for="yearSelect">Ano:</label>
+  <select id="yearSelect">
+    <option value="">Selecione um ano</option>
+  </select>
+
+  <label for="raceSelect">Corrida:</label>
+  <select id="raceSelect" disabled>
+    <option value="">Selecione uma corrida</option>
+  </select>
+
+  <br><br>
+  <button id="playPause">▶️ Play</button>
+  <input type="range" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
+  <span id="lapDisplay">Volta 1</span>
+
+  <svg width="800" height="400"></svg>
+
+  <script>
+    const svg = d3.select("svg");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const margin = { top: 40, right: 20, bottom: 40, left: 100 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().range([0, chartWidth]);
+    const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
+
+    const yearSelect = document.getElementById("yearSelect");
+    const raceSelect = document.getElementById("raceSelect");
+    const playPauseBtn = document.getElementById("playPause");
+    const lapSlider = document.getElementById("lapSlider");
+    const lapDisplay = document.getElementById("lapDisplay");
+
+    let currentLap = 0;
+    let intervalId = null;
+    let isPlaying = false;
+
+    const mockRacesByYear = {
+      "2022": ["Bahrain GP", "Monaco GP", "Brazil GP"],
+      "2023": ["Bahrain GP", "Miami GP", "Japan GP"],
+      "2024": ["Australia GP", "Canada GP", "Italy GP"]
+    };
+
+    const mockLaps = [
+      [
+        { name: "Verstappen", position: 1 },
+        { name: "Hamilton", position: 2 },
+        { name: "Leclerc", position: 3 },
+        { name: "Perez", position: 4 },
+        { name: "Sainz", position: 5 },
+        { name: "Russell", position: 6 },
+        { name: "Norris", position: 7 },
+        { name: "Alonso", position: 8 },
+        { name: "Gasly", position: 9 },
+        { name: "Ocon", position: 10 },
+      ],
+      [
+        { name: "Verstappen", position: 1 },
+        { name: "Leclerc", position: 2 },
+        { name: "Hamilton", position: 3 },
+        { name: "Sainz", position: 4 },
+        { name: "Perez", position: 5 },
+        { name: "Russell", position: 6 },
+        { name: "Norris", position: 7 },
+        { name: "Gasly", position: 8 },
+        { name: "Alonso", position: 9 },
+        { name: "Ocon", position: 10 },
+      ],
+      [
+        { name: "Leclerc", position: 1 },
+        { name: "Verstappen", position: 2 },
+        { name: "Sainz", position: 3 },
+        { name: "Hamilton", position: 4 },
+        { name: "Russell", position: 5 },
+        { name: "Perez", position: 6 },
+        { name: "Alonso", position: 7 },
+        { name: "Norris", position: 8 },
+        { name: "Gasly", position: 9 },
+        { name: "Ocon", position: 10 },
+      ]
+    ];
+
+    let laps = mockLaps;
+
+    const availableYears = ["2022", "2023", "2024"];
+    availableYears.forEach(year => {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year;
+      yearSelect.appendChild(option);
+    });
+
+    yearSelect.addEventListener("change", () => {
+      const selectedYear = yearSelect.value;
+      raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
+      raceSelect.disabled = true;
+
+      if (selectedYear && mockRacesByYear[selectedYear]) {
+        mockRacesByYear[selectedYear].forEach(race => {
+          const opt = document.createElement("option");
+          opt.value = race;
+          opt.textContent = race;
+          raceSelect.appendChild(opt);
+        });
+        raceSelect.disabled = false;
+      }
+
+      stopPlayback();
+    });
+
+    raceSelect.addEventListener("change", () => {
+      const raceChosen = raceSelect.value;
+      if (raceChosen) {
+        currentLap = 0;
+        renderLap(laps[currentLap], currentLap);
+        updateUI();
+      }
+      stopPlayback();
+    });
+
+    playPauseBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        isPlaying = true;
+        playPauseBtn.textContent = "⏸️ Pause";
+        intervalId = setInterval(() => {
+          if (currentLap < laps.length - 1) {
+            currentLap++;
+            lapSlider.value = currentLap;
+            renderLap(laps[currentLap], currentLap);
+            updateUI();
+          } else {
+            stopPlayback();
+          }
+        }, 1500);
+      }
+    });
+
+    lapSlider.addEventListener("input", () => {
+      currentLap = parseInt(lapSlider.value);
+      renderLap(laps[currentLap], currentLap);
+      updateUI();
+      stopPlayback();
+    });
+
+    function stopPlayback() {
+      clearInterval(intervalId);
+      isPlaying = false;
+      playPauseBtn.textContent = "▶️ Play";
+    }
+
+    function updateUI() {
+      lapSlider.max = laps.length - 1;
+      lapSlider.disabled = false;
+      lapSlider.value = currentLap;
+      lapDisplay.textContent = `Volta ${currentLap + 1}`;
+    }
+
+    function renderLap(data, lapNum) {
+      const sorted = [...data].sort((a, b) => a.position - b.position);
+      x.domain([0, 11]);
+      y.domain(sorted.map(d => d.name));
+
+      const bars = g.selectAll(".bar").data(sorted, d => d.name);
+
+      bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .attr("y", d => y(d.name))
+        .attr("width", d => x(11 - d.position))
+        .attr("fill", (d, i) => d3.schemeTableau10[i % 10])
+        .merge(bars)
+        .transition().duration(600)
+        .attr("y", d => y(d.name))
+        .attr("width", d => x(11 - d.position));
+
+      bars.exit().remove();
+
+      const labels = g.selectAll(".label").data(sorted, d => d.name);
+
+      labels.enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", d => x(11 - d.position) + 5)
+        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
+        .text(d => d.name)
+        .merge(labels)
+        .transition().duration(600)
+        .attr("x", d => x(11 - d.position) + 5)
+        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
+
+      labels.exit().remove();
+
+      d3.select("h2").text(`F1 Bar Chart Race - Volta ${lapNum + 1}`);
+    }
+  </script>
+</body>
+</html>
