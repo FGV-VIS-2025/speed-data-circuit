@@ -9,27 +9,26 @@
 </head>
 <body>
     <center>
-        <label for="yearSelect">Ano:</label>
         <select id="yearSelect">
             <option value="">Selecione um ano</option>
         </select>
 
-        <label for="raceSelect">Corrida:</label>
         <select id="raceSelect" disabled>
             <option value="">Selecione uma corrida</option>
         </select>
-    </center>
 
-    <br>
-    <center>
-        <svg width="1200" height="800"></svg>
-    </center>
-
-    <center>
         <button id="playPause">▶️ Play</button>
         <input type="range" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
         <span id="lapDisplay">Volta 1</span>
     </center>
+
+    <br>
+    <center>
+        <svg width="1200" height="860"></svg>
+    </center>
+
+    <div id="tooltip" style="position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; pointer-events: none; opacity: 0; border-radius: 8px;"></div>
+
 
     <script>
         const svg = d3.select("svg");
@@ -54,8 +53,8 @@
         const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
 
         // Tamanho do sprite
-        const spriteWidth = 64;
-        const spriteHeight = 40;
+        const spriteWidth = 72;
+        const spriteHeight = 45;
 
         // Carregando os elementos da página
         const yearSelect = document.getElementById("yearSelect");
@@ -91,29 +90,30 @@
         "2024": ["Australia GP", "Canada GP", "Italy GP"]
         };
 
-        // Array com nomes dos pilotos e equipes (2025)
         const initialDrivers = [
-        { name: "Max Verstappen", equipe: "red_bull" },
-        { name: "Yuki Tsunoda", equipe: "red_bull" },
-        { name: "Lewis Hamilton", equipe: "ferrari" },
-        { name: "Charles Leclerc", equipe: "ferrari" },
-        { name: "Lando Norris", equipe: "mclaren" },
-        { name: "Oscar Piastri", equipe: "mclaren" },
-        { name: "Pierre Gasly", equipe: "alpine" },
-        { name: "Jack Doohan", equipe: "alpine" },
-        { name: "Fernando Alonso", equipe: "aston_martin" },
-        { name: "Lance Stroll", equipe: "aston_martin" },
-        { name: "Alexander Albon", equipe: "willians" },
-        { name: "Carlos Sainz", equipe: "willians" },
-        { name: "Isack Hadjar", equipe: "toro_roso" },
-        { name: "Liam Lawson", equipe: "toro_roso" },
-        { name: "Kimi Antonelli", equipe: "mercedez" },
-        { name: "George Russell", equipe: "mercedez" },
-        { name: "Oliver Bearman", equipe: "hass" },
-        { name: "Esteban Ocon", equipe: "hass" },
-        { name: "Nico Hülkenberg", equipe: "sauber" },
-        { name: "Gabriel Bortoleto", equipe: "sauber" }
+        { name: "Max Verstappen", equipe: "red_bull", equipe_real: "🇦🇹 Red Bull", idade: 25, nacionalidade: "🇳🇱 Holanda" },
+        { name: "Yuki Tsunoda", equipe: "red_bull", equipe_real: "🇦🇹 Red Bull", idade: 23, nacionalidade: "🇯🇵 Japão" },
+        { name: "Lewis Hamilton", equipe: "ferrari", equipe_real: "🇮🇹 Ferrari", idade: 39, nacionalidade: "🇬🇧 Reino Unido" },
+        { name: "Charles Leclerc", equipe: "ferrari", equipe_real: "🇮🇹 Ferrari", idade: 26, nacionalidade: "🇲🇨 Mônaco" },
+        { name: "Lando Norris", equipe: "mclaren", equipe_real: "🇬🇧 McLaren", idade: 24, nacionalidade: "🇬🇧 Reino Unido" },
+        { name: "Oscar Piastri", equipe: "mclaren", equipe_real: "🇬🇧 McLaren", idade: 23, nacionalidade: "🇦🇺 Austrália" },
+        { name: "Pierre Gasly", equipe: "alpine", equipe_real: "🇫🇷 Alpine", idade: 28, nacionalidade: "🇫🇷 França" },
+        { name: "Jack Doohan", equipe: "alpine", equipe_real: "🇫🇷 Alpine", idade: 21, nacionalidade: "🇦🇺 Austrália" },
+        { name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "🇬🇧 Aston Martin", idade: 43, nacionalidade: "🇪🇸 Espanha" },
+        { name: "Lance Stroll", equipe: "aston_martin", equipe_real: "🇬🇧 Aston Martin", idade: 26, nacionalidade: "🇨🇦 Canadá" },
+        { name: "Alexander Albon", equipe: "willians", equipe_real: "🇬🇧 Williams", idade: 28, nacionalidade: "🇹🇭 Tailândia" },
+        { name: "Carlos Sainz", equipe: "willians", equipe_real: "🇬🇧 Williams", idade: 30, nacionalidade: "🇪🇸 Espanha" },
+        { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "🇮🇹 Visa Cash App RB", idade: 20, nacionalidade: "🇫🇷 França" },
+        { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "🇮🇹 Visa Cash App RB", idade: 23, nacionalidade: "🇳🇿 Nova Zelândia" },
+        { name: "Kimi Antonelli", equipe: "mercedez", equipe_real: "🇩🇪 Mercedes", idade: 18, nacionalidade: "🇮🇹 Itália" },
+        { name: "George Russell", equipe: "mercedez", equipe_real: "🇩🇪 Mercedes", idade: 26, nacionalidade: "🇬🇧 Reino Unido" },
+        { name: "Oliver Bearman", equipe: "hass", equipe_real: "🇺🇸 Haas", idade: 19, nacionalidade: "🇬🇧 Reino Unido" },
+        { name: "Esteban Ocon", equipe: "hass", equipe_real: "🇺🇸 Haas", idade: 28, nacionalidade: "🇫🇷 França" },
+        { name: "Nico Hülkenberg", equipe: "sauber", equipe_real: "🇨🇭 Sauber", idade: 37, nacionalidade: "🇩🇪 Alemanha" },
+        { name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "🇨🇭 Sauber", idade: 20, nacionalidade: "🇧🇷 Brasil" }
         ];
+
+
 
         // Função que gera dados falsos
         function generateMockLaps() {
@@ -140,7 +140,7 @@
         laps = generateMockLaps();
 
         // Insere anos no select
-        const availableYears = ["2023", "2024", "2025"];
+        const availableYears = ["2023", "2024", "2022"];
         availableYears.forEach(year => {
         const option = document.createElement("option");
         option.value = year;
@@ -274,7 +274,8 @@
             labels.exit().remove();
 
 
-            // Atualiza os sprites
+            const tooltip = d3.select("#tooltip");
+
             const sprites = g.selectAll("image.sprite").data(sorted, d => d.name);
             sprites.enter()
                 .append("image")
@@ -282,13 +283,37 @@
                 .attr("xlink:href", d => `../sprites/${d.equipe}.png`)
                 .attr("width", spriteWidth)
                 .attr("height", spriteHeight)
+                .on("mouseover", function(event, d) {
+                    tooltip
+                        .style("opacity", 1)
+                        .html(`
+                            <div style="display: flex; align-items: center;">
+                                <img src="../sprites/${d.name.replace(/ /g, '_').toLowerCase()}.png" alt="${d.name}" style="width:120px; margin-right:10px;">
+                                <div>
+                                    <strong>${d.name}</strong><br>
+                                    Idade: ${d.idade} anos<br>
+                                    Equipe: ${d.equipe_real}<br>
+                                    Nacionalidade: ${d.nacionalidade}
+                                </div>
+                            </div>
+                        `);
+                })
+                .on("mousemove", function(event) {
+                    tooltip
+                        .style("left", (event.pageX + 15) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.style("opacity", 0);
+                })
                 .merge(sprites)
                 .transition().duration(600)
                 .attr("transform", d => {
-                const posX = x(d.score) + 5;
-                const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
-                return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
+                    const posX = x(d.score) + 5;
+                    const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
+                    return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
                 });
+
             sprites.exit().remove();
 
             d3.select("h2").text(`F1 Bar Chart Race - Volta ${lapNum + 1}`);
