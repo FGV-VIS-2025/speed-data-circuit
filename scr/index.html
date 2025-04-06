@@ -24,29 +24,52 @@
 
     <br>
     <center>
-        <svg width="1200" height="860"></svg>
+        <svg width="1500" height="860">
+            <rect width="100%" height="100%" x="0" y="0" style="fill:#22b14c;" />
+            <rect width="1480" height="840" x="10" y="10" style="fill:#ffffff;" />
+            <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
+            <g id="grid"></g>
+        </svg>
     </center>
+    
 
     <div id="tooltip" style="position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; pointer-events: none; opacity: 0; border-radius: 8px;"></div>
 
 
     <script>
+        const grid = document.getElementById('grid');
+        // Definindo as posições das colunas (ordem decrescente para manter o padrão da primeira linha)
+        const cols = [1360, 1380, 1400, 1420];
+        // Calcula o número de linhas: de y = 20 até y = 860, de 20 em 20
+        const numRows = Math.floor((860 - 20) / 20) + 1;
+        
+        for (let row = 0; row < numRows - 2; row++) {
+            const y = 20 + row * 20;
+            for (let i = 0; i < cols.length; i++) {
+            const x = cols[cols.length - 1 - i];
+            let fill;
+            if (row % 2 === 0) {
+                fill = (i % 2 === 0) ? "#ffffff" : "#000000";
+            } else {
+                fill = (i % 2 === 0) ? "#000000" : "#ffffff";
+            }
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", "20");
+            rect.setAttribute("height", "20");
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("style", "fill:" + fill + ";");
+            grid.appendChild(rect);
+            }
+        }
+        
         const svg = d3.select("svg");
         const width = +svg.attr("width");
         const height = +svg.attr("height");
-        const margin = { top: 20, right: 200, bottom: 20, left: 20 };
+        const margin = { top: 20, right: 200, bottom: 20, left: 25 };
         const chartWidth = width - margin.left - margin.right;
         const chartHeight = height - margin.top - margin.bottom;
         const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-        svg.insert("image", ":first-child")
-        .attr("href", "../sprites/pista.png")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", width)
-        .attr("height", height)
-        .attr("preserveAspectRatio", "none");
-
-
 
         // Fixando o tamanho da corrida em 300
         const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
@@ -72,7 +95,7 @@
         // Cores de cada equipe
         const cores_equipes = {
         red_bull: "#181740",
-        mercedez: "#3D3E40",
+        mercedez: "#41F2D2",
         ferrari: "#D90707",
         alpine: "#0090FF",
         hass: "#BF0A2B",
@@ -85,10 +108,43 @@
 
         // Opções de anos e corridas
         const mockRacesByYear = {
-        "2022": ["Bahrain GP", "Monaco GP", "Brazil GP"],
-        "2023": ["Bahrain GP", "Miami GP", "Japan GP"],
-        "2024": ["Australia GP", "Canada GP", "Italy GP"]
+        "2024": [
+            "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Japanese GP (🇯🇵)", "Chinese GP (🇨🇳)",
+            "Miami GP (🇺🇸)", "Emilia Romagna GP (🇮🇹)", "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "Spanish GP (🇪🇸)",
+            "Austrian GP (🇦🇹)", "British GP (🇬🇧)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
+            "Italian GP (🇮🇹)", "Azerbaijan GP (🇦🇿)", "Singapore GP (🇸🇬)", "United States GP (🇺🇸)",
+            "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Qatar GP (🇶🇦)", "Abu Dhabi GP (🇦🇪)"
+        ],
+        "2023": [
+            "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Azerbaijan GP (🇦🇿)", "Miami GP (🇺🇸)",
+            "Monaco GP (🇲🇨)", "Spanish GP (🇪🇸)", "Canadian GP (🇨🇦)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
+            "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)",
+            "Japanese GP (🇯🇵)", "Qatar GP (🇶🇦)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)",
+            "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Abu Dhabi GP (🇦🇪)"
+        ],
+        "2022": [
+            "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Emilia Romagna GP (🇮🇹)", "Miami GP (🇺🇸)",
+            "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)", "Azerbaijan GP (🇦🇿)", "Canadian GP (🇨🇦)", "British GP (🇬🇧)",
+            "Austrian GP (🇦🇹)", "French GP (🇫🇷)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
+            "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)", "Japanese GP (🇯🇵)", "United States GP (🇺🇸)",
+            "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Abu Dhabi GP (🇦🇪)"
+        ],
+        "2021": [
+            "Bahrain GP (🇧🇭)", "Emilia Romagna GP (🇮🇹)", "Portuguese GP (🇵🇹)", "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)",
+            "Azerbaijan GP (🇦🇿)", "French GP (🇫🇷)", "Styrian GP (🇦🇹)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
+            "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Russian GP (🇷🇺)",
+            "Turkish GP (🇹🇷)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)",
+            "Qatar GP (🇶🇦)", "Saudi Arabian GP (🇸🇦)", "Abu Dhabi GP (🇦🇪)"
+        ],
+        "2020": [
+            "Austrian GP (🇦🇹)", "Styrian GP (🇦🇹)", "Hungarian GP (🇭🇺)", "British GP (🇬🇧)", "70th Anniversary GP (🇬🇧)",
+            "Spanish GP (🇪🇸)", "Belgian GP (🇧🇪)", "Italian GP (🇮🇹)", "Tuscan GP (🇮🇹)", "Russian GP (🇷🇺)",
+            "Eifel GP (🇩🇪)", "Portuguese GP (🇵🇹)", "Emilia Romagna GP (🇮🇹)", "Turkish GP (🇹🇷)",
+            "Bahrain GP (🇧🇭)", "Sakhir GP (🇧🇭)", "Abu Dhabi GP (🇦🇪)"
+        ]
         };
+
+
 
         const initialDrivers = [
         { name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 25, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 1, volta_mais_rapida: "1:18.235" },
@@ -143,7 +199,7 @@
         laps = generateMockLaps();
 
         // Insere anos no select
-        const availableYears = ["2023", "2024", "2022"];
+        const availableYears = ["2024", "2023", "2022", "2021", "2020"];
         availableYears.forEach(year => {
         const option = document.createElement("option");
         option.value = year;
@@ -235,11 +291,14 @@
                 .attr("y", d => y(d.name))
                 .attr("width", d => x(d.score))
                 .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
+                .attr("fill-opacity", 1)  // garante opacidade total
                 .merge(bars)
                 .transition().duration(600)
                 .attr("y", d => y(d.name))
-                .attr("width", d => x(d.score));
+                .attr("width", d => x(d.score))
+                .attr("fill-opacity",0.8 ); // mantém opacidade total na transição
             bars.exit().remove();
+
 
             const labels = g.selectAll(".label").data(sorted, d => d.name);
             labels.enter()
