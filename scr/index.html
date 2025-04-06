@@ -91,27 +91,30 @@
         };
 
         const initialDrivers = [
-        { name: "Max Verstappen", equipe: "red_bull", equipe_real: "🇦🇹 Red Bull", idade: 25, nacionalidade: "🇳🇱 Holanda" },
-        { name: "Yuki Tsunoda", equipe: "red_bull", equipe_real: "🇦🇹 Red Bull", idade: 23, nacionalidade: "🇯🇵 Japão" },
-        { name: "Lewis Hamilton", equipe: "ferrari", equipe_real: "🇮🇹 Ferrari", idade: 39, nacionalidade: "🇬🇧 Reino Unido" },
-        { name: "Charles Leclerc", equipe: "ferrari", equipe_real: "🇮🇹 Ferrari", idade: 26, nacionalidade: "🇲🇨 Mônaco" },
-        { name: "Lando Norris", equipe: "mclaren", equipe_real: "🇬🇧 McLaren", idade: 24, nacionalidade: "🇬🇧 Reino Unido" },
-        { name: "Oscar Piastri", equipe: "mclaren", equipe_real: "🇬🇧 McLaren", idade: 23, nacionalidade: "🇦🇺 Austrália" },
-        { name: "Pierre Gasly", equipe: "alpine", equipe_real: "🇫🇷 Alpine", idade: 28, nacionalidade: "🇫🇷 França" },
-        { name: "Jack Doohan", equipe: "alpine", equipe_real: "🇫🇷 Alpine", idade: 21, nacionalidade: "🇦🇺 Austrália" },
-        { name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "🇬🇧 Aston Martin", idade: 43, nacionalidade: "🇪🇸 Espanha" },
-        { name: "Lance Stroll", equipe: "aston_martin", equipe_real: "🇬🇧 Aston Martin", idade: 26, nacionalidade: "🇨🇦 Canadá" },
-        { name: "Alexander Albon", equipe: "willians", equipe_real: "🇬🇧 Williams", idade: 28, nacionalidade: "🇹🇭 Tailândia" },
-        { name: "Carlos Sainz", equipe: "willians", equipe_real: "🇬🇧 Williams", idade: 30, nacionalidade: "🇪🇸 Espanha" },
-        { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "🇮🇹 Visa Cash App RB", idade: 20, nacionalidade: "🇫🇷 França" },
-        { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "🇮🇹 Visa Cash App RB", idade: 23, nacionalidade: "🇳🇿 Nova Zelândia" },
-        { name: "Kimi Antonelli", equipe: "mercedez", equipe_real: "🇩🇪 Mercedes", idade: 18, nacionalidade: "🇮🇹 Itália" },
-        { name: "George Russell", equipe: "mercedez", equipe_real: "🇩🇪 Mercedes", idade: 26, nacionalidade: "🇬🇧 Reino Unido" },
-        { name: "Oliver Bearman", equipe: "hass", equipe_real: "🇺🇸 Haas", idade: 19, nacionalidade: "🇬🇧 Reino Unido" },
-        { name: "Esteban Ocon", equipe: "hass", equipe_real: "🇺🇸 Haas", idade: 28, nacionalidade: "🇫🇷 França" },
-        { name: "Nico Hülkenberg", equipe: "sauber", equipe_real: "🇨🇭 Sauber", idade: 37, nacionalidade: "🇩🇪 Alemanha" },
-        { name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "🇨🇭 Sauber", idade: 20, nacionalidade: "🇧🇷 Brasil" }
+        { name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 25, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 1, volta_mais_rapida: "1:18.235" },
+        { name: "Yuki Tsunoda", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 23, nacionalidade: "🇯🇵", pneus: "Médios (🟡)", posicao_grid: 2, volta_mais_rapida: "1:20.412" },
+        { name: "Lewis Hamilton", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 39, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 3, volta_mais_rapida: "1:19.832" },
+        { name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 26, nacionalidade: "🇲🇨", pneus: "Macios (⚪)", posicao_grid: 4, volta_mais_rapida: "1:19.574" },
+        { name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 24, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 5, volta_mais_rapida: "1:20.001" },
+        { name: "Oscar Piastri", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 23, nacionalidade: "🇦🇺", pneus: "Duros (🔴)", posicao_grid: 6, volta_mais_rapida: "1:21.033" },
+        { name: "Pierre Gasly", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 28, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 7, volta_mais_rapida: "1:20.546" },
+        { name: "Jack Doohan", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 21, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 8, volta_mais_rapida: "1:21.928" },
+        { name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 43, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 9, volta_mais_rapida: "1:20.238" },
+        { name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 26, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 10, volta_mais_rapida: "1:21.411" },
+        { name: "Alexander Albon", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 28, nacionalidade: "🇹🇭", pneus: "Médios (🟡)", posicao_grid: 11, volta_mais_rapida: "1:21.015" },
+        { name: "Carlos Sainz", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 30, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 12, volta_mais_rapida: "1:20.372" },
+        { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "Visa Cash App RB (🇮🇹)", idade: 20, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 13, volta_mais_rapida: "1:22.007" },
+        { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "Visa Cash App RB (🇮🇹)", idade: 23, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 14, volta_mais_rapida: "1:21.842" },
+        { name: "Kimi Antonelli", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 18, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 15, volta_mais_rapida: "1:23.001" },
+        { name: "George Russell", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 26, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617" },
+        { name: "Oliver Bearman", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 19, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 17, volta_mais_rapida: "1:22.366" },
+        { name: "Esteban Ocon", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 28, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774" },
+        { name: "Nico Hülkenberg", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 37, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 19, volta_mais_rapida: "1:23.377" },
+        { name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 20, nacionalidade: "🇧🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983" }
         ];
+
+
+
 
 
 
@@ -251,8 +254,8 @@
                     const estimatedTextWidth = d.name.length * 9;
                     const margemErro = 15;
                     return x(d.score) > estimatedTextWidth + margemErro
-                        ? x(d.score) - estimatedTextWidth - 10   // Dentro da barra
-                        : x(d.score) + spriteWidth + 10;         // Depois do sprite
+                        ? x(d.score) - estimatedTextWidth - 10  
+                        : x(d.score) + spriteWidth + 10;         
                 })
                 .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
                 .text(d => d.name)
@@ -287,13 +290,16 @@
                     tooltip
                         .style("opacity", 1)
                         .html(`
-                            <div style="display: flex; align-items: center;">
-                                <img src="../sprites/${d.name.replace(/ /g, '_').toLowerCase()}.png" alt="${d.name}" style="width:120px; margin-right:10px;">
+                            <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                                <img src="../sprites/${d.name.replace(/ /g, '_').toLowerCase()}.png" alt="${d.name}" style="width:130px; margin-right:10px;">
                                 <div>
                                     <strong>${d.name}</strong><br>
                                     Idade: ${d.idade} anos<br>
                                     Equipe: ${d.equipe_real}<br>
-                                    Nacionalidade: ${d.nacionalidade}
+                                    Nacionalidade: ${d.nacionalidade}<br>
+                                    Pneus: ${d.pneus}<br>
+                                    Largada: ${d.posicao_grid}º<br>
+                                    VMR: ${d.volta_mais_rapida} min<br>
                                 </div>
                             </div>
                         `);
