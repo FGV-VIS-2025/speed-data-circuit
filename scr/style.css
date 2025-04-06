@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+    margin: 30px;
+  }
+  .bar {
+    fill-opacity: 0.7;
+  }
+  .label {
+    font-size: 14px;
+    fill: #111;
+  }
+  select, button, input[type=range] {
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 14px;
+  }
+  input[type=range] {
+    width: 200px;
+    vertical-align: middle;
+  }
+

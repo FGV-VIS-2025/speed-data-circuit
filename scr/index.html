@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1 - Race Chart</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <center>
+        <label for="yearSelect">Ano:</label>
+        <select id="yearSelect">
+            <option value="">Selecione um ano</option>
+        </select>
+
+        <label for="raceSelect">Corrida:</label>
+        <select id="raceSelect" disabled>
+            <option value="">Selecione uma corrida</option>
+        </select>
+    </center>
+
+    <br>
+    <center>
+        <svg width="1200" height="800"></svg>
+    </center>
+
+    <center>
+        <button id="playPause">▶️ Play</button>
+        <input type="range" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
+        <span id="lapDisplay">Volta 1</span>
+    </center>
+
+    <script>
+        const svg = d3.select("svg");
+        const width = +svg.attr("width");
+        const height = +svg.attr("height");
+        const margin = { top: 20, right: 200, bottom: 20, left: 20 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+        const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+        svg.insert("image", ":first-child")
+        .attr("href", "../sprites/pista.png")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("preserveAspectRatio", "none");
+
+
+
+        // Fixando o tamanho da corrida em 300
+        const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
+        const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
+
+        // Tamanho do sprite
+        const spriteWidth = 64;
+        const spriteHeight = 40;
+
+        // Carregando os elementos da página
+        const yearSelect = document.getElementById("yearSelect");
+        const raceSelect = document.getElementById("raceSelect");
+        const playPauseBtn = document.getElementById("playPause");
+        const lapSlider = document.getElementById("lapSlider");
+        const lapDisplay = document.getElementById("lapDisplay");
+
+        let currentLap = 0;
+        let intervalId = null;
+        let isPlaying = false;
+        const numberOfLaps = 20;
+        let laps = [];
+
+        // Cores de cada equipe
+        const cores_equipes = {
+        red_bull: "#181740",
+        mercedez: "#3D3E40",
+        ferrari: "#D90707",
+        alpine: "#0090FF",
+        hass: "#BF0A2B",
+        aston_martin: "#048C5A",
+        mclaren: "#F28D35",
+        sauber: "#05A61D",
+        willians: "#113A8C",
+        toro_roso: "#F2F2F2"
+        };
+
+        // Opções de anos e corridas
+        const mockRacesByYear = {
+        "2022": ["Bahrain GP", "Monaco GP", "Brazil GP"],
+        "2023": ["Bahrain GP", "Miami GP", "Japan GP"],
+        "2024": ["Australia GP", "Canada GP", "Italy GP"]
+        };
+
+        // Array com nomes dos pilotos e equipes (2025)
+        const initialDrivers = [
+        { name: "Max Verstappen", equipe: "red_bull" },
+        { name: "Yuki Tsunoda", equipe: "red_bull" },
+        { name: "Lewis Hamilton", equipe: "ferrari" },
+        { name: "Charles Leclerc", equipe: "ferrari" },
+        { name: "Lando Norris", equipe: "mclaren" },
+        { name: "Oscar Piastri", equipe: "mclaren" },
+        { name: "Pierre Gasly", equipe: "alpine" },
+        { name: "Jack Doohan", equipe: "alpine" },
+        { name: "Fernando Alonso", equipe: "aston_martin" },
+        { name: "Lance Stroll", equipe: "aston_martin" },
+        { name: "Alexander Albon", equipe: "willians" },
+        { name: "Carlos Sainz", equipe: "willians" },
+        { name: "Isack Hadjar", equipe: "toro_roso" },
+        { name: "Liam Lawson", equipe: "toro_roso" },
+        { name: "Kimi Antonelli", equipe: "mercedez" },
+        { name: "George Russell", equipe: "mercedez" },
+        { name: "Oliver Bearman", equipe: "hass" },
+        { name: "Esteban Ocon", equipe: "hass" },
+        { name: "Nico Hülkenberg", equipe: "sauber" },
+        { name: "Gabriel Bortoleto", equipe: "sauber" }
+        ];
+
+        // Função que gera dados falsos
+        function generateMockLaps() {
+        const laps = [];
+        // Volta 0: score inicial 0
+        const drivers = initialDrivers.map(driver => ({ ...driver, score: 0 }));
+        laps.push(JSON.parse(JSON.stringify(drivers)));
+
+        for (let lap = 1; lap < numberOfLaps; lap++) {
+            const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
+            const newLap = previousLap.map(driver => {
+            const noise = d3.randomNormal(0, Math.sqrt(5))();
+            const increment = 15 + noise;
+            return {
+                ...driver,
+                score: Math.max(0, driver.score + increment)
+            };
+            });
+            laps.push(newLap);
+        }
+        return laps;
+        }
+
+        laps = generateMockLaps();
+
+        // Insere anos no select
+        const availableYears = ["2023", "2024", "2025"];
+        availableYears.forEach(year => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+        });
+
+        // Insere corridas no select
+        yearSelect.addEventListener("change", () => {
+        const selectedYear = yearSelect.value;
+        raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
+        raceSelect.disabled = true;
+
+        if (selectedYear && mockRacesByYear[selectedYear]) {
+            mockRacesByYear[selectedYear].forEach(race => {
+            const opt = document.createElement("option");
+            opt.value = race;
+            opt.textContent = race;
+            raceSelect.appendChild(opt);
+            });
+            raceSelect.disabled = false;
+        }
+        stopPlayback();
+        });
+
+        // Renderiza a volta
+        raceSelect.addEventListener("change", () => {
+        const raceChosen = raceSelect.value;
+        if (raceChosen) {
+            currentLap = 0;
+            renderLap(laps[currentLap], currentLap);
+            updateUI();
+        }
+        stopPlayback();
+        });
+
+        playPauseBtn.addEventListener("click", () => {
+        if (isPlaying) {
+            stopPlayback();
+        } else {
+            isPlaying = true;
+            playPauseBtn.textContent = "⏸️ Pause";
+            intervalId = setInterval(() => {
+            if (currentLap < laps.length - 1) {
+                currentLap++;
+                lapSlider.value = currentLap;
+                renderLap(laps[currentLap], currentLap);
+                updateUI();
+            } else {
+                stopPlayback();
+            }
+            }, 1500);
+        }
+        });
+
+        lapSlider.addEventListener("input", () => {
+        currentLap = parseInt(lapSlider.value);
+        renderLap(laps[currentLap], currentLap);
+        updateUI();
+        stopPlayback();
+        });
+
+        function stopPlayback() {
+        clearInterval(intervalId);
+        isPlaying = false;
+        playPauseBtn.textContent = "▶️ Play";
+        }
+
+        function updateUI() {
+        lapSlider.max = laps.length - 1;
+        lapSlider.disabled = false;
+        lapSlider.value = currentLap;
+        lapDisplay.textContent = `Volta ${currentLap + 1}`;
+        }
+
+        // Renderiza a volta usando o score acumulado (eixo x fixo de 0 a 300)
+        function renderLap(data, lapNum) {
+            // Ordena os pilotos pelo score (maior primeiro)
+            const sorted = [...data].sort((a, b) => b.score - a.score);
+            y.domain(sorted.map(d => d.name));
+
+            // Atualiza as barras
+            const bars = g.selectAll(".bar").data(sorted, d => d.name);
+            bars.enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("x", 0)
+                .attr("height", y.bandwidth())
+                .attr("y", d => y(d.name))
+                .attr("width", d => x(d.score))
+                .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
+                .merge(bars)
+                .transition().duration(600)
+                .attr("y", d => y(d.name))
+                .attr("width", d => x(d.score));
+            bars.exit().remove();
+
+            const labels = g.selectAll(".label").data(sorted, d => d.name);
+            labels.enter()
+                .append("text")
+                .attr("class", "label")
+                .attr("fill", d => {
+                    const estimatedTextWidth = d.name.length * 9;
+                    const margemErro = 15;
+                    return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+                })
+                .attr("x", d => {
+                    const estimatedTextWidth = d.name.length * 9;
+                    const margemErro = 15;
+                    return x(d.score) > estimatedTextWidth + margemErro
+                        ? x(d.score) - estimatedTextWidth - 10   // Dentro da barra
+                        : x(d.score) + spriteWidth + 10;         // Depois do sprite
+                })
+                .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
+                .text(d => d.name)
+                .merge(labels)
+                .transition().duration(600)
+                .attr("fill", d => {
+                    const estimatedTextWidth = d.name.length * 9;
+                    const margemErro = 15;
+                    return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+                })
+                .attr("x", d => {
+                    const estimatedTextWidth = d.name.length * 9;
+                    const margemErro = 15;
+                    return x(d.score) > estimatedTextWidth + margemErro
+                        ? x(d.score) - estimatedTextWidth - 10
+                        : x(d.score) + spriteWidth + 10;
+                })
+                .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
+            labels.exit().remove();
+
+
+            // Atualiza os sprites
+            const sprites = g.selectAll("image.sprite").data(sorted, d => d.name);
+            sprites.enter()
+                .append("image")
+                .attr("class", "sprite")
+                .attr("xlink:href", d => `../sprites/${d.equipe}.png`)
+                .attr("width", spriteWidth)
+                .attr("height", spriteHeight)
+                .merge(sprites)
+                .transition().duration(600)
+                .attr("transform", d => {
+                const posX = x(d.score) + 5;
+                const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
+                return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
+                });
+            sprites.exit().remove();
+
+            d3.select("h2").text(`F1 Bar Chart Race - Volta ${lapNum + 1}`);
+        }
+    </script>
+</body>
+</html>
