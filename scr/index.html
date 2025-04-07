@@ -8,7 +8,15 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <center>
+
+    <div id = "painel_de_controle">
+
+        <center>
+        <div id="logo">
+            <img src="../sprites/f1.png" alt="Logo" style="width: 95%; height: auto;">
+        </div>
+        </center>
+
         <select id="yearSelect">
             <option value="">Selecione um ano</option>
         </select>
@@ -20,17 +28,15 @@
         <button id="playPause">▶️ Play</button>
         <input type="range" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
         <span id="lapDisplay">Volta 1</span>
-    </center>
+    </div>
 
     <br>
-    <center>
-        <svg width="1500" height="860">
-            <rect width="100%" height="100%" x="0" y="0" style="fill:#22b14c;" />
-            <rect width="1480" height="840" x="10" y="10" style="fill:#ffffff;" />
-            <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
-            <g id="grid"></g>
-        </svg>
-    </center>
+    <svg width="1500" height="860">
+        <rect width="100%" height="100%" x="0" y="0" style="fill:#303030;" />
+        <rect width="1480" height="840" x="10" y="10" style="fill:#818181;" />
+        <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
+        <g id="grid"></g>
+    </svg>
     
 
     <div id="tooltip" style="position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; pointer-events: none; opacity: 0; border-radius: 8px;"></div>
@@ -159,8 +165,8 @@
         { name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 26, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 10, volta_mais_rapida: "1:21.411" },
         { name: "Alexander Albon", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 28, nacionalidade: "🇹🇭", pneus: "Médios (🟡)", posicao_grid: 11, volta_mais_rapida: "1:21.015" },
         { name: "Carlos Sainz", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 30, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 12, volta_mais_rapida: "1:20.372" },
-        { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "Visa Cash App RB (🇮🇹)", idade: 20, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 13, volta_mais_rapida: "1:22.007" },
-        { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "Visa Cash App RB (🇮🇹)", idade: 23, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 14, volta_mais_rapida: "1:21.842" },
+        { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 20, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 13, volta_mais_rapida: "1:22.007" },
+        { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 23, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 14, volta_mais_rapida: "1:21.842" },
         { name: "Kimi Antonelli", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 18, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 15, volta_mais_rapida: "1:23.001" },
         { name: "George Russell", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 26, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617" },
         { name: "Oliver Bearman", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 19, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 17, volta_mais_rapida: "1:22.366" },

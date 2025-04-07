@@ -1,22 +1,75 @@
+@font-face {
+  font-family: F1_Wide;
+  src: url("../Formula1-Wide.otf") format("opentype");
+}
+
+@font-face {
+  font-family: F1;
+  src: url("../Formula1-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: F1_Bold;
+  src: url("../Formula1-Bold.otf") format("opentype");
+}
+
 body {
-    font-family: sans-serif;
-    margin: 30px;
-    background-color: #111;
-  }
-  .bar {
-    fill-opacity: 0.7;
-  }
-  .label {
-    font-size: 14px;
-    fill: #111;
-  }
-  select, button, input[type=range] {
-    margin-right: 10px;
-    padding: 5px;
-    font-size: 14px;
-  }
-  input[type=range] {
-    width: 200px;
-    vertical-align: middle;
+    font-family: F1;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    width: 99vw;
+    height: 120vh;
+    margin: 10px;
   }
 
+.bar {
+  fill-opacity: 0.7;
+}
+.label {
+  font-size: 14px;
+  fill: #111;
+}
+select, button, input[type=range] {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+select, button {
+  width: 90%;
+  vertical-align: middle;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: F1;
+  font-size: 95%;
+}
+
+input[type=range] {
+  width: 90%;
+  height: 20px;
+  vertical-align: middle;
+}
+
+#painel_de_controle {
+  justify-self: center;
+  width: 15%;
+  height: 87vh; 
+  background-color: #F21905;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+
+#logo {
+  width: 90%;
+}
