@@ -32,7 +32,6 @@ body {
 }
 select, button, input[type=range] {
   margin-top: 10px;
-  margin-right: 10px;
   padding: 5px;
   font-size: 14px;
 }
@@ -49,10 +48,50 @@ select, button {
   font-size: 95%;
 }
 
+#clima_display {
+  width: 90%;
+  height: 20%;
+  background-color: #ffffff;
+  margin-top: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#clima_info {
+  width: 90%;
+  height: 15%;
+  background-color: #ffffff;
+  margin-top: 10px;
+  border-radius: 5px;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: right;
+  font-size: 95%;
+}
+
+#clima_info p {
+  margin: 2.5% 0; 
+  margin-left: 5%;
+}
+
+#clima_display img {
+  width: 97%;
+  height: 95%;
+  border-radius: 5px;
+}
+
+
 input[type=range] {
   width: 90%;
-  height: 20px;
   vertical-align: middle;
+}
+
+span {
+  font-size: 100%;
+  color: #ffffff;
 }
 
 #painel_de_controle {
@@ -65,10 +104,9 @@ input[type=range] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 10px;
   margin-left: 10px;
 }
-
 
 #logo {
   width: 90%;
