@@ -1,21 +1,124 @@
+const initialDrivers = [
+{ name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 25, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 1, volta_mais_rapida: "1:18.235" },
+{ name: "Yuki Tsunoda", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 23, nacionalidade: "🇯🇵", pneus: "Médios (🟡)", posicao_grid: 2, volta_mais_rapida: "1:20.412" },
+{ name: "Lewis Hamilton", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 39, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 3, volta_mais_rapida: "1:19.832" },
+{ name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 26, nacionalidade: "🇲🇨", pneus: "Macios (⚪)", posicao_grid: 4, volta_mais_rapida: "1:19.574" },
+{ name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 24, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 5, volta_mais_rapida: "1:20.001" },
+{ name: "Oscar Piastri", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 23, nacionalidade: "🇦🇺", pneus: "Duros (🔴)", posicao_grid: 6, volta_mais_rapida: "1:21.033" },
+{ name: "Pierre Gasly", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 28, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 7, volta_mais_rapida: "1:20.546" },
+{ name: "Jack Doohan", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 21, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 8, volta_mais_rapida: "1:21.928" },
+{ name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 43, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 9, volta_mais_rapida: "1:20.238" },
+{ name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 26, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 10, volta_mais_rapida: "1:21.411" },
+{ name: "Alexander Albon", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 28, nacionalidade: "🇹🇭", pneus: "Médios (🟡)", posicao_grid: 11, volta_mais_rapida: "1:21.015" },
+{ name: "Carlos Sainz", equipe: "willians", equipe_real: "Williams (🇬🇧)", idade: 30, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 12, volta_mais_rapida: "1:20.372" },
+{ name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 20, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 13, volta_mais_rapida: "1:22.007" },
+{ name: "Liam Lawson", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 23, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 14, volta_mais_rapida: "1:21.842" },
+{ name: "Kimi Antonelli", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 18, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 15, volta_mais_rapida: "1:23.001" },
+{ name: "George Russell", equipe: "mercedez", equipe_real: "Mercedes (🇩🇪)", idade: 26, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617" },
+{ name: "Oliver Bearman", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 19, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 17, volta_mais_rapida: "1:22.366" },
+{ name: "Esteban Ocon", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 28, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774" },
+{ name: "Nico Hülkenberg", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 37, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 19, volta_mais_rapida: "1:23.377" },
+{ name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 20, nacionalidade: "🇧🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983" }
+];
+
+const climas = {
+"1": ["sol", "../assets/weather/clima_sol.jpg"],
+"2": ["neve", "../assets/weather/clima_neve.jpg"],
+"3": ["chuva", "../assets/weather/clima_chuva.jpg"]
+};
+
+const mockRacesByYear = {
+"2024": [
+    "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Japanese GP (🇯🇵)", "Chinese GP (🇨🇳)",
+    "Miami GP (🇺🇸)", "Emilia Romagna GP (🇮🇹)", "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "Spanish GP (🇪🇸)",
+    "Austrian GP (🇦🇹)", "British GP (🇬🇧)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
+    "Italian GP (🇮🇹)", "Azerbaijan GP (🇦🇿)", "Singapore GP (🇸🇬)", "United States GP (🇺🇸)",
+    "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Qatar GP (🇶🇦)", "Abu Dhabi GP (🇦🇪)"
+],
+"2023": [
+    "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Azerbaijan GP (🇦🇿)", "Miami GP (🇺🇸)",
+    "Monaco GP (🇲🇨)", "Spanish GP (🇪🇸)", "Canadian GP (🇨🇦)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
+    "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)",
+    "Japanese GP (🇯🇵)", "Qatar GP (🇶🇦)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)",
+    "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Abu Dhabi GP (🇦🇪)"
+],
+"2022": [
+    "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Emilia Romagna GP (🇮🇹)", "Miami GP (🇺🇸)",
+    "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)", "Azerbaijan GP (🇦🇿)", "Canadian GP (🇨🇦)", "British GP (🇬🇧)",
+    "Austrian GP (🇦🇹)", "French GP (🇫🇷)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
+    "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)", "Japanese GP (🇯🇵)", "United States GP (🇺🇸)",
+    "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Abu Dhabi GP (🇦🇪)"
+],
+"2021": [
+    "Bahrain GP (🇧🇭)", "Emilia Romagna GP (🇮🇹)", "Portuguese GP (🇵🇹)", "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)",
+    "Azerbaijan GP (🇦🇿)", "French GP (🇫🇷)", "Styrian GP (🇦🇹)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
+    "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Russian GP (🇷🇺)",
+    "Turkish GP (🇹🇷)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)",
+    "Qatar GP (🇶🇦)", "Saudi Arabian GP (🇸🇦)", "Abu Dhabi GP (🇦🇪)"
+],
+"2020": [
+    "Austrian GP (🇦🇹)", "Styrian GP (🇦🇹)", "Hungarian GP (🇭🇺)", "British GP (🇬🇧)", "70th Anniversary GP (🇬🇧)",
+    "Spanish GP (🇪🇸)", "Belgian GP (🇧🇪)", "Italian GP (🇮🇹)", "Tuscan GP (🇮🇹)", "Russian GP (🇷🇺)",
+    "Eifel GP (🇩🇪)", "Portuguese GP (🇵🇹)", "Emilia Romagna GP (🇮🇹)", "Turkish GP (🇹🇷)",
+    "Bahrain GP (🇧🇭)", "Sakhir GP (🇧🇭)", "Abu Dhabi GP (🇦🇪)"
+]
+};
+
+const cores_equipes = {
+    red_bull: "#181740",
+    mercedez: "#41F2D2",
+    ferrari: "#D90707",
+    alpine: "#0090FF",
+    hass: "#BF0A2B",
+    aston_martin: "#048C5A",
+    mclaren: "#F28D35",
+    sauber: "#05A61D",
+    willians: "#113A8C",
+    toro_roso: "#F2F2F2"
+};
+
+// CONSTRUINDO A LINHA DE CHEGADA
+const grid = document.getElementById('grid');
+const cols = [1360, 1380, 1400, 1420];
+const numRows = Math.floor((860 - 20) / 20) + 1;
+
+for (let row = 0; row < numRows - 2; row++) {
+    const y = 20 + row * 20;
+    for (let i = 0; i < cols.length; i++) {
+    const x = cols[cols.length - 1 - i];
+    let fill;
+    if (row % 2 === 0) {
+        fill = (i % 2 === 0) ? "#ffffff" : "#000000";
+    } else {
+        fill = (i % 2 === 0) ? "#000000" : "#ffffff";
+    }
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("width", "20");
+    rect.setAttribute("height", "20");
+    rect.setAttribute("x", x);
+    rect.setAttribute("y", y);
+    rect.setAttribute("style", "fill:" + fill + ";");
+    grid.appendChild(rect);
+    }
+}
+
 const svg = d3.select("svg");
 const width = +svg.attr("width");
 const height = +svg.attr("height");
-const margin = { top: 20, right: 200, bottom: 20, left: 20 };
+const margin = { top: 20, right: 200, bottom: 20, left: 25 };
 const chartWidth = width - margin.left - margin.right;
 const chartHeight = height - margin.top - margin.bottom;
 const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-d3.select("svg").style("background-color", "#A39B9B");
 
-// Fixando o Tamanho da Corrida em 300
+// Fixando o tamanho da corrida em 300
 const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
 const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
 
-// Tamanho do Sprite
-const spriteWidth = 64;
-const spriteHeight = 40;
+// Tamanho do sprite
+const spriteWidth = 72;
+const spriteHeight = 45;
 
-// Carregando os Elementos da Página
+// Carregando os elementos da página
 const yearSelect = document.getElementById("yearSelect");
 const raceSelect = document.getElementById("raceSelect");
 const playPauseBtn = document.getElementById("playPause");
@@ -28,209 +131,244 @@ let isPlaying = false;
 const numberOfLaps = 20;
 let laps = [];
 
-// Cores de Cada Equipe
-const cores_equipes = {
-    red_bull: "#181740",
-    mercedez: "#3D3E40",
-    ferrari: "#D90707",
-    alpine: "#0090FF",
-    hass: "#BF0A2B",
-    aston_martin: "#048C5A",
-    mclaren: "#F28D35",
-    sauber: "#05A61D",
-    willians: "#113A8C",
-    toro_roso: "#F2F2F2"
-};
-
-// Opções de Anos e Corridas
-const mockRacesByYear = {
-    "2022": ["Bahrain GP", "Monaco GP", "Brazil GP"],
-    "2023": ["Bahrain GP", "Miami GP", "Japan GP"],
-    "2024": ["Australia GP", "Canada GP", "Italy GP"]
-};
-
-// Array Com Nomes dos Pilotos e Equipes (2025)
-const initialDrivers = [
-    { name: "Max Verstappen", equipe: "red_bull" },
-    { name: "Lewis Hamilton", equipe: "ferrari" },
-    { name: "Charles Leclerc", equipe: "ferrari" },
-    { name: "Lando Norris", equipe: "mclaren" },
-    { name: "Yuki Tsunoda", equipe: "red_bull" },
-    { name: "Carlos Sainz", equipe: "ferrari" },
-    { name: "Pierre Gasly", equipe: "alpine" },
-    { name: "Fernando Alonso", equipe: "aston_martin" },
-    { name: "Oscar Piastri", equipe: "mclaren" },
-    { name: "Jack Doohan", equipe: "alpine" },
-    { name: "Lance Stroll", equipe: "aston_martin" },
-    { name: "Alexander Albon", equipe: "willians" },
-    { name: "Isack Hadjar", equipe: "toro_roso" },
-    { name: "Kimi Antonelli", equipe: "mercedez" },
-    { name: "Oliver Bearman", equipe: "hass" },
-    { name: "Esteban Ocon", equipe: "hass" },
-    { name: "Carlos Sainz", equipe: "willians" },
-    { name: "Liam Lawson", equipe: "toro_roso" },
-    { name: "Nico Hülkenberg", equipe: "sauber" },
-    { name: "Gabriel Bortoleto", equipe: "sauber" },
-    { name: "George Russell", equipe: "mercedez" }];
-
-// Função que Gera Dados Falsos
+// Função que gera dados falsos
 function generateMockLaps() {
-    const laps = [];
-    // Volta 0: score inicial 0
-    const drivers = initialDrivers.map(driver => ({ ...driver, score: 0 }));
-    laps.push(JSON.parse(JSON.stringify(drivers)));
+const laps = [];
+// Volta 0: score inicial 0
+const drivers = initialDrivers.map(driver => ({ ...driver, score: 0 }));
+laps.push(JSON.parse(JSON.stringify(drivers)));
 
-    for (let lap = 1; lap < numberOfLaps; lap++) {
-        const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
-        const newLap = previousLap.map(driver => {
-        const noise = d3.randomNormal(0, Math.sqrt(5))();
-        const increment = 13 + noise;
-        return {
-            ...driver,
-            score: Math.max(0, driver.score + increment)
-        };
-        });
-        laps.push(newLap);
-    }
-    return laps;
+for (let lap = 1; lap < numberOfLaps; lap++) {
+    const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
+    const newLap = previousLap.map(driver => {
+    const noise = d3.randomNormal(0, Math.sqrt(5))();
+    const increment = 15 + noise;
+    return {
+        ...driver,
+        score: Math.max(0, driver.score + increment)
+    };
+    });
+    laps.push(newLap);
+}
+return laps;
 }
 
 laps = generateMockLaps();
 
-// Insere anos no Select
-const availableYears = ["2023", "2024", "2025"];
+// Insere anos no select
+const availableYears = ["2024", "2023", "2022", "2021", "2020"];
 availableYears.forEach(year => {
-    const option = document.createElement("option");
-    option.value = year;
-    option.textContent = year;
-    yearSelect.appendChild(option);
+const option = document.createElement("option");
+option.value = year;
+option.textContent = year;
+yearSelect.appendChild(option);
 });
 
-// Insere corridas no Select
+// Insere corridas no select
 yearSelect.addEventListener("change", () => {
-    const selectedYear = yearSelect.value;
-    raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
-    raceSelect.disabled = true;
+const selectedYear = yearSelect.value;
+raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
+raceSelect.disabled = true;
 
-    if (selectedYear && mockRacesByYear[selectedYear]) {
-      mockRacesByYear[selectedYear].forEach(race => {
-        const opt = document.createElement("option");
-        opt.value = race;
-        opt.textContent = race;
-        raceSelect.appendChild(opt);
-      });
-      raceSelect.disabled = false;
-    }
-    stopPlayback();
+if (selectedYear && mockRacesByYear[selectedYear]) {
+    mockRacesByYear[selectedYear].forEach(race => {
+    const opt = document.createElement("option");
+    opt.value = race;
+    opt.textContent = race;
+    raceSelect.appendChild(opt);
+    });
+    raceSelect.disabled = false;
+}
+stopPlayback();
 });
 
-// Renderiza a Volta
+// Renderiza a volta
 raceSelect.addEventListener("change", () => {
-    const raceChosen = raceSelect.value;
-    if (raceChosen) {
-      currentLap = 0;
-      renderLap(laps[currentLap], currentLap);
-      updateUI();
-    }
-    stopPlayback();
+const raceChosen = raceSelect.value;
+if (raceChosen) {
+    currentLap = 0;
+    renderLap(laps[currentLap], currentLap);
+    updateUI();
+}
+stopPlayback();
+
+// definindo um clima aleatório para cada corrida
+const clima_img = document.getElementById("clima_display");
+clima_img.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
+const infos = document.getElementById("clima_info");
+infos.innerHTML = `
+    <p>Horário: ${new Date().toLocaleTimeString()}</p>
+    <p>Data: ${new Date().toLocaleDateString()}</p>
+    <p>Temperatura: ${Math.floor(Math.random() * 30) + 20}°C</p>
+    <p>Temp. Pista: ${Math.floor(Math.random() * 40) + 20}°C</p>
+    <p>Umidade: ${Math.floor(Math.random() * 100)}%</p>
+    <p>Vento: ${Math.floor(Math.random() * 20) + 5} km/h</p>
+`;
+
+const select_pilotos = document.getElementById("pilotos");
+select_pilotos.innerHTML = "";
+var opt = document.createElement('option');
+opt.innerHTML = `<p>Selecionar Todos</p>`;
+select_pilotos.appendChild(opt);
+for (let i = 0; i < initialDrivers.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = initialDrivers[i].name;
+    opt.textContent = initialDrivers[i].name;
+    opt.innerHTML = `<p>${opt.value}</p>`;
+    select_pilotos.appendChild(opt);
+};
 });
 
 playPauseBtn.addEventListener("click", () => {
-    if (isPlaying) {
-      stopPlayback();
+if (isPlaying) {
+    stopPlayback();
+} else {
+    isPlaying = true;
+    playPauseBtn.textContent = "⏸️ Pause";
+    intervalId = setInterval(() => {
+    if (currentLap < laps.length - 1) {
+        currentLap++;
+        lapSlider.value = currentLap;
+        renderLap(laps[currentLap], currentLap);
+        updateUI();
     } else {
-      isPlaying = true;
-      playPauseBtn.textContent = "⏸️ Pause";
-      intervalId = setInterval(() => {
-        if (currentLap < laps.length - 1) {
-          currentLap++;
-          lapSlider.value = currentLap;
-          renderLap(laps[currentLap], currentLap);
-          updateUI();
-        } else {
-          stopPlayback();
-        }
-      }, 1500);
+        stopPlayback();
     }
+    }, 1500);
+}
 });
 
 lapSlider.addEventListener("input", () => {
-    currentLap = parseInt(lapSlider.value);
-    renderLap(laps[currentLap], currentLap);
-    updateUI();
-    stopPlayback();
+currentLap = parseInt(lapSlider.value);
+renderLap(laps[currentLap], currentLap);
+updateUI();
+stopPlayback();
 });
 
 function stopPlayback() {
-    clearInterval(intervalId);
-    isPlaying = false;
-    playPauseBtn.textContent = "▶️ Play";
+clearInterval(intervalId);
+isPlaying = false;
+playPauseBtn.textContent = "▶️ Play";
 }
 
 function updateUI() {
-    lapSlider.max = laps.length - 1;
-    lapSlider.disabled = false;
-    lapSlider.value = currentLap;
-    lapDisplay.textContent = `Volta ${currentLap + 1}`;
+lapSlider.max = laps.length - 1;
+lapSlider.disabled = false;
+lapSlider.value = currentLap;
+lapDisplay.textContent = `Volta ${currentLap + 1}`;
 }
 
-// Renderiza a volta usando o score acumulado (o eixo x é fixo de 0 a 300)
+// Renderiza a volta usando o score acumulado (eixo x fixo de 0 a 300)
 function renderLap(data, lapNum) {
-    // Ordena os Pilotos pelo Nome da Equipe
-    data.sort((a, b) => {
-        if (a.equipe < b.equipe) return -1;
-        if (a.equipe > b.equipe) return 1;
-        return 0;
-    });
-
+    // Ordena os pilotos pelo score (maior primeiro)
     const sorted = [...data].sort((a, b) => b.score - a.score);
     y.domain(sorted.map(d => d.name));
 
     // Atualiza as barras
     const bars = g.selectAll(".bar").data(sorted, d => d.name);
     bars.enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", 0)
-      .attr("height", y.bandwidth())
-      .attr("y", d => y(d.name))
-      .attr("width", d => x(d.score))
-      .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
-      .merge(bars)
-      .transition().duration(600)
-      .attr("y", d => y(d.name))
-      .attr("width", d => x(d.score));
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .attr("y", d => y(d.name))
+        .attr("width", d => x(d.score))
+        .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
+        .attr("fill-opacity", 1)
+        .merge(bars)
+        .transition().duration(1000)
+        .attr("y", d => y(d.name))
+        .attr("width", d => x(d.score))
     bars.exit().remove();
 
-    // Atualiza os labels
+
     const labels = g.selectAll(".label").data(sorted, d => d.name);
     labels.enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("x", d => x(d.score) + spriteWidth + 10)
-      .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
-      .text(d => d.name)
-      .merge(labels)
-      .transition().duration(600)
-      .attr("x", d => x(d.score) + spriteWidth + 10)
-      .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
+        .append("text")
+        .attr("class", "label")
+        .attr("fill", d => {
+            const estimatedTextWidth = d.name.length * 9;
+            const margemErro = 15;
+            return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+        })
+        .attr("x", d => {
+            const estimatedTextWidth = d.name.length * 9;
+            const margemErro = 15;
+            return x(d.score) > estimatedTextWidth + margemErro
+                ? x(d.score) - estimatedTextWidth - 10  
+                : x(d.score) + spriteWidth + 10;         
+        })
+        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
+        .text(d => d.name)
+        .merge(labels)
+        .transition().duration(1000)
+        .attr("fill", d => {
+            const estimatedTextWidth = d.name.length * 9;
+            const margemErro = 15;
+            return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+        })
+        .attr("x", d => {
+            const estimatedTextWidth = d.name.length * 9;
+            const margemErro = 15;
+            return x(d.score) > estimatedTextWidth + margemErro
+                ? x(d.score) - estimatedTextWidth - 10
+                : x(d.score) + spriteWidth + 10;
+        })
+        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
     labels.exit().remove();
 
-    // Atualiza os sprites
+
+    const tooltip = d3.select("#tooltip");
+
     const sprites = g.selectAll("image.sprite").data(sorted, d => d.name);
     sprites.enter()
-      .append("image")
-      .attr("class", "sprite")
-      .attr("xlink:href", d => `sprites/${d.equipe}.png`)
-      .attr("width", spriteWidth)
-      .attr("height", spriteHeight)
-      .merge(sprites)
-      .transition().duration(600)
-      .attr("transform", d => {
-        const posX = x(d.score) + 5;
-        const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
-        return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
-      });
+        .append("image")
+        .attr("class", "sprite")
+        .attr("xlink:href", d => `../assets/sprites/${d.equipe}.png`)
+        .attr("width", spriteWidth)
+        .attr("height", spriteHeight)
+        .on("mouseover", function(event, d) {
+            tooltip
+                .style("opacity", 1)
+                .html(`
+                    <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                        <img src="../assets/drivers/${d.name.replace(/ /g, '_').toLowerCase()}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
+                        <div>
+                            <strong>${d.name}</strong><br>
+                            Idade: ${d.idade} anos<br>
+                            Equipe: ${d.equipe_real}<br>
+                            Nacionalidade: ${d.nacionalidade}<br>
+                            Pneus: ${d.pneus}<br>
+                            Largada: ${d.posicao_grid}º<br>
+                            VMR: ${d.volta_mais_rapida} min<br>
+                        </div>
+                    </div>
+                `);
+        })
+        .on("mousemove", function(event) {
+            // se o mouse tiver muito a direita, coloca o tooltip a esquerda
+            const tooltipWidth = parseInt(tooltip.style("width"));
+            const tooltipX = event.pageX + 15;
+            const tooltipY = event.pageY - 28;
+            if (tooltipX + tooltipWidth > window.innerWidth) {
+                tooltip.style("left", (event.pageX - tooltipWidth - 35) + "px");
+            } else {
+                tooltip.style("left", tooltipX + "px");
+            }
+            tooltip
+                .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.style("opacity", 0);
+        })
+        .merge(sprites)
+        .transition().duration(1000)
+        .attr("transform", d => {
+            const posX = x(d.score) + 5;
+            const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
+            return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
+        });
+
     sprites.exit().remove();
 
     d3.select("h2").text(`F1 Bar Chart Race - Volta ${lapNum + 1}`);
