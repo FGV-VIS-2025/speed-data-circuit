@@ -280,6 +280,7 @@ function stopPlayback() {
     playPauseBtn.textContent = "▶️ Play";
 }
 
+// ATUALIZA A INTERFACE DO USUÁRIO
 function updateUI() {
     lapSlider.max = laps.length - 1;
     lapSlider.disabled = false;
@@ -287,13 +288,14 @@ function updateUI() {
     lapDisplay.textContent = `Volta ${currentLap + 1}`;
 }
 
-// Renderiza a volta usando o score acumulado (eixo x fixo de 0 a 300)
+// RENDERIZA A VOLTA COM BASE NOS DADOS
 function renderLap(data, lapNum) {
-    // Ordena os pilotos pelo score (maior primeiro)
+    
+    // ORDENA OS PILOTOS COM BASE NO SCORE
     const sorted = [...data].sort((a, b) => b.score - a.score);
     y.domain(sorted.map(d => d.name));
 
-    // Atualiza as barras
+    // ATUALIZA AS BARRAS
     const bars = g.selectAll(".bar").data(sorted, d => d.name);
     bars.enter()
         .append("rect")
@@ -304,13 +306,55 @@ function renderLap(data, lapNum) {
         .attr("width", d => x(d.score))
         .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
         .attr("fill-opacity", 1)
+
+        // ADICIONA O TOOLTIP
+        .on("mouseover", function(event, d) {
+            tooltip
+                .style("opacity", 1)
+                .html(`
+                    <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                        <img src="../assets/drivers/${d.name.replace(/ /g, '_').toLowerCase()}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
+                        <div>
+                            <strong>${d.name}</strong><br>
+                            Idade: ${d.idade} anos<br>
+                            Equipe: ${d.equipe_real}<br>
+                            Nacionalidade: ${d.nacionalidade}<br>
+                            Pneus: ${d.pneus}<br>
+                            Largada: ${d.posicao_grid}º<br>
+                            VMR: ${d.volta_mais_rapida} min<br>
+                        </div>
+                    </div>
+                `);
+        })
+
+        // MOVER O TOOLTIP COM O MOUSE
+        .on("mousemove", function(event) {
+            const tooltipWidth = parseInt(tooltip.style("width"));
+            const tooltipX = event.pageX + 15;
+            const tooltipY = event.pageY - 28;
+
+            // SE TIVER MUITO À DIREITA, COLOCA O TOOLLTIP À ESQUERDA
+            if (tooltipX + tooltipWidth > window.innerWidth) {
+                tooltip.style("left", (event.pageX - tooltipWidth - 35) + "px");
+            } else {
+                tooltip.style("left", tooltipX + "px");
+            }
+
+            tooltip.style("top", (event.pageY - 28) + "px");
+        })
+
+        // QUANDO O MOUSE SAI, ESCONDE O TOOLTIP
+        .on("mouseout", function() {
+            tooltip.style("opacity", 0);
+        })
+
         .merge(bars)
         .transition().duration(1000)
         .attr("y", d => y(d.name))
         .attr("width", d => x(d.score))
     bars.exit().remove();
 
-
+    // ATUALIZA O NOME DOS PILOTOS
     const labels = g.selectAll(".label").data(sorted, d => d.name);
     labels.enter()
         .append("text")
@@ -346,9 +390,8 @@ function renderLap(data, lapNum) {
         .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
     labels.exit().remove();
 
-
+    // ATUALIZA OS SPRITES E O TOOLTIP
     const tooltip = d3.select("#tooltip");
-
     const sprites = g.selectAll("image.sprite").data(sorted, d => d.name);
     sprites.enter()
         .append("image")
@@ -356,6 +399,9 @@ function renderLap(data, lapNum) {
         .attr("xlink:href", d => `../assets/sprites/${d.equipe}.png`)
         .attr("width", spriteWidth)
         .attr("height", spriteHeight)
+
+        // ADICIONA O TOOLTIP
+        .attr("x", d => x(d.score) + 5)
         .on("mouseover", function(event, d) {
             tooltip
                 .style("opacity", 1)
@@ -374,22 +420,28 @@ function renderLap(data, lapNum) {
                     </div>
                 `);
         })
+
+        // MOVER O TOOLTIP COM O MOUSE
         .on("mousemove", function(event) {
-            // se o mouse tiver muito a direita, coloca o tooltip a esquerda
             const tooltipWidth = parseInt(tooltip.style("width"));
             const tooltipX = event.pageX + 15;
             const tooltipY = event.pageY - 28;
+
+            // SE TIVER MUITO À DIREITA, COLOCA O TOOLLTIP À ESQUERDA
             if (tooltipX + tooltipWidth > window.innerWidth) {
                 tooltip.style("left", (event.pageX - tooltipWidth - 35) + "px");
             } else {
                 tooltip.style("left", tooltipX + "px");
             }
-            tooltip
-                .style("top", (event.pageY - 28) + "px");
+
+            tooltip.style("top", (event.pageY - 28) + "px");
         })
+
+        // QUANDO O MOUSE SAI, ESCONDE O TOOLTIP
         .on("mouseout", function() {
             tooltip.style("opacity", 0);
         })
+        
         .merge(sprites)
         .transition().duration(1000)
         .attr("transform", d => {
