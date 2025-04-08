@@ -205,57 +205,86 @@ infos.innerHTML = `
     <p>Vento: ${Math.floor(Math.random() * 20) + 5} km/h</p>
 `;
 
-const select_pilotos = document.getElementById("pilotos");
-select_pilotos.innerHTML = "";
-var opt = document.createElement('option');
-opt.innerHTML = `<p>Selecionar Todos</p>`;
-select_pilotos.appendChild(opt);
-for (let i = 0; i < initialDrivers.length; i++) {
-    var opt = document.createElement('option');
-    opt.value = initialDrivers[i].name;
-    opt.textContent = initialDrivers[i].name;
-    opt.innerHTML = `<p>${opt.value}</p>`;
-    select_pilotos.appendChild(opt);
-};
+    const select_pilotos = document.getElementById("multiselect");
+    select_pilotos.innerHTML = "";
+
+    // Adiciona a opção "Selecionar Todos"
+    let selectAllDiv = document.createElement('div');
+    let selectAllCheckbox = document.createElement('input');
+    let selectAllLabel = document.createElement('label');
+
+    selectAllCheckbox.type = "checkbox";
+    selectAllCheckbox.id = "selectAll";
+    selectAllLabel.htmlFor = "selectAll";
+    selectAllLabel.textContent = "Selecionar Todos";
+
+    selectAllDiv.appendChild(selectAllCheckbox);
+    selectAllDiv.appendChild(selectAllLabel);
+    select_pilotos.appendChild(selectAllDiv);
+
+    // Adiciona cada piloto como uma checkbox
+    initialDrivers.forEach((driver, index) => {
+        let wrapper = document.createElement('div');
+    
+        let checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+        checkbox.id = `driver_${index}`;
+        checkbox.name = "drivers";
+        checkbox.value = driver.name;
+    
+        let label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = driver.name;
+    
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(label);
+        select_pilotos.appendChild(wrapper);
+    });
+  
+    // Funcionalidade "Selecionar Todos"
+    selectAllCheckbox.addEventListener("change", () => {
+        const checkboxes = document.querySelectorAll('input[name="drivers"]');
+        checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+    });
 });
 
 playPauseBtn.addEventListener("click", () => {
-if (isPlaying) {
-    stopPlayback();
-} else {
-    isPlaying = true;
-    playPauseBtn.textContent = "⏸️ Pause";
-    intervalId = setInterval(() => {
-    if (currentLap < laps.length - 1) {
-        currentLap++;
-        lapSlider.value = currentLap;
-        renderLap(laps[currentLap], currentLap);
-        updateUI();
-    } else {
+    if (isPlaying) {
         stopPlayback();
+    } else {
+        isPlaying = true;
+        playPauseBtn.textContent = "⏸️ Pause";
+        intervalId = setInterval(() => {
+        if (currentLap < laps.length - 1) {
+            currentLap++;
+            lapSlider.value = currentLap;
+            renderLap(laps[currentLap], currentLap);
+            updateUI();
+        } else {
+            stopPlayback();
+        }
+        }, 1500);
     }
-    }, 1500);
-}
 });
 
 lapSlider.addEventListener("input", () => {
-currentLap = parseInt(lapSlider.value);
-renderLap(laps[currentLap], currentLap);
-updateUI();
-stopPlayback();
+    currentLap = parseInt(lapSlider.value);
+    renderLap(laps[currentLap], currentLap);
+    updateUI();
+    stopPlayback();
 });
 
 function stopPlayback() {
-clearInterval(intervalId);
-isPlaying = false;
-playPauseBtn.textContent = "▶️ Play";
+    clearInterval(intervalId);
+    isPlaying = false;
+    playPauseBtn.textContent = "▶️ Play";
 }
 
 function updateUI() {
-lapSlider.max = laps.length - 1;
-lapSlider.disabled = false;
-lapSlider.value = currentLap;
-lapDisplay.textContent = `Volta ${currentLap + 1}`;
+    lapSlider.max = laps.length - 1;
+    lapSlider.disabled = false;
+    lapSlider.value = currentLap;
+    lapDisplay.textContent = `Volta ${currentLap + 1}`;
 }
 
 // Renderiza a volta usando o score acumulado (eixo x fixo de 0 a 300)

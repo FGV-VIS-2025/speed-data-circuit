@@ -90,13 +90,20 @@ input[type=range] {
    Multiselect e Pilotos
 ------------------------------ */
 #multiselect {
+  border-radius: 5px;
+  background-color: #ffffff;
   width: 90%;
-  height: 20%;
+  height: 15%;
+  overflow-y: auto;
+}
+
+#multiselect div{
+  margin: 10px;
 }
 
 #pilotos {
   width: 100%;
-  height: 100%;
+  height: 20%;
 }
 
 #pilotos option {
@@ -106,6 +113,12 @@ input[type=range] {
 #pilotos option:hover {
   background-color: #F21905;
   color: #ffffff;
+}
+
+legend{
+  font-size: 100%;
+  color: #ffffff;
+  font-family: F1;
 }
 
 /* ------------------------------
@@ -142,6 +155,7 @@ input[type=range] {
   justify-content: center;
   align-items: right;
   font-size: 95%;
+  margin-bottom: 15px;
 }
 
 #clima_info p {
