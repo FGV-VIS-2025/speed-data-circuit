@@ -12,11 +12,13 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/FGV-VIS-2025/speed-data-circuit/issues"
   },
   "homepage": "https://github.com/FGV-VIS-2025/speed-data-circuit#readme",
   "dependencies": {
-    "adm-zip": "^0.5.16"
+    "adm-zip": "^0.5.16",
+    "d3": "^7.9.0"
   }
 }

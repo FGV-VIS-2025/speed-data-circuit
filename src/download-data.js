@@ -1,7 +1,12 @@
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const AdmZip = require('adm-zip');
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
+import AdmZip from 'adm-zip';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const zipUrl = 'https://ergast.com/downloads/f1db_csv.zip';
 const zipFilePath = path.join(__dirname, 'f1db_csv.zip');
