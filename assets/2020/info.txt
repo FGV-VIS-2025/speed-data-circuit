@@ -1,24 +1,24 @@
 Drivers:
-Lewis Hamilton - Mercedes
-Valtteri Bottas - Mercedes
-Max Verstappen - Red Bull Racing
-Alexander Albon - Red Bull Racing
-Sebastian Vettel - Ferrari
-Charles Leclerc - Ferrari
-Sergio Perez - Racing Point
-Lance Stroll - Racing Point
-Nico Hulkenberg - Racing Point
-Daniel Ricciardo - Renault
-Esteban Ocon - Renault
-Carlos Sainz - McLaren
-Lando Norris - McLaren
-Pierre Gasly - AlphaTauri
-Daniil Kvyat - AlphaTauri
-Kimi Räikkönen - Alfa Romeo Racing
-Antonio Giovinazzi - Alfa Romeo Racing
-Nicholas Latifi - Williams
-George Russell - Williams
-Jack Aitken - Williams
-Kevin Magnussen - Haas
-Romain Grosjean - Haas
-Pietro Fittipaldi - Hass
+Lewis Hamilton - Mercedes- OK
+Valtteri Bottas - Mercedes - OK
+Max Verstappen - Red Bull Racing - OK
+Alexander Albon - Red Bull Racing - OK
+Sebastian Vettel - Ferrari - OK
+Charles Leclerc - Ferrari - OK
+Sergio Perez - Racing Point - OK
+Lance Stroll - Racing Point - OK
+Nico Hulkenberg - Racing Point - OK
+Daniel Ricciardo - Renault - OK
+Esteban Ocon - Renault - OK
+Carlos Sainz - McLaren - OK
+Lando Norris - McLaren - OK
+Pierre Gasly - AlphaTauri - OK
+Daniil Kvyat - AlphaTauri - OK
+Kimi Räikkönen - Alfa Romeo Racing - OK
+Antonio Giovinazzi - Alfa Romeo Racing - OK
+Nicholas Latifi - Williams - OK
+George Russell - Williams - OK
+Jack Aitken - Williams - OK
+Kevin Magnussen - Haas - OK
+Romain Grosjean - Haas - OK
+Pietro Fittipaldi - Hass - OK
