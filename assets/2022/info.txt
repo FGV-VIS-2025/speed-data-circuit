@@ -1,23 +1,23 @@
 Drivers:
-Max Verstappen - Red Bull Racing
-Sergio Perez - Red Bull Racing
-Charles Leclerc - Ferrari
-Carlos Sainz - Ferrari
-Lewis Hamilton - Mercedes
-George Russell - Mercedes
-Lando Norris - McLaren
-Daniel Ricciardo - McLaren
-Esteban Ocon - Alpine
-Fernando Alonso - Alpine
-Valtteri Bottas - Alfa Romeo Racing
-Zhou Guanyu - Alfa Romeo Racing
-Sebastian Vettel - Aston Martin
-Lance Stroll - Aston Martin
-Nico Hulkenberg - Aston Martin
-Mick Schumacher - Haas
-Kevin Magnussen - Haas
-Pierre Gasly - AlphaTauri
-Yuki Tsunoda - AlphaTauri
-Alexander Albon - Williams
-Nicholas Latifi - Williams
-Nyck De Vries - Williams
+Max Verstappen - Red Bull Racing - OK
+Sergio Perez - Red Bull Racing - OK
+Charles Leclerc - Ferrari - OK
+Carlos Sainz - Ferrari - OK
+Lewis Hamilton - Mercedes - OK
+George Russell - Mercedes - OK
+Lando Norris - McLaren - OK
+Daniel Ricciardo - McLaren - OK
+Esteban Ocon - Alpine - OK
+Fernando Alonso - Alpine - OK
+Valtteri Bottas - Alfa Romeo Racing - OK
+Zhou Guanyu - Alfa Romeo Racing - OK
+Sebastian Vettel - Aston Martin - OK
+Lance Stroll - Aston Martin - OK
+Nico Hulkenberg - Aston Martin - OK
+Mick Schumacher - Haas - OK
+Kevin Magnussen - Haas - OK
+Pierre Gasly - AlphaTauri - OK
+Yuki Tsunoda - AlphaTauri - OK
+Alexander Albon - Williams - OK
+Nicholas Latifi - Williams - OK
+Nyck De Vries - Williams - OK
