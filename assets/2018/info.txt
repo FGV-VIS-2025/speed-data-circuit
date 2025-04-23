@@ -1,0 +1,21 @@
+Drivers:
+Lewis Hamilton - Mercedes
+Sebastian Vettel - Ferrari
+Kimi Räikkönen - Ferrari
+Max Verstappen - Red Bull Racing
+Valtteri Bottas - Mercedes
+Daniel Ricciardo - Red Bull Racing
+Nico Hulkenberg - Renault
+Sergio Perez - Force India
+Kevin Magnussen - Haas
+Carlos Sainz - Renault
+Fernando Alonso - McLaren 
+Esteban Ocon - Force India
+Charles Leclerc - Sauber
+Romain Grosjean - Haas
+Pierre Gasly - Scuderia Toro Rosso
+Stoffel Vandoorne - McLaren 
+Marcus Ericsson - Sauber
+Lance Stroll - Williams
+Brendon Hartley - Scuderia Toro Rosso
+Sergey Sirotkin - Williams

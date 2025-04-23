@@ -1,0 +1,23 @@
+Drivers:
+Max Verstappen - Red Bull Racing
+Sergio Perez - Red Bull Racing
+Charles Leclerc - Ferrari
+Carlos Sainz - Ferrari
+Lewis Hamilton - Mercedes
+George Russell - Mercedes
+Lando Norris - McLaren
+Daniel Ricciardo - McLaren
+Esteban Ocon - Alpine
+Fernando Alonso - Alpine
+Valtteri Bottas - Alfa Romeo Racing
+Zhou Guanyu - Alfa Romeo Racing
+Sebastian Vettel - Aston Martin
+Lance Stroll - Aston Martin
+Nico Hulkenberg - Aston Martin
+Mick Schumacher - Haas
+Kevin Magnussen - Haas
+Pierre Gasly - AlphaTauri
+Yuki Tsunoda - AlphaTauri
+Alexander Albon - Williams
+Nicholas Latifi - Williams
+Nyck De Vries - Williams
