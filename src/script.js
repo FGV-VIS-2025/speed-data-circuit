@@ -77,6 +77,19 @@ const cores_equipes = {
     toro_roso: "#F2F2F2"
 };
 
+// Dados fictícios para os gráficos
+const pilotos = ["Piloto 1", "Piloto 2", "Piloto 3", "Piloto 4"];
+const tempos = [12, 15, 10, 13]; // Ranking com tempo de volta
+const velocidades = [200, 195, 210, 205]; // Velocidade média dos pilotos
+const voltas = [1, 2, 3, 4, 5]; // Exemplo de voltas
+const evolucao = [
+    [1, 2, 3, 4], // Volta 1
+    [1, 2, 4, 3], // Volta 2
+    [1, 3, 4, 2], // Volta 3
+    [2, 1, 4, 3], // Volta 4
+    [1, 2, 3, 4], // Volta 5
+];
+
 // CONSTRUINDO A LINHA DE CHEGADA
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -102,7 +115,7 @@ for (let row = 0; row < numRows - 2; row++) {
     }
 }
 
-const svg = d3.select("svg");
+const svg = d3.select("#main_chart");
 const width = +svg.attr("width");
 const height = +svg.attr("height");
 const margin = { top: 20, right: 200, bottom: 20, left: 25 };
@@ -114,6 +127,94 @@ const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.t
 const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
 const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
 
+// Ordenar os pilotos pela posição de grid
+const pilotosOrdenadosGrid = [...initialDrivers]
+    .sort((a, b) => a.posicao_grid - b.posicao_grid)
+    .map(d => d.name);
+
+// Criar uma escala fictícia de ranking (maior barra = melhor posição)
+const valoresRanking = pilotosOrdenadosGrid.map((_, i) => 20 - i); // ex: 20, 19, ..., 1
+
+// Espaço para o título
+const marginTop = 30;
+
+// Escalas
+const rankingSvg = d3.select("#ranking_chart");
+const rankingX = d3.scaleLinear()
+    .domain([0, d3.max(valoresRanking)])
+    .range([0, 460]);
+
+const rankingY = d3.scaleBand()
+    .domain(pilotosOrdenadosGrid)
+    .range([0, 280])
+    .padding(0.1);
+
+// Adiciona título
+rankingSvg.append("text")
+    .attr("x", 230)
+    .attr("y", marginTop / 2)
+    .attr("text-anchor", "middle")
+    .text("Ranking pela Posição no Grid")
+    .style("font-weight", "bold");
+
+// Adiciona barras
+rankingSvg.selectAll("rect")
+    .data(valoresRanking)
+    .enter()
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", (d, i) => rankingY(pilotosOrdenadosGrid[i]) + marginTop)
+    .attr("width", d => rankingX(d))
+    .attr("height", rankingY.bandwidth())
+    .style("fill", "#4CAF50");
+
+// Adiciona nomes dos pilotos
+rankingSvg.selectAll("text.label")
+    .data(pilotosOrdenadosGrid)
+    .enter()
+    .append("text")
+    .attr("class", "label")
+    .attr("x", 5)
+    .attr("y", (d, i) => rankingY(d) + marginTop + rankingY.bandwidth() / 2)
+    .attr("dy", ".35em")
+    .text(d => d)
+    .style("fill", "white");
+
+// EVOLUÇÃO
+const evolucaoSvg = d3.select("#evolucao_chart");
+const evolucaoX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
+const evolucaoY = d3.scaleBand().domain(pilotos).range([0, 280]).padding(0.1);
+
+evolucaoSvg.selectAll("path")
+    .data(evolucao)
+    .enter()
+    .append("path")
+    .attr("d", (d, i) => {
+        const line = d3.line()
+            .x((d, j) => evolucaoX(voltas[j]))
+            .y((d, j) => evolucaoY(pilotos[i]) + marginTop);
+        return line(d);
+    })
+    .attr("fill", "none")
+    .attr("stroke", "blue")
+    .attr("stroke-width", 2);
+
+// VELOCIDADE
+const velocidadeSvg = d3.select("#velocidade_chart");
+const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
+const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
+
+velocidadeSvg.selectAll("path")
+    .data([velocidades])
+    .enter()
+    .append("path")
+    .attr("transform", `translate(0, ${marginTop})`)
+    .attr("d", d3.line()
+        .x((d, i) => velocidadeX(i + 1))
+        .y(d => velocidadeY(d)))
+    .attr("fill", "none")
+    .attr("stroke", "orange")
+    .attr("stroke-width", 2);
 // Tamanho do sprite
 const spriteWidth = 72;
 const spriteHeight = 45;

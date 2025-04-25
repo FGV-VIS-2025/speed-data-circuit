@@ -8,52 +8,68 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <div id="painel_de_controle">
-        <center>
-            <div id="logo">
-                <img src="../assets/others/f1.png" alt="Logo" style="width: 95%; height: auto;">
+    <div id="layout-container">
+        <div id="painel_de_controle">
+            <center>
+                <div id="logo">
+                    <img src="../assets/others/f1.png" alt="Logo" style="width: 95%; height: auto;">
+                </div>
+            </center>
+
+            <select id="yearSelect">
+                <option value="">Selecione um ano</option>
+            </select>
+
+            <select id="raceSelect" disabled>
+                <option value="">Selecione uma corrida</option>
+            </select>
+
+            <div id="clima_display">
+                <img src="../assets/weather/clima_sol.jpg" alt="">
             </div>
-        </center>
 
-        <select id="yearSelect">
-            <option value="">Selecione um ano</option>
-        </select>
+            <div id="clima_info">
+                <p>Horário:</p>
+                <p>Data:</p>
+                <p>Temperatura:</p>
+                <p>Temp. Pista:</p>
+                <p>Umidade:</p>
+                <p>Vento:</p>
+            </div>
 
-        <select id="raceSelect" disabled>
-            <option value="">Selecione uma corrida</option>
-        </select>
+            <legend>Selecione os Pilotos:</legend>
+            <div id="multiselect"></div>
 
-        <div id="clima_display">
-            <img src="../assets/weather/clima_sol.jpg" alt="">
+            <button id="playPause">▶️ Play</button>
+            <input type="range" class="range-style" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
+            <span id="lapDisplay">Volta 1</span>
         </div>
 
-        <div id="clima_info">
-            <p>Horário:</p>
-            <p>Data:</p>
-            <p>Temperatura:</p>
-            <p>Temp. Pista:</p>
-            <p>Umidade:</p>
-            <p>Vento:</p>
+        <div id="main_chart_area">
+            <svg id="main_chart">
+                <rect width="100%" height="100%" x="0" y="0" style="fill:#303030;" />
+                <rect width="1480" height="840" x="10" y="10" style="fill:#818181;" />
+                <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
+                <g id="grid"></g>
+            </svg>
         </div>
-
-        <legend>Selecione os Pilotos:</legend>
-        <div id="multiselect">
-        </div>
-
-        <button id="playPause">▶️ Play</button>
-        <input type="range" class="range-style" id="lapSlider" min="0" max="0" value="0" step="1" disabled>
-        <span id="lapDisplay">Volta 1</span>
     </div>
 
-    <svg width="1500" height="860">
-        <rect width="100%" height="100%" x="0" y="0" style="fill:#303030;" />
-        <rect width="1480" height="840" x="10" y="10" style="fill:#818181;" />
-        <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
-        <g id="grid"></g>
-    </svg>
+    <div id="extra_charts">
+        <svg id="ranking_chart">
+            <text x="10" y="20">Ranking dos Pilotos</text>
+        </svg>
+
+        <svg id="evolucao_chart">
+            <text x="10" y="20">Evolução por Volta</text>
+        </svg>
+
+        <svg id="velocidade_chart">
+            <text x="10" y="20">Velocidade na Corrida</text>
+        </svg>
+    </div>
 
     <div id="tooltip"></div>
-    
     <script src="src/script.js"></script>
 </body>
 </html>
