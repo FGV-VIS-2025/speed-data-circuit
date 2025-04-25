@@ -22,70 +22,68 @@ function loadCSVData(filePath) {
     });
 }
 
-const dfPath = path.join(__dirname, '../f1db');
+function getUniqueRaceIds(data) {
+    const uniqueRaceIds = new Set();
+    data.forEach(row => {
+        if (row.raceId) {
+            uniqueRaceIds.add(Number(row.raceId));
+        }
+    });
+    return Array.from(uniqueRaceIds).sort((a, b) => a - b);
+}
 
-const circuitsFilePath = path.join(dfPath, 'circuits.csv');
-const constructorResultsFilePath = path.join(dfPath, 'constructor_results.csv');
-const constructorStandingsFilePath = path.join(dfPath, 'constructor_standings.csv');
-const constructorsFilePath = path.join(dfPath, 'constructors.csv');
-const driverStandingsFilePath = path.join(dfPath, 'driver_standings.csv');
-const driversFilePath = path.join(dfPath, 'drivers.csv');
-const lapTimesFilePath = path.join(dfPath, 'lap_times.csv');
-const pitStopsFilePath = path.join(dfPath, 'pit_stops.csv');
-const qualifyingFilePath = path.join(dfPath, 'qualifying.csv');
-const racesFilePath = path.join(dfPath, 'races.csv');
-const resultsFilePath = path.join(dfPath, 'results.csv');
-const seasonsFilePath = path.join(dfPath, 'seasons.csv');
-const sprintResultsFilePath = path.join(dfPath, 'sprint_results.csv');
-const statusFilePath = path.join(dfPath, 'status.csv');
+function getYears(data) {
+    const years = new Set();
+    data.forEach(row => {
+        if (row.date) {
+            const year = new Date(row.date).getFullYear();
+            years.add(year);
+        }
+    });
+    return Array.from(years).sort((a, b) => a - b);
+}
 
-Promise.all([
-    loadCSVData(circuitsFilePath),
-    loadCSVData(constructorsFilePath),
-    loadCSVData(driversFilePath),
-    loadCSVData(constructorResultsFilePath),
-    loadCSVData(constructorStandingsFilePath),
-    loadCSVData(driverStandingsFilePath),
-    loadCSVData(lapTimesFilePath),
-    loadCSVData(pitStopsFilePath),
-    loadCSVData(qualifyingFilePath),
-    loadCSVData(racesFilePath),
-    loadCSVData(resultsFilePath),
-    loadCSVData(sprintResultsFilePath),
-    loadCSVData(seasonsFilePath),
-    loadCSVData(statusFilePath)
-]).then(([
-    circuitsData,
-    constructorsData,
-    driversData,
-    constructorResultsData,
-    constructorStandingsData,
-    driverStandingsData,
-    lapTimesData,
-    pitStopsData,
-    qualifyingData,
-    racesData,
-    resultsData,
-    sprintResultsData,
-    seasonsData,
-    statusData
-]) => {
-    console.log('circuits:', circuitsData);
-    console.log('constructors:', constructorsData);
-    console.log('drivers:', driversData);
-    console.log('constructorResults:', constructorResultsData);
-    console.log('constructorStandings:', constructorStandingsData);
-    console.log('driverStandings:', driverStandingsData);
-    console.log('lapTimes:', lapTimesData);
-    console.log('pitStops:', pitStopsData);
-    console.log('qualifying:', qualifyingData);
-    console.log('races:', racesData);
-    console.log('results:', resultsData);
-    console.log('sprint_results:', sprintResultsData);
-    console.log('seasons:', seasonsData);
-    console.log('status:', statusData);
-}).catch(error => {
-    console.error('Error loading CSV data:', error);
-});
+function filterValidRaces(data, raceIds) {
+    return data.filter(row => {
+        const raceId = Number(row.raceId);
+        return raceIds.includes(raceId);
+    });
+}
+
+const dbPath = path.join(__dirname, '../f1db');
+
+const circuitsFilePath = path.join(dbPath, 'circuits.csv');
+const constructorResultsFilePath = path.join(dbPath, 'constructor_results.csv');
+const constructorStandingsFilePath = path.join(dbPath, 'constructor_standings.csv');
+const constructorsFilePath = path.join(dbPath, 'constructors.csv');
+const driverStandingsFilePath = path.join(dbPath, 'driver_standings.csv');
+const driversFilePath = path.join(dbPath, 'drivers.csv');
+const lapTimesFilePath = path.join(dbPath, 'lap_times.csv');
+const pitStopsFilePath = path.join(dbPath, 'pit_stops.csv');
+const qualifyingFilePath = path.join(dbPath, 'qualifying.csv');
+const racesFilePath = path.join(dbPath, 'races.csv');
+const resultsFilePath = path.join(dbPath, 'results.csv');
+const seasonsFilePath = path.join(dbPath, 'seasons.csv');
+const sprintResultsFilePath = path.join(dbPath, 'sprint_results.csv');
+const statusFilePath = path.join(dbPath, 'status.csv');
+
+async function main() {
+    try {
+        const [pitStopsData, racesData] = await Promise.all([
+            loadCSVData(pitStopsFilePath),
+            loadCSVData(racesFilePath)
+        ]);
+
+        const uniqueRaceIds = getUniqueRaceIds(pitStopsData);
+        const filteredData = filterValidRaces(racesData, uniqueRaceIds);
+        const years = getYears(filteredData);
+
+        console.log(years);
+    } catch (error) {
+        console.error('Erro ao processar os dados:', error);
+    }
+}
+
+main();
 
 export { loadCSVData };

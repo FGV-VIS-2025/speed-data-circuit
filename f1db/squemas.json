@@ -1,0 +1,1176 @@
+{
+    "user_guide": {
+        "title": "Ergast Database User Guide",
+        "version": "1.0",
+        "date": "2021-01-31",
+        "author": "Chris Newell"
+    },
+    "list_of_tables": [
+        "circuits",
+        "constructorResults",
+        "constructorStandings",
+        "constructors",
+        "driverStandings",
+        "drivers",
+        "lapTimes",
+        "pitStops",
+        "qualifying",
+        "races",
+        "results",
+        "sprintResults",
+        "seasons",
+        "status"
+    ],
+    "general_notes": [
+        "Dates, times and durations are in ISO 8601 format",
+        "Dates and times are UTC",
+        "Strings use UTF-8 encoding",
+        "Primary keys are for internal use only",
+        "Fields ending with \"Ref\" are unique identifiers for external use",
+        "A grid position of '0' is used for starting from the pitlane",
+        "Labels used in the positionText fields:\n  • \"D\" - disqualified\n  • \"E\" - excluded\n  • \"F\" - failed to qualify\n  • \"N\" - not classified\n  • \"R\" - retired\n  • \"W\" - withdrew"
+    ],
+    "tables": [
+        {
+            "name": "circuits",
+            "fields": [
+                {
+                    "name": "circuitId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "circuitRef",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Unique circuit identifier"
+                },
+                {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Circuit name"
+                },
+                {
+                    "name": "location",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Location name"
+                },
+                {
+                    "name": "country",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Country name"
+                },
+                {
+                    "name": "lat",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Latitude"
+                },
+                {
+                    "name": "lng",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Longitude"
+                },
+                {
+                    "name": "alt",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Altitude (metres)"
+                },
+                {
+                    "name": "url",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "UNI",
+                    "default": "",
+                    "extra": "",
+                    "description": "Circuit Wikipedia page"
+                }
+            ]
+        },
+        {
+            "name": "constructorResults",
+            "fields": [
+                {
+                    "name": "constructorResultsId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → constructors.constructorId"
+                },
+                {
+                    "name": "points",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Constructor points for race"
+                },
+                {
+                    "name": "status",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "\"D\" for disqualified (or null)"
+                }
+            ]
+        },
+        {
+            "name": "constructorStandings",
+            "fields": [
+                {
+                    "name": "constructorStandingsId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → constructors.constructorId"
+                },
+                {
+                    "name": "points",
+                    "type": "float",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Constructor points for season"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Standings position (integer)"
+                },
+                {
+                    "name": "positionText",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Standings position (string)"
+                },
+                {
+                    "name": "wins",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Season win count"
+                }
+            ]
+        },
+        {
+            "name": "constructors",
+            "fields": [
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "constructorRef",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Unique constructor identifier"
+                },
+                {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "UNI",
+                    "default": "",
+                    "extra": "",
+                    "description": "Constructor name"
+                },
+                {
+                    "name": "nationality",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Constructor nationality"
+                },
+                {
+                    "name": "url",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Constructor Wikipedia page"
+                }
+            ]
+        },
+        {
+            "name": "driverStandings",
+            "fields": [
+                {
+                    "name": "driverStandingsId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "points",
+                    "type": "float",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Driver points for season"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Standings position (integer)"
+                },
+                {
+                    "name": "positionText",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Standings position (string)"
+                },
+                {
+                    "name": "wins",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Season win count"
+                }
+            ]
+        },
+        {
+            "name": "drivers",
+            "fields": [
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "driverRef",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Unique driver identifier"
+                },
+                {
+                    "name": "number",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Permanent driver number"
+                },
+                {
+                    "name": "code",
+                    "type": "varchar(3)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver code e.g. \"ALO\""
+                },
+                {
+                    "name": "forename",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Driver forename"
+                },
+                {
+                    "name": "surname",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Driver surname"
+                },
+                {
+                    "name": "dob",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver date of birth"
+                },
+                {
+                    "name": "nationality",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver nationality"
+                },
+                {
+                    "name": "url",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "UNI",
+                    "default": "",
+                    "extra": "",
+                    "description": "Driver Wikipedia page"
+                }
+            ]
+        },
+        {
+            "name": "lapTimes",
+            "fields": [
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "lap",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap number"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver race position"
+                },
+                {
+                    "name": "time",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap time e.g. \"1:43.762\""
+                },
+                {
+                    "name": "milliseconds",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap time in milliseconds"
+                }
+            ]
+        },
+        {
+            "name": "pitStops",
+            "fields": [
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "stop",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "",
+                    "description": "Stop number"
+                },
+                {
+                    "name": "lap",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap number"
+                },
+                {
+                    "name": "time",
+                    "type": "time",
+                    "null": false,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Time of stop e.g. \"13:52:25\""
+                },
+                {
+                    "name": "duration",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Duration of stop e.g. \"21.783\""
+                },
+                {
+                    "name": "milliseconds",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Duration in milliseconds"
+                }
+            ]
+        },
+        {
+            "name": "qualifying",
+            "fields": [
+                {
+                    "name": "qualifyId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → constructors.constructorId"
+                },
+                {
+                    "name": "number",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Driver number"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Qualifying position"
+                },
+                {
+                    "name": "q1",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Q1 lap time"
+                },
+                {
+                    "name": "q2",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Q2 lap time"
+                },
+                {
+                    "name": "q3",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Q3 lap time"
+                }
+            ]
+        },
+        {
+            "name": "races",
+            "fields": [
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "year",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → seasons.year"
+                },
+                {
+                    "name": "round",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Round number"
+                },
+                {
+                    "name": "circuitId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → circuits.circuitId"
+                },
+                {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Race name"
+                },
+                {
+                    "name": "date",
+                    "type": "date",
+                    "null": false,
+                    "key": "",
+                    "default": "0000-00-00",
+                    "extra": "",
+                    "description": "Race date"
+                },
+                {
+                    "name": "time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Race start time"
+                },
+                {
+                    "name": "url",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "UNI",
+                    "default": null,
+                    "extra": "",
+                    "description": "Wikipedia page"
+                },
+                {
+                    "name": "fp1_date",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP1 date"
+                },
+                {
+                    "name": "fp1_time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP1 start time"
+                },
+                {
+                    "name": "fp2_date",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP2 date"
+                },
+                {
+                    "name": "fp2_time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP2 start time"
+                },
+                {
+                    "name": "fp3_date",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP3 date"
+                },
+                {
+                    "name": "fp3_time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "FP3 start time"
+                },
+                {
+                    "name": "quali_date",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Qualifying date"
+                },
+                {
+                    "name": "quali_time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Qualifying start time"
+                },
+                {
+                    "name": "sprint_date",
+                    "type": "date",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Sprint date"
+                },
+                {
+                    "name": "sprint_time",
+                    "type": "time",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Sprint start time"
+                }
+            ]
+        },
+        {
+            "name": "results",
+            "fields": [
+                {
+                    "name": "resultId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → constructors.constructorId"
+                },
+                {
+                    "name": "number",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver number"
+                },
+                {
+                    "name": "grid",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Starting grid position"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Official classification"
+                },
+                {
+                    "name": "positionText",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Position string e.g. \"1\" or \"R\""
+                },
+                {
+                    "name": "positionOrder",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Position for ordering"
+                },
+                {
+                    "name": "points",
+                    "type": "float",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Driver points for race"
+                },
+                {
+                    "name": "laps",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Number of completed laps"
+                },
+                {
+                    "name": "time",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Finishing time or gap"
+                },
+                {
+                    "name": "milliseconds",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Finishing time in ms"
+                },
+                {
+                    "name": "fastestLap",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap number of fastest lap"
+                },
+                {
+                    "name": "rank",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Fastest lap rank"
+                },
+                {
+                    "name": "fastestLapTime",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Fastest lap time e.g. \"1:27.453\""
+                },
+                {
+                    "name": "fastestLapSpeed",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Fastest lap speed e.g. \"213.874\""
+                },
+                {
+                    "name": "statusId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → status.statusId"
+                }
+            ]
+        },
+        {
+            "name": "sprintResults",
+            "fields": [
+                {
+                    "name": "sprintResultId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "constructorId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → constructors.constructorId"
+                },
+                {
+                    "name": "number",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Driver number"
+                },
+                {
+                    "name": "grid",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Starting grid position"
+                },
+                {
+                    "name": "position",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Official classification"
+                },
+                {
+                    "name": "positionText",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Position string"
+                },
+                {
+                    "name": "positionOrder",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Position for ordering"
+                },
+                {
+                    "name": "points",
+                    "type": "float",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Driver points for sprint"
+                },
+                {
+                    "name": "laps",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Number of completed laps"
+                },
+                {
+                    "name": "time",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Finishing time or gap"
+                },
+                {
+                    "name": "milliseconds",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Finishing time in ms"
+                },
+                {
+                    "name": "fastestLap",
+                    "type": "int(11)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Lap number of fastest lap"
+                },
+                {
+                    "name": "fastestLapTime",
+                    "type": "varchar(255)",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Fastest lap time"
+                }
+            ]
+        },
+        {
+            "name": "seasons",
+            "fields": [
+                {
+                    "name": "year",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Primary key e.g. 1950"
+                },
+                {
+                    "name": "url",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "UNI",
+                    "default": "",
+                    "extra": "",
+                    "description": "Season Wikipedia page"
+                }
+            ]
+        },
+        {
+            "name": "status",
+            "fields": [
+                {
+                    "name": "statusId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "description": "Primary key"
+                },
+                {
+                    "name": "status",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Finishing status e.g. \"Retired\""
+                }
+            ]
+        }
+    ]
+}
