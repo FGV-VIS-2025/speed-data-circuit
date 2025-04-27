@@ -112,6 +112,34 @@ async function getLapTimesByDriverRace(raceId, driverId) {
     return lapTimes.filter(l => Number(l.raceId) === Number(raceId) && Number(l.driverId) === Number(driverId));
 }
 
+async function getDriversPositionsByRace(raceId) {
+
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+    const results = await loadCSVData(resultsFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+
+    const raceDriverIds = results.filter(r => Number(r.raceId) === Number(raceId)).map(r => r.driverId);
+    const raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+
+    const maxLap = Math.max(...raceLapTimes.map(l => Number(l.lap)));
+
+    const positionsByDriver = raceDriverIds.map(driverId => {
+        const positions = [];
+        for (let lap = 1; lap <= maxLap; lap++) {
+            const lapEntry = raceLapTimes.find(l => Number(l.driverId) === Number(driverId) && Number(l.lap) === lap);
+            positions.push(lapEntry ? Number(lapEntry.position) : null);
+        }
+        // Busca info do piloto
+        const driverInfo = drivers.find(d => d.driverId === driverId);
+        return {
+            driverId,
+            driver: driverInfo,
+            positions
+        };
+    });
+    return positionsByDriver;
+}
+
 async function getFullRaceData() {
     const races = await loadCSVData(racesFilePath);
     const results = await loadCSVData(resultsFilePath);
@@ -125,16 +153,16 @@ async function getFullRaceData() {
 
     return races.map(race => {
         const raceId = race.raceId;
-        // Resultados da corrida
+
         const raceResults = results.filter(r => r.raceId === raceId).map(r => ({
             ...r,
             driver: driversMap[r.driverId] || null,
             constructor: constructorsMap[r.constructorId] || null
         }));
-        // Pit stops
+
         const racePitStops = pitStops.filter(p => p.raceId === raceId);
-        // Tempos de volta
         const raceLapTimes = lapTimes.filter(l => l.raceId === raceId);
+
         return {
             ...race,
             results: raceResults,
@@ -164,6 +192,6 @@ async function main() {
 main();
 
 export {
-    getAllValidSeasons, getDriversByRace, getFullRaceData, getLapTimesByDriverRace, getPitStopsByRace, getRacesByYear, getResultsByRace, loadCSVData
+    getAllValidSeasons, getDriversByRace, getDriversPositionsByRace, getFullRaceData, getLapTimesByDriverRace, getPitStopsByRace, getRacesByYear, getResultsByRace, loadCSVData
 };
 
