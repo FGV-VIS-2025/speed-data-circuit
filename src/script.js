@@ -323,7 +323,7 @@ for (let row = 0; row < numRows - 2; row++) {
 const mainChartSVG = d3.select("#main_chart");
 const mainChartWidth = +mainChartSVG.attr("width");
 const mainChartHeight = +mainChartSVG.attr("height");
-const mainChartMargin = { top: 800, right: 200, bottom: -50, left: 30 };
+const mainChartMargin = { top: 825, right: 200, bottom: -30, left: 30 };
 
 const mainChartRealWidth = mainChartWidth - mainChartMargin.left - mainChartMargin.right;
 const mainChartRealHeight = mainChartHeight - mainChartMargin.top - mainChartMargin.bottom;
@@ -343,7 +343,7 @@ const x = d3.scaleLinear()
 
 // Escala Y com padding reduzido para barras mais altas (alteração importante)
 const y = d3.scaleBand()
-  .range([0, mainChartRealHeight])
+  .range([mainChartRealHeight, 0])
   .padding(0.05); // Reduzindo o espaçamento entre as barras
 
 
@@ -367,6 +367,12 @@ let laps = [];
 const numberOfLaps = 20;
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
+
+function clearChart() {
+    g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
+    d3.select("#tooltip").style("opacity", 0); // Esconde o tooltip
+    d3.select("h2").text("F1 Bar Chart Race"); // Reseta o título
+}
 
 // Insere os anos no select
 validYears.forEach(year => {
@@ -396,6 +402,8 @@ yearSelect.addEventListener("change", () => {
 
 // Muda o clima e o circuito
 raceSelect.addEventListener("change", () => {
+    clearChart();
+
     climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
     climaInfo.innerHTML = `
         <p>Horário: ${new Date().toLocaleTimeString()}</p>
@@ -413,7 +421,15 @@ raceSelect.addEventListener("change", () => {
 
     const raceChosen = raceSelect.value;
 
-    if (raceChosen) {
+    if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
+        const existingBars = g.selectAll(".bar").data([], d => d.name);
+        existingBars.exit().remove();
+    
+        const existingLabels = g.selectAll(".label").data([], d => d.name);
+        existingLabels.exit().remove();
+    
+        const existingSprites = g.selectAll(".sprite").data([], d => d.name);
+        existingSprites.exit().remove();
         currentLap = 0;
         renderLap(laps[currentLap], currentLap);
         updateUI();
@@ -487,7 +503,6 @@ function updateUI() {
 }
 
 function renderLap(data, lapNum) {
-    
     const tooltip = d3.select("#tooltip");
 
     const sorted = [...data].sort((a, b) => b.score - a.score);
