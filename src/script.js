@@ -158,18 +158,26 @@ const pilotosOrdenadosGrid = [...initialDrivers]
 // Criar uma escala fictícia de ranking (maior barra = melhor posição)
 const valoresRanking = pilotosOrdenadosGrid.map((_, i) => 20 - i); // ex: 20, 19, ..., 1
 
+// Configurações do gráfico
+const width2 = 450;  // Largura menor
+const height2 = 300; // Altura proporcional
+const margin2 = { top: 30, right: 20, bottom: 30, left: 110};
+
 // Espaço para o título
 const marginTop = 30;
 
 // Escalas
-const rankingSvg = d3.select("#ranking_chart");
+const rankingSvg = d3.select("#ranking_chart")
+    .attr("width", width2)
+    .attr("height", height2);
+
 const rankingX = d3.scaleLinear()
     .domain([0, d3.max(valoresRanking)])
-    .range([0, 460]);
+    .range([0, width2 - margin2.left - margin2.right]);
 
 const rankingY = d3.scaleBand()
     .domain(pilotosOrdenadosGrid)
-    .range([0, 280])
+    .range([0, height2 - margin2.top - margin2.bottom])
     .padding(0.1);
 
 // Adiciona barras
@@ -177,7 +185,7 @@ rankingSvg.selectAll("rect")
     .data(valoresRanking)
     .enter()
     .append("rect")
-    .attr("x", 0)
+    .attr("x", margin2.left)
     .attr("y", (d, i) => rankingY(pilotosOrdenadosGrid[i]) + marginTop)
     .attr("width", d => rankingX(d))
     .attr("height", rankingY.bandwidth())
@@ -189,21 +197,13 @@ rankingSvg.selectAll("text.label")
     .enter()
     .append("text")
     .attr("class", "label")
-    .attr("x", 5)
+    .attr("x", margin2.left + 5)
     .attr("y", (d, i) => rankingY(d) + marginTop + rankingY.bandwidth() / 2)
     .attr("dy", ".35em")
     .text(d => d)
     .style("fill", "white");
 
 // EVOLUÇÃO
-/// Extração dos nomes dos pilotos para o eixo Y
-const pilotos2 = evolucaoData.map(d => d.name);
-
-// Configurações do gráfico
-const width2 = 450;  // Largura menor
-const height2 = 300; // Altura proporcional
-const margin2 = { top: 30, right: 20, bottom: 30, left: 35 };
-
 // Escala X: voltas
 const evolucaoX = d3.scaleLinear()
     .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
@@ -211,7 +211,7 @@ const evolucaoX = d3.scaleLinear()
 
 // Escala Y: posições (1º lugar no topo, 20º embaixo)
 const evolucaoY = d3.scaleLinear()
-    .domain([20, 1]) // invertido porque 1º lugar fica no topo
+    .domain([20.5, 0.5]) // invertido porque 1º lugar fica no topo
     .range([height2 - margin2.bottom, margin2.top]);
 
 // Criando o SVG
@@ -238,12 +238,22 @@ evolucaoSvg.selectAll(".linha-piloto")
 // Eixo X
 evolucaoSvg.append("g")
     .attr("transform", `translate(0,${height2 - margin2.bottom})`)
-    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `Volta ${d + 1}`));
+    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `${d + 1}`));
+
+// Eixo Y: posições, mas trocando números pelos nomes dos pilotos
+const posicaoParaPiloto = {};
+evolucaoData.forEach(piloto => {
+    // Pega a posição inicial do piloto na volta 0
+    const posicaoInicial = piloto.posicoes[0];
+    posicaoParaPiloto[posicaoInicial] = piloto.name;
+});
 
 // Eixo Y
 evolucaoSvg.append("g")
     .attr("transform", `translate(${margin2.left},0)`)
-    .call(d3.axisLeft(evolucaoY).ticks(20).tickFormat(d => `${d}º`));
+    .call(d3.axisLeft(evolucaoY)
+        .ticks(20)
+        .tickFormat(d => posicaoParaPiloto[d]));
 
 // VELOCIDADE
 const velocidadeSvg = d3.select("#velocidade_chart");
