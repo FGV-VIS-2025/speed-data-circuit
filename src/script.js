@@ -21,6 +21,29 @@ const initialDrivers = [
 { name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 20, nacionalidade: "🇧🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983" }
 ];
 
+const evolucaoData = [
+    { name: "Verstappen", posicoes: [1,1,1,2,3,3,1,2,1,1], pontuacao: 95 },
+    { name: "Leclerc", posicoes: [2,3,3,4,2,2,4,3,2,4], pontuacao: 88 },
+    { name: "Norris", posicoes: [3,4,4,3,4,4,3,5,4,3], pontuacao: 82 },
+    { name: "Sainz", posicoes: [4,2,5,6,5,6,5,6,5,6], pontuacao: 79 },
+    { name: "Hamilton", posicoes: [5,5,6,5,6,5,6,4,6,5], pontuacao: 77 },
+    { name: "Russell", posicoes: [6,6,7,7,7,7,7,7,7,7], pontuacao: 70 },
+    { name: "Piastri", posicoes: [7,8,8,8,8,8,8,8,8,8], pontuacao: 65 },
+    { name: "Alonso", posicoes: [8,7,9,9,9,9,9,9,9,9], pontuacao: 63 },
+    { name: "Stroll", posicoes: [9,9,10,10,10,10,10,10,10,10], pontuacao: 58 },
+    { name: "Gasly", posicoes: [10,10,11,11,12,12,12,11,12,11], pontuacao: 56 },
+    { name: "Ocon", posicoes: [11,12,12,13,13,13,13,12,13,12], pontuacao: 52 },
+    { name: "Tsunoda", posicoes: [12,13,13,12,12,14,14,13,14,13], pontuacao: 49 },
+    { name: "Ricciardo", posicoes: [13,14,14,15,14,15,15,14,15,14], pontuacao: 45 },
+    { name: "Albon", posicoes: [14,15,15,14,15,16,16,15,16,15], pontuacao: 43 },
+    { name: "Sargeant", posicoes: [15,16,16,17,17,17,17,16,17,16], pontuacao: 38 },
+    { name: "Zhou", posicoes: [16,17,17,16,16,17,17,17,16,17], pontuacao: 36 },
+    { name: "Bottas", posicoes: [17,18,18,18,18,18,18,18,18,18], pontuacao: 32 },
+    { name: "Magnussen", posicoes: [18,19,19,19,19,19,19,19,19,19], pontuacao: 29 },
+    { name: "Hülkenberg", posicoes: [19,20,20,20,20,20,20,20,20,20], pontuacao: 26 },
+    { name: "Perez", posicoes: [20,20,19,18,18,18,18,19,19,19], pontuacao: 31 }
+]; 
+
 const climas = {
 "1": ["sol", "../assets/weather/clima_sol.jpg"],
 "2": ["neve", "../assets/weather/clima_neve.jpg"],
@@ -102,7 +125,7 @@ for (let row = 0; row < numRows - 2; row++) {
     }
 }
 
-const svg = d3.select("svg");
+const svg = d3.select("#main_chart");
 const width = +svg.attr("width");
 const height = +svg.attr("height");
 const margin = { top: 20, right: 200, bottom: 20, left: 25 };
@@ -114,6 +137,131 @@ const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.t
 const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
 const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
 
+// Configurações do gráfico
+const width2 = 450;  // Largura menor
+const height2 = 300; // Altura proporcional
+const margin2 = { top: 30, right: 20, bottom: 30, left: 110 };
+
+// Espaço para o título
+const marginTop = 30;
+
+// Pegando os nomes dos pilotos e suas pontuações
+const pilotosOrdenadosGrid = evolucaoData
+    .sort((a, b) => b.pontuacao - a.pontuacao) // ordena por pontuação decrescente
+    .map(d => d.name);
+
+const valoresRanking = evolucaoData
+    .sort((a, b) => b.pontuacao - a.pontuacao)
+    .map(d => d.pontuacao);
+
+// Criando SVG
+const rankingSvg = d3.select("#ranking_chart")
+    .attr("width", width2)
+    .attr("height", height2);
+
+// Escalas
+const rankingX = d3.scaleLinear()
+    .domain([0, d3.max(valoresRanking)])
+    .range([0, width2 - margin2.left - margin2.right]);
+
+const rankingY = d3.scaleBand()
+    .domain(pilotosOrdenadosGrid)
+    .range([margin2.top, height2 - margin2.bottom])
+    .padding(0.1);
+
+// Adiciona barras
+rankingSvg.selectAll("rect")
+    .data(evolucaoData.sort((a, b) => b.pontuacao - a.pontuacao))
+    .enter()
+    .append("rect")
+    .attr("x", margin2.left)
+    .attr("y", d => rankingY(d.name))
+    .attr("width", d => rankingX(d.pontuacao))
+    .attr("height", rankingY.bandwidth())
+    .style("fill", "#4CAF50");
+
+// Adiciona eixo Y com nomes dos pilotos
+rankingSvg.append("g")
+    .attr("transform", `translate(${margin2.left}, 0)`)
+    .call(d3.axisLeft(rankingY).tickSize(0)) // remove ticks
+    .selectAll("text")
+    .style("text-anchor", "end"); // Alinha os nomes melhor
+
+// Eixo X com valores da pontuação
+rankingSvg.append("g")
+    .attr("transform", `translate(${margin2.left},${height2 - margin2.bottom})`)
+    .call(d3.axisBottom(rankingX).ticks(5)) // você pode mudar o número de ticks se quiser
+    .selectAll("text")
+    .style("text-anchor", "middle");
+
+// EVOLUÇÃO
+// Escala X: voltas
+const evolucaoX = d3.scaleLinear()
+    .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
+    .range([margin2.left, width2 - margin2.right]);
+
+// Escala Y: posições (1º lugar no topo, 20º embaixo)
+const evolucaoY = d3.scaleLinear()
+    .domain([20.5, 0.5]) // invertido porque 1º lugar fica no topo
+    .range([height2 - margin2.bottom, margin2.top]);
+
+// Criando o SVG
+const evolucaoSvg = d3.select("#evolucao_chart")
+    .attr("width", width2)
+    .attr("height", height2);
+
+// Linha para cada piloto
+const line = d3.line()
+    .x((d, i) => evolucaoX(i)) // i é o número da volta
+    .y(d => evolucaoY(d));     // d é a posição na volta
+
+// Desenhando as linhas dos pilotos
+evolucaoSvg.selectAll(".linha-piloto")
+    .data(evolucaoData) // Um item para cada piloto
+    .enter()
+    .append("path")
+    .attr("class", "linha-piloto")
+    .attr("d", d => line(d.posicoes)) // d.posicoes = vetor de posições do piloto nas voltas
+    .attr("fill", "none")
+    .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // cores diferentes
+    .attr("stroke-width", 2);
+
+// Eixo X
+evolucaoSvg.append("g")
+    .attr("transform", `translate(0,${height2 - margin2.bottom})`)
+    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `${d + 1}`));
+
+// Eixo Y: posições, mas trocando números pelos nomes dos pilotos
+const posicaoParaPiloto = {};
+evolucaoData.forEach(piloto => {
+    // Pega a posição inicial do piloto na volta 0
+    const posicaoInicial = piloto.posicoes[0];
+    posicaoParaPiloto[posicaoInicial] = piloto.name;
+});
+
+// Eixo Y
+evolucaoSvg.append("g")
+    .attr("transform", `translate(${margin2.left},0)`)
+    .call(d3.axisLeft(evolucaoY)
+        .ticks(20)
+        .tickFormat(d => posicaoParaPiloto[d]));
+
+// VELOCIDADE
+const velocidadeSvg = d3.select("#velocidade_chart");
+const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
+const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
+
+velocidadeSvg.selectAll("path")
+    .data([velocidades])
+    .enter()
+    .append("path")
+    .attr("transform", `translate(0, ${marginTop})`)
+    .attr("d", d3.line()
+        .x((d, i) => velocidadeX(i + 1))
+        .y(d => velocidadeY(d)))
+    .attr("fill", "none")
+    .attr("stroke", "orange")
+    .attr("stroke-width", 2);
 // Tamanho do sprite
 const spriteWidth = 72;
 const spriteHeight = 45;
