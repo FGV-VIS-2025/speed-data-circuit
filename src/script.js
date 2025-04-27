@@ -545,12 +545,12 @@ function renderLap(data, lapNum) {
         .merge(labels)
         .transition().duration(1000)
         .attr("fill", d => {
-            const estimatedTextWidth = d.name.length * 9;
+            const estimatedTextWidth = d.name.length * 10;
             const margemErro = 15;
             return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
         })
         .attr("x", d => {
-            const estimatedTextWidth = d.name.length * 9;
+            const estimatedTextWidth = d.name.length * 10;
             const margemErro = 25;
             return x(d.score) > estimatedTextWidth + margemErro
                 ? x(d.score) - estimatedTextWidth - 35
