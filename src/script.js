@@ -199,44 +199,51 @@ rankingSvg.selectAll("text.label")
 /// Extração dos nomes dos pilotos para o eixo Y
 const pilotos2 = evolucaoData.map(d => d.name);
 
-// Configurações do gráfico (sem margens)
-const width2 = 500; // Largura total do gráfico
-const height2 = 300; // Altura total do gráfico
+// Configurações do gráfico
+const width2 = 450;  // Largura menor
+const height2 = 300; // Altura proporcional
+const margin2 = { top: 30, right: 20, bottom: 30, left: 35 };
 
-// Escala para o eixo X (voltando para a posição nas voltas)
-const evolucaoX = d3.scaleLinear().domain([0, 9]).range([0, width2]);
+// Escala X: voltas
+const evolucaoX = d3.scaleLinear()
+    .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
+    .range([margin2.left, width2 - margin2.right]);
 
-// Escala para o eixo Y (pilotos)
-const evolucaoY = d3.scaleBand().domain(pilotos2).range([0, height2]).padding(0.1);
+// Escala Y: posições (1º lugar no topo, 20º embaixo)
+const evolucaoY = d3.scaleLinear()
+    .domain([20, 1]) // invertido porque 1º lugar fica no topo
+    .range([height2 - margin2.bottom, margin2.top]);
 
-// Adicionando o gráfico sem margens
+// Criando o SVG
 const evolucaoSvg = d3.select("#evolucao_chart")
     .attr("width", width2)
     .attr("height", height2);
 
+// Linha para cada piloto
+const line = d3.line()
+    .x((d, i) => evolucaoX(i)) // i é o número da volta
+    .y(d => evolucaoY(d));     // d é a posição na volta
 
-// Desenhando as linhas de evolução para cada piloto
-evolucaoSvg.selectAll("path")
-    .data(evolucaoData)
+// Desenhando as linhas dos pilotos
+evolucaoSvg.selectAll(".linha-piloto")
+    .data(evolucaoData) // Um item para cada piloto
     .enter()
     .append("path")
-    .attr("d", d => {
-        const line = d3.line()
-            .x((d, j) => evolucaoX(j)) // Eixo X representa as voltas (0 a 9)
-            .y((posicao) => evolucaoY(d.name) + marginTop + (d.posicoes.indexOf(posicao) * 2)); // Ajusta a altura para a posição do piloto
-        return line(d.posicoes); // Posições de cada piloto ao longo das voltas
-    })
+    .attr("class", "linha-piloto")
+    .attr("d", d => line(d.posicoes)) // d.posicoes = vetor de posições do piloto nas voltas
     .attr("fill", "none")
-    .attr("stroke", "blue")
+    .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // cores diferentes
     .attr("stroke-width", 2);
 
-// Adicionando os eixos X e Y
+// Eixo X
 evolucaoSvg.append("g")
-    .attr("transform", `translate(0,${height2})`)
-    .call(d3.axisBottom(evolucaoX).ticks(9).tickFormat(d => `Volta ${d + 1}`));
+    .attr("transform", `translate(0,${height2 - margin2.bottom})`)
+    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `Volta ${d + 1}`));
 
+// Eixo Y
 evolucaoSvg.append("g")
-    .call(d3.axisLeft(evolucaoY));
+    .attr("transform", `translate(${margin2.left},0)`)
+    .call(d3.axisLeft(evolucaoY).ticks(20).tickFormat(d => `${d}º`));
 
 // VELOCIDADE
 const velocidadeSvg = d3.select("#velocidade_chart");
