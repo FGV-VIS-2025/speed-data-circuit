@@ -90,6 +90,12 @@ async function getRacesByYear(year) {
     return data.filter(row => Number(row.year) === Number(year));
 }
 
+async function getValidRacesByYear(year) {
+    const data = await loadCSVData(racesFilePath);
+    const validRaces = data.filter(row => Number(row.year) === Number(year));
+    return filterValidRaces(validRaces, await getValidRaceIds());
+}
+
 async function getDriversByRace(raceId) {
     const results = await loadCSVData(resultsFilePath);
     const drivers = await loadCSVData(driversFilePath);
