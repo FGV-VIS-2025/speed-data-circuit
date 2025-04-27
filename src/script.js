@@ -22,27 +22,27 @@ const initialDrivers = [
 ];
 
 const evolucaoData = [
-    { name: "Verstappen", posicoes: [1, 1, 1, 2, 3, 3, 1, 2, 1, 1] },
-    { name: "Leclerc", posicoes: [2, 3, 3, 4, 2, 2, 4, 3, 2, 4] },
-    { name: "Norris", posicoes: [3, 4, 4, 3, 4, 4, 3, 5, 4, 3] },
-    { name: "Sainz", posicoes: [4, 2, 5, 6, 5, 6, 5, 6, 5, 6] },
-    { name: "Hamilton", posicoes: [5, 5, 6, 5, 6, 5, 6, 4, 6, 5] },
-    { name: "Russell", posicoes: [6, 6, 7, 7, 7, 7, 7, 7, 7, 7] },
-    { name: "Piastri", posicoes: [7, 8, 8, 8, 8, 8, 8, 8, 8, 8] },
-    { name: "Alonso", posicoes: [8, 7, 9, 9, 9, 9, 9, 9, 9, 9] },
-    { name: "Stroll", posicoes: [9, 9, 10, 10, 10, 10, 10, 10, 10, 10] },
-    { name: "Gasly", posicoes: [10, 10, 11, 11, 12, 12, 12, 11, 12, 11] },
-    { name: "Ocon", posicoes: [11, 12, 12, 13, 13, 13, 13, 12, 13, 12] },
-    { name: "Tsunoda", posicoes: [12, 13, 13, 12, 12, 14, 14, 13, 14, 13] },
-    { name: "Ricciardo", posicoes: [13, 14, 14, 15, 14, 15, 15, 14, 15, 14] },
-    { name: "Albon", posicoes: [14, 15, 15, 14, 15, 16, 16, 15, 16, 15] },
-    { name: "Sargeant", posicoes: [15, 16, 16, 17, 17, 17, 17, 16, 17, 16] },
-    { name: "Zhou", posicoes: [16, 17, 17, 16, 16, 17, 17, 17, 16, 17] },
-    { name: "Bottas", posicoes: [17, 18, 18, 18, 18, 18, 18, 18, 18, 18] },
-    { name: "Magnussen", posicoes: [18, 19, 19, 19, 19, 19, 19, 19, 19, 19] },
-    { name: "Hülkenberg", posicoes: [19, 20, 20, 20, 20, 20, 20, 20, 20, 20] },
-    { name: "Perez", posicoes: [20, 20, 19, 18, 18, 18, 18, 19, 19, 19] }
-  ];  
+    { name: "Verstappen", posicoes: [1,1,1,2,3,3,1,2,1,1], pontuacao: 95 },
+    { name: "Leclerc", posicoes: [2,3,3,4,2,2,4,3,2,4], pontuacao: 88 },
+    { name: "Norris", posicoes: [3,4,4,3,4,4,3,5,4,3], pontuacao: 82 },
+    { name: "Sainz", posicoes: [4,2,5,6,5,6,5,6,5,6], pontuacao: 79 },
+    { name: "Hamilton", posicoes: [5,5,6,5,6,5,6,4,6,5], pontuacao: 77 },
+    { name: "Russell", posicoes: [6,6,7,7,7,7,7,7,7,7], pontuacao: 70 },
+    { name: "Piastri", posicoes: [7,8,8,8,8,8,8,8,8,8], pontuacao: 65 },
+    { name: "Alonso", posicoes: [8,7,9,9,9,9,9,9,9,9], pontuacao: 63 },
+    { name: "Stroll", posicoes: [9,9,10,10,10,10,10,10,10,10], pontuacao: 58 },
+    { name: "Gasly", posicoes: [10,10,11,11,12,12,12,11,12,11], pontuacao: 56 },
+    { name: "Ocon", posicoes: [11,12,12,13,13,13,13,12,13,12], pontuacao: 52 },
+    { name: "Tsunoda", posicoes: [12,13,13,12,12,14,14,13,14,13], pontuacao: 49 },
+    { name: "Ricciardo", posicoes: [13,14,14,15,14,15,15,14,15,14], pontuacao: 45 },
+    { name: "Albon", posicoes: [14,15,15,14,15,16,16,15,16,15], pontuacao: 43 },
+    { name: "Sargeant", posicoes: [15,16,16,17,17,17,17,16,17,16], pontuacao: 38 },
+    { name: "Zhou", posicoes: [16,17,17,16,16,17,17,17,16,17], pontuacao: 36 },
+    { name: "Bottas", posicoes: [17,18,18,18,18,18,18,18,18,18], pontuacao: 32 },
+    { name: "Magnussen", posicoes: [18,19,19,19,19,19,19,19,19,19], pontuacao: 29 },
+    { name: "Hülkenberg", posicoes: [19,20,20,20,20,20,20,20,20,20], pontuacao: 26 },
+    { name: "Perez", posicoes: [20,20,19,18,18,18,18,19,19,19], pontuacao: 31 }
+]; 
 
 const climas = {
 "1": ["sol", "../assets/weather/clima_sol.jpg"],
@@ -100,19 +100,6 @@ const cores_equipes = {
     toro_roso: "#F2F2F2"
 };
 
-// Dados fictícios para os gráficos
-const pilotos = ["Piloto 1", "Piloto 2", "Piloto 3", "Piloto 4"];
-const tempos = [12, 15, 10, 13]; // Ranking com tempo de volta
-const velocidades = [200, 195, 210, 205]; // Velocidade média dos pilotos
-const voltas = [1, 2, 3, 4, 5]; // Exemplo de voltas
-const evolucao = [
-    [1, 2, 3, 4], // Volta 1
-    [1, 2, 4, 3], // Volta 2
-    [1, 3, 4, 2], // Volta 3
-    [2, 1, 4, 3], // Volta 4
-    [1, 2, 3, 4], // Volta 5
-];
-
 // CONSTRUINDO A LINHA DE CHEGADA
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -150,58 +137,62 @@ const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.t
 const x = d3.scaleLinear().range([0, chartWidth]).domain([0, 300]);
 const y = d3.scaleBand().range([0, chartHeight]).padding(0.1);
 
-// Ordenar os pilotos pela posição de grid
-const pilotosOrdenadosGrid = [...initialDrivers]
-    .sort((a, b) => a.posicao_grid - b.posicao_grid)
-    .map(d => d.name);
-
-// Criar uma escala fictícia de ranking (maior barra = melhor posição)
-const valoresRanking = pilotosOrdenadosGrid.map((_, i) => 20 - i); // ex: 20, 19, ..., 1
-
 // Configurações do gráfico
 const width2 = 450;  // Largura menor
 const height2 = 300; // Altura proporcional
-const margin2 = { top: 30, right: 20, bottom: 30, left: 110};
+const margin2 = { top: 30, right: 20, bottom: 30, left: 110 };
 
 // Espaço para o título
 const marginTop = 30;
 
-// Escalas
+// Pegando os nomes dos pilotos e suas pontuações
+const pilotosOrdenadosGrid = evolucaoData
+    .sort((a, b) => b.pontuacao - a.pontuacao) // ordena por pontuação decrescente
+    .map(d => d.name);
+
+const valoresRanking = evolucaoData
+    .sort((a, b) => b.pontuacao - a.pontuacao)
+    .map(d => d.pontuacao);
+
+// Criando SVG
 const rankingSvg = d3.select("#ranking_chart")
     .attr("width", width2)
     .attr("height", height2);
 
+// Escalas
 const rankingX = d3.scaleLinear()
     .domain([0, d3.max(valoresRanking)])
     .range([0, width2 - margin2.left - margin2.right]);
 
 const rankingY = d3.scaleBand()
     .domain(pilotosOrdenadosGrid)
-    .range([0, height2 - margin2.top - margin2.bottom])
+    .range([margin2.top, height2 - margin2.bottom])
     .padding(0.1);
 
 // Adiciona barras
 rankingSvg.selectAll("rect")
-    .data(valoresRanking)
+    .data(evolucaoData.sort((a, b) => b.pontuacao - a.pontuacao))
     .enter()
     .append("rect")
     .attr("x", margin2.left)
-    .attr("y", (d, i) => rankingY(pilotosOrdenadosGrid[i]) + marginTop)
-    .attr("width", d => rankingX(d))
+    .attr("y", d => rankingY(d.name))
+    .attr("width", d => rankingX(d.pontuacao))
     .attr("height", rankingY.bandwidth())
     .style("fill", "#4CAF50");
 
-// Adiciona nomes dos pilotos
-rankingSvg.selectAll("text.label")
-    .data(pilotosOrdenadosGrid)
-    .enter()
-    .append("text")
-    .attr("class", "label")
-    .attr("x", margin2.left + 5)
-    .attr("y", (d, i) => rankingY(d) + marginTop + rankingY.bandwidth() / 2)
-    .attr("dy", ".35em")
-    .text(d => d)
-    .style("fill", "white");
+// Adiciona eixo Y com nomes dos pilotos
+rankingSvg.append("g")
+    .attr("transform", `translate(${margin2.left}, 0)`)
+    .call(d3.axisLeft(rankingY).tickSize(0)) // remove ticks
+    .selectAll("text")
+    .style("text-anchor", "end"); // Alinha os nomes melhor
+
+// Eixo X com valores da pontuação
+rankingSvg.append("g")
+    .attr("transform", `translate(${margin2.left},${height2 - margin2.bottom})`)
+    .call(d3.axisBottom(rankingX).ticks(5)) // você pode mudar o número de ticks se quiser
+    .selectAll("text")
+    .style("text-anchor", "middle");
 
 // EVOLUÇÃO
 // Escala X: voltas
