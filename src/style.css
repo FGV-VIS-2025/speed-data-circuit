@@ -40,8 +40,8 @@ body {
    Painel de Controle
 ------------------------------ */
 #painel_de_controle {
-  width: 20%;
-  height: 100%; /* O painel ocupa toda a altura da tela */
+  width: 15%;
+  height: 90%; /* O painel ocupa toda a altura da tela */
   background-color: #F21905;
   padding: 10px;
   border-radius: 10px;
@@ -66,8 +66,8 @@ body {
    Área do Gráfico Principal
 ------------------------------ */
 #main_chart_area {
-  width: 80%;
-  height: 100%; /* O gráfico principal deve ter a mesma altura do painel */
+  width: 81%;
+  height: 92.25%; /* O gráfico principal deve ter a mesma altura do painel */
   padding-left: 20px; /* Espaço entre o painel e o gráfico */
 }
 
@@ -151,25 +151,13 @@ input[type=range] {
   height: auto;
 }
 
-#multiselect {
-  border-radius: 5px;
-  background-color: #ffffff;
-  width: 90%;
-  height: 15%;
-  overflow-y: auto;
-}
-
-#multiselect div {
-  margin: 10px;
-}
-
 legend {
   font-size: 100%;
   color: #ffffff;
   font-family: F1;
 }
 
-#clima_display {
+#clima_display, #lap_display {
   width: 90%;
   height: 20%;
   background-color: #ffffff;
@@ -186,6 +174,12 @@ legend {
   border-radius: 5px;
 }
 
+#lap_display img {
+  width: 97%;
+  height: 95%;
+  border-radius: 5px;
+}
+
 #clima_info {
   width: 90%;
   height: 25%;
@@ -197,7 +191,6 @@ legend {
   justify-content: center;
   align-items: right;
   font-size: 95%;
-  margin-bottom: 15px;
 }
 
 #clima_info p {
@@ -221,4 +214,8 @@ svg text {
 .bar:hover {
   fill: #F21905;
   cursor: pointer;
+}
+
+#lapText{
+  color: white;
 }
