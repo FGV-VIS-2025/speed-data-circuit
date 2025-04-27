@@ -72,17 +72,27 @@ async function getValidRaceIds() {
 }
 
 async function getAllValidSeasons() {
-    const data = await loadCSVData(seasonsFilePath);
-    if (!data) {
-        console.error('Erro ao carregar os dados de temporadas.');
-        return [];
-    }
-    const validRaceIds = await getValidRaceIds();
-    const validSeasons = data.filter(row => {
-        const raceId = Number(row.raceId);
-        return validRaceIds.includes(raceId);
-    });
-    return validSeasons;
+    // const data = await loadCSVData(seasonsFilePath);
+    // if (!data) {
+    //     console.error('Erro ao carregar os dados de temporadas.');
+    //     return [];
+    // }
+    // const validRaceIds = await getValidRaceIds();
+    // const validSeasons = data.filter(row => {
+    //     const raceId = Number(row.raceId);
+    //     return validRaceIds.includes(raceId);
+    // });
+    // return validSeasons;
+    
+    return [
+        { year: '2018' },
+        { year: '2019' },
+        { year: '2020' },
+        { year: '2021' },
+        { year: '2022' },
+        { year: '2023' },
+        { year: '2024' },
+    ];
 }
 
 async function getRacesByYear(year) {
