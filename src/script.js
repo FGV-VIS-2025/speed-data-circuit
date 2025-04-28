@@ -9,6 +9,9 @@ import {initialDrivers,
 
 const racesFilePath = "../f1db/races.csv";
 const pitStopsFilePath = "../f1db/pit_stops.csv";
+const resultsFilePath = "../f1db/results.csv";
+const driversFilePath = "../f1db/drivers.csv";
+const constructorsFilePath = "../f1db/constructors.csv";
 
 function getAllValidSeasons() {
     return [
@@ -58,6 +61,43 @@ async function getValidRacesByYear(year) {
         return filterValidRaces(validRaces, validRaceIds);
     } catch (error) {
         console.error('Erro ao carregar as corridas:', error);
+        return [];
+    }
+}
+
+async function getDriversByRace(raceId) {
+    try {
+        const results = await loadCSVData(resultsFilePath);
+        const drivers = await loadCSVData(driversFilePath);
+
+        const driverIds = results
+            .filter(r => Number(r.raceId) === Number(raceId))
+            .map(r => Number(r.driverId)); // Garante que driverId vira número
+
+        return drivers.filter(d => driverIds.includes(Number(d.driverId)));
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
+        return [];
+    }
+};
+
+async function getTeamsByRaceAndDriver(raceId, driverId) {
+    try{
+        const racesData = await loadCSVData(resultsFilePath);
+        return racesData.filter(l => Number(l.raceId) === Number(raceId) && Number(l.driverId) === Number(driverId));
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
+        return [];
+    }
+};
+
+async function getConstructorDataByID(constructorID) {
+    try{
+        const results = await loadCSVData(constructorsFilePath);
+        console.log("OK");
+        return results.filter(l => Number(l.constructorId) === Number(constructorID));
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
         return [];
     }
 }
@@ -161,7 +201,7 @@ yearSelect.addEventListener("change", async () => {
     if (selectedYear && validRaces.length > 0) {
         validRaces.forEach(race => {
             const opt = document.createElement("option");
-            opt.value = race.name;
+            opt.value = race.raceId;
             opt.textContent = race.name;
             raceSelect.appendChild(opt);
         });
@@ -172,7 +212,7 @@ yearSelect.addEventListener("change", async () => {
 
 
 // Muda o clima e o circuito
-raceSelect.addEventListener("change", () => {
+raceSelect.addEventListener("change", async () => {
     clearChart();
 
     climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
@@ -188,9 +228,22 @@ raceSelect.addEventListener("change", () => {
 
     stopPlayback();
 
-    laps = generateMockLaps(selectedYear);
+    const raceChosen = raceSelect.textContent;
+    const raceID = raceSelect.value;
 
-    const raceChosen = raceSelect.value;
+    const raceDrivers = await getDriversByRace(parseInt(raceID));
+
+    for (const driver of raceDrivers) {
+        const teste = await getTeamsByRaceAndDriver(parseInt(raceID), parseInt(driver.driverId));
+        driver.constructorId = teste[0].constructorId;
+        driver.grid = teste[0].grid;
+        driver.fastestLap = teste[0].fastestLapTime;
+        const teste2 = await getConstructorDataByID(parseInt(driver.constructorId));
+        driver.constructorRef = teste2[0].constructorRef;
+        driver.constructorName = teste2[0].name;
+    }
+
+    laps = generateMockLaps(raceDrivers);
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -208,25 +261,31 @@ raceSelect.addEventListener("change", () => {
 });
 
 // Função que gera dados falsos
-function generateMockLaps(year){
+function generateMockLaps(drivers) {
     const laps = [];
-    const drivers = initialDrivers[year].map(driver => ({ ...driver, score: 0 }));
-    laps.push(JSON.parse(JSON.stringify(drivers)));
+    const driversWithScore = drivers.map(driver => ({ 
+        ...driver, 
+        score: 0,
+        name: `${driver.forename} ${driver.surname}`
+    }));
+
+    laps.push(JSON.parse(JSON.stringify(driversWithScore)));
 
     for (let lap = 1; lap < numberOfLaps; lap++) {
         const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
         const newLap = previousLap.map(driver => {
-        const noise = d3.randomNormal(0, Math.sqrt(5))();
-        const increment = (15 + noise)*4.25;
-        return {
-            ...driver,
-            score: Math.max(0, driver.score + increment)
-        };
-    });
-    laps.push(newLap);  
+            const noise = d3.randomNormal(0, Math.sqrt(5))();
+            const increment = (15 + noise) * 4.25;
+            return {
+                ...driver,
+                score: Math.max(0, driver.score + increment)
+            };
+        });
+        laps.push(newLap);  
     }
     return laps;
-};
+}
+
 
 // Vai reiniciar a contagem de voltas
 function stopPlayback() {
@@ -289,7 +348,7 @@ function renderLap(data, lapNum) {
         .attr("y", d => y(d.name))  // Posicionamento vertical corrigido
         .attr("x", 0)
         .attr("width", 0)  // Inicialmente com largura 0 para animação
-        .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
+        .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc")
         .attr("fill-opacity", 1)
         .on("mouseover", (event, d) => showTooltip(event, d))
         .on("mousemove", (event) => moveTooltip(event))
@@ -298,7 +357,7 @@ function renderLap(data, lapNum) {
         .transition().duration(1000)
         .attr("width", d => x(d.score))  // Largura da barra de acordo com o score
         .attr("y", d => y(d.name))
-        .attr("fill", d => cores_equipes[d.equipe] || "#ccc");
+        .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc");
     bars.exit().remove();
 
     // LABELS
@@ -335,7 +394,7 @@ function renderLap(data, lapNum) {
     sprites.enter()
         .append("image")
         .attr("class", "sprite")
-        .attr("xlink:href", d => `../assets/${selectedYear}/sprites/${d.equipe}.png`)
+        .attr("xlink:href", d => `../assets/${selectedYear}/sprites/${d.constructorRef}.png`)
         .attr("width", spriteWidth)
         .attr("height", spriteHeight)
         .on("mouseover", (event, d) => showTooltip(event, d))
@@ -358,15 +417,15 @@ function renderLap(data, lapNum) {
             .style("opacity", 1)
             .html(`
                 <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
-                    <img src="../assets/${selectedYear}/drivers/${d.name.split(" ")[1].toLowerCase()}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
+                    <img src="../assets/${selectedYear}/drivers/${d.driverRef}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
                     <div>
                         <strong>${d.name}</strong><br>
                         Idade: ${d.idade} anos<br>
-                        Equipe: ${d.equipe_real}<br>
-                        Nacionalidade: ${d.nacionalidade}<br>
+                        Equipe: ${d.constructorName}<br>
+                        Nacionalidade: ${d.nationality}<br>
                         Pneus: ${d.pneus}<br>
-                        Largada: ${d.posicao_grid}º<br>
-                        VMR: ${d.volta_mais_rapida} min<br>
+                        Largada: ${d.grid}º<br>
+                        VMR: ${d.fastestLap} min<br>
                     </div>
                 </div>
             `);
