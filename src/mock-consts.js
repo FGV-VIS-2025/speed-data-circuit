@@ -282,47 +282,60 @@ export const mockRacesByYear = {
     
 
 export const cores_equipes = {
+    "2025": {
+        red_bull: "#181740",
+        mercedez: "#41F2D2",
+        ferrari: "#D90707",
+        alpine: "#0090FF",
+        hass: "#BF0A2B",
+        aston_martin: "#048C5A",
+        mclaren: "#F28D35",
+        sauber: "#00FF00",
+        williams: "#476497",
+        rb: "#002244"
+    },
+
     "2024": {
-      red_bull: "#1E5BC6",       // Azul escuro
-      mercedes: "#C0C0C0",       // Prata
-      ferrari: "#DC0000",        // Vermelho
-      alpine: "#FF69B4",         // Rosa
-      haas: "#000000",           // Preto
-      aston_martin: "#006F62",   // Verde escuro
-      mclaren: "#FF8700",        // Laranja
-      sauber: "#00FF00",         // Verde limão
-      williams: "#002244",       // Azul marinho
-      toro_rosso: "#FFFFFF"      // Branco
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        // 
+      sauber: "#00FF00",         // 
+      williams: "#476497",       // 
+      rb: "#002244"              // 
     },
     "2023": {
-      red_bull: "#1E5BC6",       // Azul escuro
-      mercedes: "#000000",       // Preto
-      ferrari: "#DC0000",        // Vermelho
-      alpine: "#FF69B4",         // Rosa
-      haas: "#FFFFFF",           // Branco
-      aston_martin: "#006F62",   // Verde escuro
-      mclaren: "#FF8700",        // Laranja
-      alfa: "#900000",     // Vinho
-      williams: "#002244",       // Azul marinho
-      toro_rosso: "#C0C0C0"      // Prata
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        // 
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
     },
     "2022": {
-      red_bull: "#1E5BC6",       // Azul escuro
-      mercedes: "#000000",       // Preto
-      ferrari: "#DC0000",        // Vermelho
-      alpine: "#FF69B4",         // Rosa
-      haas: "#FFFFFF",           // Branco
-      aston_martin: "#006F62",   // Verde escuro
-      mclaren: "#FF8700",        // Laranja
-      alfa: "#900000",     // Vinho
-      williams: "#002244",       // Azul marinho
-      toro_rosso: "#C0C0C0"      // Prata
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        //
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
     },
     "2021": {
       red_bull: "#0A111F",       // 
-      mercedes: "#C0C9CC",       // 
+      mercedes: "#5F6970",       // 
       ferrari: "#F12323",        // 
-      alpine: "#FF69B4",         // 
+      alpine: "#0E2773",         // 
       haas: "#FFFFFF",           // 
       aston_martin: "#006F62",   // 
       mclaren: "#F38F1C",        // 
@@ -332,7 +345,7 @@ export const cores_equipes = {
     },
     "2020": {
       red_bull: "#0A111F",       // 
-      mercedes: "#C0C9CC",       // 
+      mercedes: "#5F6970",       // 
       ferrari: "#F12323",        // 
       renault: "#FFD700",        // 
       haas: "#000000",           // 
@@ -344,7 +357,7 @@ export const cores_equipes = {
     },
     "2019": {
       red_bull: "#0A111F",       // 
-      mercedes: "#C0C9CC",       // 
+      mercedes: "#5F6970",       // 
       ferrari: "#F12323",        // 
       renault: "#FFD700",        // 
       haas: "#000000",           // 
@@ -356,7 +369,7 @@ export const cores_equipes = {
     },
     "2018": {
       red_bull: "#0A111F",       // 
-      mercedes: "#C0C9CC",       // 
+      mercedes: "#5F6970",       // 
       ferrari: "#F12323",        // 
       renault: "#FFD700",        // 
       haas: "#99141D",           // 
