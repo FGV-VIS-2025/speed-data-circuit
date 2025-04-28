@@ -331,7 +331,7 @@ const g = mainChartSVG.append("g").attr("transform", `translate(${mainChartMargi
 
 const auxChartWidth = 450;
 const auxChartHeight = 300;
-const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 50 };
+const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 60 };
 
 // Manter a proporção 8:5
 const spriteWidth = 72;
