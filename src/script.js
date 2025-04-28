@@ -795,49 +795,67 @@ async function getRaceEvolution(raceId, maxLap = null) {
     });
 }
 
-// Escala X: voltas
-const evolucaoX = d3.scaleLinear()
-    .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
-    .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+const lapTimesFilePath = './f1db/lap_times.csv';
 
-// Escala Y: posições (1º lugar no topo, 20º embaixo)
-const evolucaoY = d3.scaleLinear()
-    .domain([20.5, 0.5]) // invertido porque 1º lugar fica no topo
-    .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+async function createEvolutionChart() {
+    try {
+        const evolucaoData = await getRaceEvolution(raceId);
 
-// Criando o SVG
-const evolucaoSvg = d3.select("#evolucao_chart")
-    .attr("width", auxChartWidth)
-    .attr("height", auxChartHeight);
+        if (evolucaoData.length === 0) {
+            console.log("Nenhum dado encontrado para evolução da corrida.");
+            return;
+        }
 
-// Linha para cada piloto
-const line = d3.line()
-    .x((d, i) => evolucaoX(i)) // i é o número da volta
-    .y(d => evolucaoY(d));     // d é a posição na volta
+        // Escala X: voltas
+        const evolucaoX = d3.scaleLinear()
+            .domain([0, evolucaoData[0].positions.length - 1]) // Número de voltas - 1
+            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
 
-// Desenhando as linhas dos pilotos
-evolucaoSvg.selectAll(".linha-piloto")
-    .data(evolucaoData) // Um item para cada piloto
-    .enter()
-    .append("path")
-    .attr("class", "linha-piloto")
-    .attr("d", d => line(d.posicoes)) // d.posicoes = vetor de posições do piloto nas voltas
-    .attr("fill", "none")
-    .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // cores diferentes
-    .attr("stroke-width", 2);
+        // Escala Y: posições (invertido)
+        const evolucaoY = d3.scaleLinear()
+            .domain([20.5, 0.5]) // da posição 20 até posição 1
+            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
 
-// Eixo X
-evolucaoSvg.append("g")
-    .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
-    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `${d + 1}`));
+        // Criando o SVG
+        const evolucaoSvg = d3.select("#evolucao_chart")
+            .attr("width", auxChartWidth)
+            .attr("height", auxChartHeight);
 
-// Eixo Y: posições, mas trocando números pelos nomes dos pilotos
-const posicaoParaPiloto = {};
-evolucaoData.forEach(piloto => {
-    // Pega a posição inicial do piloto na volta 0
-    const posicaoInicial = piloto.posicoes[0];
-    posicaoParaPiloto[posicaoInicial] = piloto.name;
-});
+        // Linha para cada piloto
+        const line = d3.line()
+            .x((d, i) => evolucaoX(i)) // i é o número da volta
+            .y(d => evolucaoY(d));     // d é a posição
+
+        // Desenhando as linhas dos pilotos
+        evolucaoSvg.selectAll(".linha-piloto")
+            .data(evolucaoData)
+            .enter()
+            .append("path")
+            .attr("class", "linha-piloto")
+            .attr("d", d => line(d.positions))
+            .attr("fill", "none")
+            .attr("stroke", (d, i) => d3.schemeCategory10[i % 10])
+            .attr("stroke-width", 2);
+
+        // Eixo X: voltas
+        evolucaoSvg.append("g")
+            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
+            .call(d3.axisBottom(evolucaoX).ticks(evolucaoData[0].positions.length).tickFormat(d => `${d + 1}`));
+
+        // Eixo Y: posições
+        evolucaoSvg.append("g")
+            .attr("transform", `translate(${auxChartMargin.left},0)`)
+            .call(d3.axisLeft(evolucaoY).ticks(20));
+
+        // Opcional: você pode criar uma legenda com nomes dos pilotos usando driver.givenName + driver.familyName
+
+    } catch (err) {
+        console.error("Erro ao gerar gráfico de evolução:", err);
+    }
+}
+
+// Chamando para gerar o gráfico:
+createEvolutionChart();
 
 // Eixo Y
 evolucaoSvg.append("g")
