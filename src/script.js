@@ -840,7 +840,10 @@ async function createEvolutionChart() {
         // Eixo X: voltas
         evolucaoSvg.append("g")
             .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
-            .call(d3.axisBottom(evolucaoX).ticks(evolucaoData[0].positions.length).tickFormat(d => `${d + 1}`));
+            .call(d3.axisBottom(evolucaoX)
+                .ticks(Math.ceil(evolucaoData[0].positions.length / 10)) // <-- menos ticks
+                .tickFormat(d => `${d + 1}`) // volta começa de 1
+            );
 
         // Eixo Y: posições
         evolucaoSvg.append("g")
