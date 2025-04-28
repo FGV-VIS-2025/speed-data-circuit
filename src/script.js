@@ -102,7 +102,39 @@ async function getConstructorDataByID(constructorID) {
     }
 }
 
-function calculaIdade()
+async function getAgesByRace(raceId) {
+    const drivers = await loadCSVData(driversFilePath);
+    const results = await loadCSVData(resultsFilePath);
+    const races = await loadCSVData(racesFilePath);
+
+    const race = races.find(r => Number(r.raceId) === Number(raceId));
+    if (!race) return {};
+    const raceDate = new Date(race.date);
+
+    const raceDriverIds = results
+        .filter(r => Number(r.raceId) === Number(raceId))
+        .map(r => r.driverId);
+
+    const driverAges = {}; // cria um objeto vazio
+
+    raceDriverIds.forEach(driverId => {
+        const driver = drivers.find(d => d.driverId === driverId);
+        if (!driver || !driver.dob) {
+            driverAges[driverId] = { driverId, driver, age: null };
+        } else {
+            const dob = new Date(driver.dob);
+            let age = raceDate.getFullYear() - dob.getFullYear();
+            const m = raceDate.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && raceDate.getDate() < dob.getDate())) {
+                age--;
+            }
+            driverAges[driverId] = { driverId, driver, age };
+        }
+    });
+
+    return driverAges;
+}
+
 
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
@@ -234,6 +266,7 @@ raceSelect.addEventListener("change", async () => {
     const raceID = raceSelect.value;
 
     const raceDrivers = await getDriversByRace(parseInt(raceID));
+    const raceAges = await getAgesByRace(parseInt(raceID));
 
     for (const driver of raceDrivers) {
         const teste = await getTeamsByRaceAndDriver(parseInt(raceID), parseInt(driver.driverId));
@@ -243,6 +276,7 @@ raceSelect.addEventListener("change", async () => {
         const teste2 = await getConstructorDataByID(parseInt(driver.constructorId));
         driver.constructorRef = teste2[0].constructorRef;
         driver.constructorName = teste2[0].name;
+        driver.age = raceAges[parseInt(driver.driverId)].age;
     }
 
     laps = generateMockLaps(raceDrivers);
@@ -422,7 +456,7 @@ function renderLap(data, lapNum) {
                     <img src="../assets/${selectedYear}/drivers/${d.driverRef}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
                     <div>
                         <strong>${d.name}</strong><br>
-                        Idade: ${d.idade} anos<br>
+                        Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
                         Nacionalidade: ${d.nationality}<br>
                         Pneus: ${d.pneus}<br>
