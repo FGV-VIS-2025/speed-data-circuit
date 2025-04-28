@@ -12,7 +12,8 @@ const pitStopsFilePath = "../f1db/pit_stops.csv";
 const resultsFilePath = "../f1db/results.csv";
 const driversFilePath = "../f1db/drivers.csv";
 const constructorsFilePath = "../f1db/constructors.csv";
-const weatherDataFilePath = "../f1db/weather.csv"
+const weatherDataFilePath = "../f1db/weather.csv";
+const lapTimesFilePath = "../f1db/lap_times.csv";
 
 function getAllValidSeasons() {
     return [
@@ -180,7 +181,44 @@ function formatDate(date) {
     return formattedDate;
 }
 
+function timeInSeconds(time){
+    const aux = time.split(":");
+    const seconds = Number(aux[1]);
+    const minutesInSeconds = Number(aux[0])*60;
+    return seconds + minutesInSeconds;
+}
 
+async function getLapTimes(raceId) {
+    const raceData = await loadCSVData(lapTimesFilePath);
+    
+    // Filtra os dados pela corrida
+    const raceLapData = raceData.filter(l => Number(l.raceId) === Number(raceId));
+    
+    // Cria o dicionário com driverId como chave e acumula os milissegundos
+    const lapTimesByDriver = raceLapData.reduce((acc, lap) => {
+        const driverId = lap.driverId;
+        if (!acc[driverId]) {
+            acc[driverId] = []; // Se não existir o driverId, cria um array vazio
+        }
+        
+        // Acumula os milissegundos
+        const previousMilliseconds = acc[driverId].length > 0 ? acc[driverId][acc[driverId].length - 1].milliseconds_acumulated : 0;
+        const millisecondsAccumulated = previousMilliseconds + Number(lap.milliseconds);
+
+        // Adiciona a volta com o acumulado de milissegundos
+        acc[driverId].push({
+            position: lap.position,
+            lap: lap.lap,
+            time: lap.time,
+            milliseconds: Number(lap.milliseconds),
+            milliseconds_acumulated: millisecondsAccumulated
+        });
+        
+        return acc;
+    }, {});
+    
+    return lapTimesByDriver;
+}
 
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
@@ -301,8 +339,6 @@ raceSelect.addEventListener("change", async () => {
     const clima = await getWeatherRace(raceID);
     const dateAndTime = await getDateAndTime(raceID);
 
-    console.log(formatDate(dateAndTime.date));
-
     climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
     climaInfo.innerHTML = `
         <p>Data: ${formatDate(dateAndTime.date)}</p>
@@ -331,7 +367,9 @@ raceSelect.addEventListener("change", async () => {
         driver.age = raceAges[parseInt(driver.driverId)].age;
     }
 
-    laps = generateMockLaps(raceDrivers);
+    const lapsTime = await getLapTimes(raceID);
+
+    laps = generateLaps(raceDrivers, lapsTime);
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -348,32 +386,101 @@ raceSelect.addEventListener("change", async () => {
     }
 });
 
-// Função que gera dados falsos
-function generateMockLaps(drivers) {
+function generateLaps(drivers, lapsTime) {
     const laps = [];
-    const driversWithScore = drivers.map(driver => ({ 
-        ...driver, 
+
+    const driversWithScore = drivers.map(driver => ({
+        ...driver,
         score: 0,
-        name: `${driver.forename} ${driver.surname}`
+        name: `${driver.forename} ${driver.surname}`,
+        totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
+        running: true,
+        lapsCompleted: 0,
+        lastAccumulated: 0
     }));
 
     laps.push(JSON.parse(JSON.stringify(driversWithScore)));
 
-    for (let lap = 1; lap < numberOfLaps; lap++) {
+    const realNumberOfLaps = lapsTime[Number(drivers[0].driverId)].length;
+
+    for (let lap = 1; lap < realNumberOfLaps; lap++) {
         const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
+
         const newLap = previousLap.map(driver => {
-            const noise = d3.randomNormal(0, Math.sqrt(5))();
-            const increment = (15 + noise) * 4.25;
+            const driverLaps = lapsTime[driver.driverId];
+            const currentLapData = driverLaps[lap];
+            const previousLapData = driverLaps[lap - 1];
+
+            // Se já abandonou, só copia
+            if (!driver.running) {
+                return driver;
+            }
+
+            // Se não existe volta atual -> abandonou
+            if (!currentLapData) {
+                return {
+                    ...driver,
+                    running: false
+                };
+            }
+
+            // Se acumulado não mudou, também abandonou
+            if (currentLapData.milliseconds_acumulated === previousLapData.milliseconds_acumulated) {
+                return {
+                    ...driver,
+                    running: false
+                };
+            }
+
             return {
                 ...driver,
-                score: Math.max(0, driver.score + increment)
+                lastAccumulated: currentLapData.milliseconds_acumulated,
+                lapsCompleted: driver.lapsCompleted + 1
             };
         });
-        laps.push(newLap);  
+
+        // Só consideramos pilotos que estão "running"
+        const activeDrivers = newLap.filter(d => d.running && d.lastAccumulated !== undefined);
+        const leaderAccumulated = Math.min(...activeDrivers.map(d => d.lastAccumulated));
+        const leaderLapsCompleted = Math.max(...activeDrivers.map(d => d.lapsCompleted));
+
+        const finalLap = newLap.map(driver => {
+            if (!driver.running) {
+                return {
+                    ...driver,
+                    score: driver.score
+                };
+            }
+
+            let score;
+
+            if (driver.lastAccumulated !== undefined) {
+                if (driver.lastAccumulated === leaderAccumulated) {
+                    score = driver.lastAccumulated;
+                } else {
+                    score = leaderAccumulated + 5*(leaderAccumulated - driver.lastAccumulated);
+                }
+            } else {
+                score = (2 * leaderAccumulated) - 100000;
+            }
+
+            // Penalização pra quem tomou volta
+            const lapsBehind = leaderLapsCompleted - driver.lapsCompleted;
+            if (lapsBehind > 0) {
+                score *= Math.pow(0.9, lapsBehind);
+            }
+
+            return {
+                ...driver,
+                score: 2 * score / 10000
+            };
+        });
+
+        laps.push(finalLap);
     }
+
     return laps;
 }
-
 
 // Vai reiniciar a contagem de voltas
 function stopPlayback() {
@@ -424,7 +531,7 @@ function renderLap(data, lapNum) {
     const tooltip = d3.select("#tooltip");
 
     const sorted = [...data].sort((a, b) => b.score - a.score);
-
+    
     y.domain(sorted.map(d => d.name));
     
     // BARRAS
