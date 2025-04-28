@@ -637,57 +637,20 @@ function renderLap(data, lapNum) {
 
 
 
-
-
-
-// Pegando os nomes dos pilotos e suas pontuações
-const pilotosOrdenadosGrid = evolucaoData
-    .sort((a, b) => b.pontuacao - a.pontuacao) // ordena por pontuação decrescente
-    .map(d => d.name);
-
-const valoresRanking = evolucaoData
-    .sort((a, b) => b.pontuacao - a.pontuacao)
-    .map(d => d.pontuacao);
-
-// Criando SVG
-const rankingSvg = d3.select("#ranking_chart")
-    .attr("width", auxChartWidth)
-    .attr("height", auxChartHeight);
-
-// Escalas
-const rankingX = d3.scaleLinear()
-    .domain([0, d3.max(valoresRanking)])
-    .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
-
-const rankingY = d3.scaleBand()
-    .domain(pilotosOrdenadosGrid)
-    .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
-    .padding(0.1);
-
-// Adiciona barras
-rankingSvg.selectAll("rect")
-    .data(evolucaoData.sort((a, b) => b.pontuacao - a.pontuacao))
-    .enter()
-    .append("rect")
-    .attr("x", auxChartMargin.left)
-    .attr("y", d => rankingY(d.name))
-    .attr("width", d => rankingX(d.pontuacao))
-    .attr("height", rankingY.bandwidth())
-    .style("fill", "#4CAF50");
-
-// Adiciona eixo Y com nomes dos pilotos
-rankingSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left}, 0)`)
-    .call(d3.axisLeft(rankingY).tickSize(0)) // remove ticks
-    .selectAll("text")
-    .style("text-anchor", "end"); // Alinha os nomes melhor
-
-// Eixo X com valores da pontuação
-rankingSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
-    .call(d3.axisBottom(rankingX).ticks(5)) // você pode mudar o número de ticks se quiser
-    .selectAll("text")
-    .style("text-anchor", "middle");
+// Função para carregar os dados CSV
+async function loadCSVData(filePath) {
+    try {
+        const response = await fetch(filePath);
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o arquivo CSV');
+        }
+        const text = await response.text();
+        return d3.csvParse(text);  // Parse CSV com d3
+    } catch (error) {
+        console.error('Erro ao ler o arquivo CSV:', error);
+        throw error;  // Lança o erro para quem chamar a função
+    }
+}
 
 // EVOLUÇÃO
 // Escala X: voltas
