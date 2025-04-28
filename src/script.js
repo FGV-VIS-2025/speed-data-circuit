@@ -764,6 +764,37 @@ createRankingChart();
 
 
 // EVOLUÇÃO
+async function getRaceEvolution(raceId, maxLap = null) {
+    const results = await loadCSVData(resultsFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+
+    const raceDriverIds = results.filter(r => Number(r.raceId) === Number(raceId)).map(r => r.driverId);
+    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+
+    let maxLapNumber;
+    if (maxLap !== null) {
+        maxLapNumber = Number(maxLap);
+        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= maxLapNumber);
+    } else {
+        maxLapNumber = Math.max(...raceLapTimes.map(l => Number(l.lap)));
+    }
+
+    return raceDriverIds.map(driverId => {
+        const driverInfo = drivers.find(d => d.driverId === driverId);
+        const positions = [];
+        for (let lap = 1; lap <= maxLapNumber; lap++) {
+            const lapEntry = raceLapTimes.find(l => Number(l.driverId) === Number(driverId) && Number(l.lap) === lap);
+            positions.push(lapEntry ? Number(lapEntry.position) : null);
+        }
+        return {
+            driverId,
+            driver: driverInfo,
+            positions
+        };
+    });
+}
+
 // Escala X: voltas
 const evolucaoX = d3.scaleLinear()
     .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
