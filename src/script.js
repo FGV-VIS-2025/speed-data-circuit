@@ -15,6 +15,7 @@ const constructorsFilePath = "../f1db/constructors.csv";
 const weatherDataFilePath = "../f1db/weather.csv";
 const lapTimesFilePath = "../f1db/lap_times.csv";
 const circuitsFilePath = "../f1db/circuits.csv";
+const tyreStintsFilePath = "../f1db/tyre_stints.csv";
 
 function getAllValidSeasons() {
     return [
@@ -227,6 +228,36 @@ async function getCircuitIdByRaceId(raceId){
     return circuitData[0].circuitId;
 }
 
+async function getTyreStintsByRace(raceId) {
+    const drivers = await loadCSVData(driversFilePath);
+    const stints = await loadCSVData(tyreStintsFilePath);
+
+    const raceStints = stints.filter(s => Number(s.raceId) === Number(raceId));
+    const driverIds = [...new Set(raceStints.map(s => s.driverId))];
+
+    const result = {};
+
+    driverIds.forEach(driverId => {
+        const stintsByDriver = raceStints
+            .filter(s => s.driverId === driverId)
+            .sort((a, b) => Number(a.startLap) - Number(b.startLap));
+        
+        const stintPorVolta = {};
+
+        stintsByDriver.forEach(stint => {
+            const start = Number(stint.startLap);
+            const end = start + Number(stint.lapCount) - 1;
+            for (let lap = start; lap <= end; lap++) {
+                stintPorVolta[lap] = stint.compound;
+            }
+        });
+
+        result[driverId] = stintPorVolta;
+    });
+
+    return result;
+}
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -300,6 +331,18 @@ let laps = [];
 const numberOfLaps = 20;
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
+
+function emojiByStringTyre(compound) {
+    const tyreEmojis = {
+      MEDIUM: '(⚪)', 
+      HARD: '(🔴)',   
+      SOFT: '(🟡)',   
+      INTERMEDIATE: '(🟢)', 
+      WET: '(🔵)'     
+    };
+  
+    return tyreEmojis[compound.toUpperCase()] || ''; 
+}
 
 function clearChart() {
     g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
@@ -376,8 +419,11 @@ raceSelect.addEventListener("change", async () => {
     }
 
     const lapsTime = await getLapTimes(raceID);
+    const tyreData = await getTyreStintsByRace(raceID);
 
-    laps = generateLaps(raceDrivers, lapsTime);
+    console.log(tyreData[1][1]);
+
+    laps = generateLaps(raceDrivers, lapsTime, tyreData);
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -394,7 +440,7 @@ raceSelect.addEventListener("change", async () => {
     }
 });
 
-function generateLaps(drivers, lapsTime) {
+function generateLaps(drivers, lapsTime, tyreData) {
     const laps = [];
 
     const driversWithScore = drivers.map(driver => ({
@@ -404,7 +450,8 @@ function generateLaps(drivers, lapsTime) {
         totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
         running: true,
         lapsCompleted: 0,
-        lastAccumulated: 0
+        lastAccumulated: 0,
+        tyre: tyreData[driver.driverId][1] // Pneu da primeira volta
     }));
 
     laps.push(JSON.parse(JSON.stringify(driversWithScore)));
@@ -443,7 +490,8 @@ function generateLaps(drivers, lapsTime) {
             return {
                 ...driver,
                 lastAccumulated: currentLapData.milliseconds_acumulated,
-                lapsCompleted: driver.lapsCompleted + 1
+                lapsCompleted: driver.lapsCompleted + 1,
+                tyre: tyreData[driver.driverId][lap + 1] // Atualiza o pneu para a volta atual (lap começa em 0)
             };
         });
 
@@ -466,7 +514,7 @@ function generateLaps(drivers, lapsTime) {
                 if (driver.lastAccumulated === leaderAccumulated) {
                     score = driver.lastAccumulated;
                 } else {
-                    score = leaderAccumulated + 2.5*(leaderAccumulated - driver.lastAccumulated);
+                    score = leaderAccumulated + 2.5 * (leaderAccumulated - driver.lastAccumulated);
                 }
             } else {
                 score = (2 * leaderAccumulated) - 100000;
@@ -489,6 +537,7 @@ function generateLaps(drivers, lapsTime) {
 
     return laps;
 }
+
 
 // Vai reiniciar a contagem de voltas
 function stopPlayback() {
@@ -626,7 +675,7 @@ function renderLap(data, lapNum) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
                         Nacionalidade: ${d.nationality}<br>
-                        Pneus: ${d.pneus}<br>
+                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase() + " " + emojiByStringTyre(d.tyre)}<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min<br>
                     </div>
