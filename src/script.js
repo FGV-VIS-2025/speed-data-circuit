@@ -298,9 +298,11 @@ const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 110 };
 const spriteWidth = 72;
 const spriteHeight = 45;
 
+let largerScore = 0;
+
 // Escala X dinâmica (alteração crucial)
 const x = d3.scaleLinear()
-  .range([mainChartRealWidth, 0]).domain([mainChartRealWidth, 0]); // Agora usa toda a largura disponível
+  .range([0, 1350]); // Agora usa toda a largura disponível
 
 // Escala Y com padding reduzido para barras mais altas (alteração importante)
 const y = d3.scaleBand()
@@ -418,9 +420,15 @@ raceSelect.addEventListener("change", async () => {
     const lapsTime = await getLapTimes(raceID);
     const tyreData = await getTyreStintsByRace(raceID);
 
-    console.log(tyreData[1][1]);
-
     laps = generateLaps(raceDrivers, lapsTime, tyreData);
+    largerScore = 0;
+    for (const each_lap of laps) {
+        for (const each_driver of each_lap) {
+            if (each_driver.score > largerScore) {
+                largerScore = each_driver.score;
+            }
+        }
+    }
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -514,7 +522,7 @@ function generateLaps(drivers, lapsTime, tyreData) {
                     score = leaderAccumulated + 2.5 * (leaderAccumulated - driver.lastAccumulated);
                 }
             } else {
-                score = (2 * leaderAccumulated) - 100000;
+                score = leaderAccumulated - 100000;
             }
 
             // Penalização pra quem tomou volta
@@ -525,7 +533,7 @@ function generateLaps(drivers, lapsTime, tyreData) {
 
             return {
                 ...driver,
-                score: 2 * score / 10000
+                score: score
             };
         });
 
@@ -581,14 +589,15 @@ function updateUI() {
     lapText.textContent = `Volta ${currentLap + 1}`;
 }
 
+
 function renderLap(data, lapNum) {
     const tooltip = d3.select("#tooltip");
 
     const sorted = [...data].sort((a, b) => b.score - a.score);
-    
+
     y.domain(sorted.map(d => d.name));
-    
-    // BARRAS
+    x.domain([0, largerScore]);
+
     const bars = g.selectAll(".bar").data(sorted, d => d.name);
     bars.enter()
         .append("rect")
