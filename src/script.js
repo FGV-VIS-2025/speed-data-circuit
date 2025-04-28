@@ -5,6 +5,63 @@ import {initialDrivers,
         cores_equipes
  } from "./mock-consts.js";
 
+// FUNÇÕES DOS DADOS --------------------------------------------------------------------------------------------------------------------------------
+
+const racesFilePath = "../f1db/races.csv";
+const pitStopsFilePath = "../f1db/pit_stops.csv";
+
+function getAllValidSeasons() {
+    return [
+        { year: '2018' },
+        { year: '2019' },
+        { year: '2020' },
+        { year: '2021' },
+        { year: '2022' },
+        { year: '2023' },
+        { year: '2024' },
+    ];
+}
+
+function loadCSVData(filePath) {
+    return d3.csv(filePath);
+}
+
+function filterValidRaces(data, raceIds) {
+    return data.filter(row => {
+        const raceId = Number(row.raceId);
+        return raceIds.includes(raceId);
+    });
+}
+
+async function getValidRaceIds() {
+    try {
+        const data = await loadCSVData(pitStopsFilePath);
+        const validRaceIds = new Set();
+        data.forEach(row => {
+            if (row.raceId) {
+                validRaceIds.add(Number(row.raceId));
+            }
+        });
+        return Array.from(validRaceIds);
+    } catch (error) {
+        console.error('Erro ao carregar os dados de pit stops:', error);
+        return [];
+    }
+}
+
+
+async function getValidRacesByYear(year) {
+    try {
+        const data = await loadCSVData(racesFilePath);
+        const validRaceIds = await getValidRaceIds();
+        const validRaces = data.filter(row => Number(row.year) === Number(year));
+        return filterValidRaces(validRaces, validRaceIds);
+    } catch (error) {
+        console.error('Erro ao carregar as corridas:', error);
+        return [];
+    }
+}
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -58,7 +115,7 @@ const y = d3.scaleBand()
   .padding(0.05); // Reduzindo o espaçamento entre as barras
 
 
-const validYears = ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"];
+const validYears = getAllValidSeasons();
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -86,30 +143,33 @@ function clearChart() {
 }
 
 // Insere os anos no select
-validYears.forEach(year => {
+validYears.forEach(eachYear => {
     const option = document.createElement("option");
-    option.value = year;
-    option.textContent = year;
+    option.value = eachYear.year;
+    option.textContent = eachYear.year;
     yearSelect.appendChild(option);
 });
 
 // Insere corridas no select
-yearSelect.addEventListener("change", () => {
+yearSelect.addEventListener("change", async () => {
     selectedYear = yearSelect.value;
     raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
     raceSelect.disabled = false;
     
-    if (selectedYear && mockRacesByYear[selectedYear]) {
-        mockRacesByYear[selectedYear].forEach(race => {
-        const opt = document.createElement("option");
-        opt.value = race;
-        opt.textContent = race;
-        raceSelect.appendChild(opt);
-    });
-    raceSelect.disabled = false;
+    const validRaces = await getValidRacesByYear(parseInt(selectedYear));
+
+    if (selectedYear && validRaces.length > 0) {
+        validRaces.forEach(race => {
+            const opt = document.createElement("option");
+            opt.value = race.name;
+            opt.textContent = race.name;
+            raceSelect.appendChild(opt);
+        });
+        raceSelect.disabled = false;
     }
     stopPlayback();
 });
+
 
 // Muda o clima e o circuito
 raceSelect.addEventListener("change", () => {
@@ -351,123 +411,123 @@ function renderLap(data, lapNum) {
 
 
 
-// Pegando os nomes dos pilotos e suas pontuações
-const pilotosOrdenadosGrid = evolucaoData
-    .sort((a, b) => b.pontuacao - a.pontuacao) // ordena por pontuação decrescente
-    .map(d => d.name);
+// // Pegando os nomes dos pilotos e suas pontuações
+// const pilotosOrdenadosGrid = evolucaoData
+//     .sort((a, b) => b.pontuacao - a.pontuacao) // ordena por pontuação decrescente
+//     .map(d => d.name);
 
-const valoresRanking = evolucaoData
-    .sort((a, b) => b.pontuacao - a.pontuacao)
-    .map(d => d.pontuacao);
+// const valoresRanking = evolucaoData
+//     .sort((a, b) => b.pontuacao - a.pontuacao)
+//     .map(d => d.pontuacao);
 
-// Criando SVG
-const rankingSvg = d3.select("#ranking_chart")
-    .attr("width", auxChartWidth)
-    .attr("height", auxChartHeight);
+// // Criando SVG
+// const rankingSvg = d3.select("#ranking_chart")
+//     .attr("width", auxChartWidth)
+//     .attr("height", auxChartHeight);
 
-// Escalas
-const rankingX = d3.scaleLinear()
-    .domain([0, d3.max(valoresRanking)])
-    .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
+// // Escalas
+// const rankingX = d3.scaleLinear()
+//     .domain([0, d3.max(valoresRanking)])
+//     .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
 
-const rankingY = d3.scaleBand()
-    .domain(pilotosOrdenadosGrid)
-    .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
-    .padding(0.1);
+// const rankingY = d3.scaleBand()
+//     .domain(pilotosOrdenadosGrid)
+//     .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
+//     .padding(0.1);
 
-// Adiciona barras
-rankingSvg.selectAll("rect")
-    .data(evolucaoData.sort((a, b) => b.pontuacao - a.pontuacao))
-    .enter()
-    .append("rect")
-    .attr("x", auxChartMargin.left)
-    .attr("y", d => rankingY(d.name))
-    .attr("width", d => rankingX(d.pontuacao))
-    .attr("height", rankingY.bandwidth())
-    .style("fill", "#4CAF50");
+// // Adiciona barras
+// rankingSvg.selectAll("rect")
+//     .data(evolucaoData.sort((a, b) => b.pontuacao - a.pontuacao))
+//     .enter()
+//     .append("rect")
+//     .attr("x", auxChartMargin.left)
+//     .attr("y", d => rankingY(d.name))
+//     .attr("width", d => rankingX(d.pontuacao))
+//     .attr("height", rankingY.bandwidth())
+//     .style("fill", "#4CAF50");
 
-// Adiciona eixo Y com nomes dos pilotos
-rankingSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left}, 0)`)
-    .call(d3.axisLeft(rankingY).tickSize(0)) // remove ticks
-    .selectAll("text")
-    .style("text-anchor", "end"); // Alinha os nomes melhor
+// // Adiciona eixo Y com nomes dos pilotos
+// rankingSvg.append("g")
+//     .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+//     .call(d3.axisLeft(rankingY).tickSize(0)) // remove ticks
+//     .selectAll("text")
+//     .style("text-anchor", "end"); // Alinha os nomes melhor
 
-// Eixo X com valores da pontuação
-rankingSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
-    .call(d3.axisBottom(rankingX).ticks(5)) // você pode mudar o número de ticks se quiser
-    .selectAll("text")
-    .style("text-anchor", "middle");
+// // Eixo X com valores da pontuação
+// rankingSvg.append("g")
+//     .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
+//     .call(d3.axisBottom(rankingX).ticks(5)) // você pode mudar o número de ticks se quiser
+//     .selectAll("text")
+//     .style("text-anchor", "middle");
 
-// EVOLUÇÃO
-// Escala X: voltas
-const evolucaoX = d3.scaleLinear()
-    .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
-    .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+// // EVOLUÇÃO
+// // Escala X: voltas
+// const evolucaoX = d3.scaleLinear()
+//     .domain([0, 9]) // 0 até 9, ou ajuste para o número real de voltas - 1
+//     .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
 
-// Escala Y: posições (1º lugar no topo, 20º embaixo)
-const evolucaoY = d3.scaleLinear()
-    .domain([20.5, 0.5]) // invertido porque 1º lugar fica no topo
-    .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+// // Escala Y: posições (1º lugar no topo, 20º embaixo)
+// const evolucaoY = d3.scaleLinear()
+//     .domain([20.5, 0.5]) // invertido porque 1º lugar fica no topo
+//     .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
 
-// Criando o SVG
-const evolucaoSvg = d3.select("#evolucao_chart")
-    .attr("width", auxChartWidth)
-    .attr("height", auxChartHeight);
+// // Criando o SVG
+// const evolucaoSvg = d3.select("#evolucao_chart")
+//     .attr("width", auxChartWidth)
+//     .attr("height", auxChartHeight);
 
-// Linha para cada piloto
-const line = d3.line()
-    .x((d, i) => evolucaoX(i)) // i é o número da volta
-    .y(d => evolucaoY(d));     // d é a posição na volta
+// // Linha para cada piloto
+// const line = d3.line()
+//     .x((d, i) => evolucaoX(i)) // i é o número da volta
+//     .y(d => evolucaoY(d));     // d é a posição na volta
 
-// Desenhando as linhas dos pilotos
-evolucaoSvg.selectAll(".linha-piloto")
-    .data(evolucaoData) // Um item para cada piloto
-    .enter()
-    .append("path")
-    .attr("class", "linha-piloto")
-    .attr("d", d => line(d.posicoes)) // d.posicoes = vetor de posições do piloto nas voltas
-    .attr("fill", "none")
-    .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // cores diferentes
-    .attr("stroke-width", 2);
+// // Desenhando as linhas dos pilotos
+// evolucaoSvg.selectAll(".linha-piloto")
+//     .data(evolucaoData) // Um item para cada piloto
+//     .enter()
+//     .append("path")
+//     .attr("class", "linha-piloto")
+//     .attr("d", d => line(d.posicoes)) // d.posicoes = vetor de posições do piloto nas voltas
+//     .attr("fill", "none")
+//     .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // cores diferentes
+//     .attr("stroke-width", 2);
 
-// Eixo X
-evolucaoSvg.append("g")
-    .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
-    .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `${d + 1}`));
+// // Eixo X
+// evolucaoSvg.append("g")
+//     .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
+//     .call(d3.axisBottom(evolucaoX).ticks(10).tickFormat(d => `${d + 1}`));
 
-// Eixo Y: posições, mas trocando números pelos nomes dos pilotos
-const posicaoParaPiloto = {};
-evolucaoData.forEach(piloto => {
-    // Pega a posição inicial do piloto na volta 0
-    const posicaoInicial = piloto.posicoes[0];
-    posicaoParaPiloto[posicaoInicial] = piloto.name;
-});
+// // Eixo Y: posições, mas trocando números pelos nomes dos pilotos
+// const posicaoParaPiloto = {};
+// evolucaoData.forEach(piloto => {
+//     // Pega a posição inicial do piloto na volta 0
+//     const posicaoInicial = piloto.posicoes[0];
+//     posicaoParaPiloto[posicaoInicial] = piloto.name;
+// });
 
-// Eixo Y
-evolucaoSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left},0)`)
-    .call(d3.axisLeft(evolucaoY)
-        .ticks(20)
-        .tickFormat(d => posicaoParaPiloto[d]));
+// // Eixo Y
+// evolucaoSvg.append("g")
+//     .attr("transform", `translate(${auxChartMargin.left},0)`)
+//     .call(d3.axisLeft(evolucaoY)
+//         .ticks(20)
+//         .tickFormat(d => posicaoParaPiloto[d]));
 
-// VELOCIDADE
-const velocidadeSvg = d3.select("#velocidade_chart");
-const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
-const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
+// // VELOCIDADE
+// const velocidadeSvg = d3.select("#velocidade_chart");
+// const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
+// const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
 
-velocidadeSvg.selectAll("path")
-    .data([velocidades])
-    .enter()
-    .append("path")
-    .attr("transform", `translate(0, ${auxChartMargin.top})`)
-    .attr("d", d3.line()
-        .x((d, i) => velocidadeX(i + 1))
-        .y(d => velocidadeY(d)))
-    .attr("fill", "none")
-    .attr("stroke", "orange")
-    .attr("stroke-width", 2);
+// velocidadeSvg.selectAll("path")
+//     .data([velocidades])
+//     .enter()
+//     .append("path")
+//     .attr("transform", `translate(0, ${auxChartMargin.top})`)
+//     .attr("d", d3.line()
+//         .x((d, i) => velocidadeX(i + 1))
+//         .y(d => velocidadeY(d)))
+//     .attr("fill", "none")
+//     .attr("stroke", "orange")
+//     .attr("stroke-width", 2);
 
 
 
