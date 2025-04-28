@@ -845,12 +845,21 @@ async function createEvolutionChart() {
                 .tickFormat(d => `${d + 1}`) // volta começa de 1
             );
 
-        // Eixo Y: posições
+        const posicaoParaPiloto = {};
+        evolucaoData.forEach(piloto => {
+            const posicaoInicial = piloto.positions[0];
+            if (posicaoInicial !== null) {
+                posicaoParaPiloto[posicaoInicial] = piloto.driver.code;
+            }
+        });
+            
+        // Eixo Y
         evolucaoSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left},0)`)
-            .call(d3.axisLeft(evolucaoY).ticks(20));
-
-        // Opcional: você pode criar uma legenda com nomes dos pilotos usando driver.givenName + driver.familyName
+            .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+            .call(d3.axisLeft(evolucaoY)
+                .ticks(20) // para posições de 1 a 20
+                .tickFormat(pos => posicaoParaPiloto[Math.round(pos)] || "")
+            );
 
     } catch (err) {
         console.error("Erro ao gerar gráfico de evolução:", err);
