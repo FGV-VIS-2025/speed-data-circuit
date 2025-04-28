@@ -1,7 +1,4 @@
-import {initialDrivers,
-        evolucaoData,
-        mockRacesByYear,
-        climas,
+import {
         cores_equipes
  } from "./mock-consts.js";
 
@@ -15,6 +12,7 @@ const constructorsFilePath = "../f1db/constructors.csv";
 const weatherDataFilePath = "../f1db/weather.csv";
 const lapTimesFilePath = "../f1db/lap_times.csv";
 const circuitsFilePath = "../f1db/circuits.csv";
+const tyreStintsFilePath = "../f1db/tyre_stints.csv";
 
 function getAllValidSeasons() {
     return [
@@ -227,6 +225,36 @@ async function getCircuitIdByRaceId(raceId){
     return circuitData[0].circuitId;
 }
 
+async function getTyreStintsByRace(raceId) {
+    const drivers = await loadCSVData(driversFilePath);
+    const stints = await loadCSVData(tyreStintsFilePath);
+
+    const raceStints = stints.filter(s => Number(s.raceId) === Number(raceId));
+    const driverIds = [...new Set(raceStints.map(s => s.driverId))];
+
+    const result = {};
+
+    driverIds.forEach(driverId => {
+        const stintsByDriver = raceStints
+            .filter(s => s.driverId === driverId)
+            .sort((a, b) => Number(a.startLap) - Number(b.startLap));
+        
+        const stintPorVolta = {};
+
+        stintsByDriver.forEach(stint => {
+            const start = Number(stint.startLap);
+            const end = start + Number(stint.lapCount) - 1;
+            for (let lap = start; lap <= end; lap++) {
+                stintPorVolta[lap] = stint.compound;
+            }
+        });
+
+        result[driverId] = stintPorVolta;
+    });
+
+    return result;
+}
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -270,9 +298,11 @@ const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 110 };
 const spriteWidth = 72;
 const spriteHeight = 45;
 
+let largerScore = 0;
+
 // Escala X dinâmica (alteração crucial)
 const x = d3.scaleLinear()
-  .range([mainChartRealWidth, 0]).domain([mainChartRealWidth, 0]); // Agora usa toda a largura disponível
+  .range([0, 1350]); // Agora usa toda a largura disponível
 
 // Escala Y com padding reduzido para barras mais altas (alteração importante)
 const y = d3.scaleBand()
@@ -300,6 +330,18 @@ let laps = [];
 const numberOfLaps = 20;
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
+
+function emojiByStringTyre(compound) {
+    const tyreEmojis = {
+      MEDIUM: '(⚪)', 
+      HARD: '(🔴)',   
+      SOFT: '(🟡)',   
+      INTERMEDIATE: '(🟢)', 
+      WET: '(🔵)'     
+    };
+  
+    return tyreEmojis[compound.toUpperCase()] || ''; 
+}
 
 function clearChart() {
     g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
@@ -376,8 +418,17 @@ raceSelect.addEventListener("change", async () => {
     }
 
     const lapsTime = await getLapTimes(raceID);
+    const tyreData = await getTyreStintsByRace(raceID);
 
-    laps = generateLaps(raceDrivers, lapsTime);
+    laps = generateLaps(raceDrivers, lapsTime, tyreData);
+    largerScore = 0;
+    for (const each_lap of laps) {
+        for (const each_driver of each_lap) {
+            if (each_driver.score > largerScore) {
+                largerScore = each_driver.score;
+            }
+        }
+    }
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -394,17 +445,18 @@ raceSelect.addEventListener("change", async () => {
     }
 });
 
-function generateLaps(drivers, lapsTime) {
+function generateLaps(drivers, lapsTime, tyreData) {
     const laps = [];
 
     const driversWithScore = drivers.map(driver => ({
         ...driver,
-        score: 0,
+        score: (20 - driver.grid)/1000000,
         name: `${driver.forename} ${driver.surname}`,
         totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
         running: true,
         lapsCompleted: 0,
-        lastAccumulated: 0
+        lastAccumulated: 0,
+        tyre: tyreData[driver.driverId][1] // Pneu da primeira volta
     }));
 
     laps.push(JSON.parse(JSON.stringify(driversWithScore)));
@@ -443,7 +495,8 @@ function generateLaps(drivers, lapsTime) {
             return {
                 ...driver,
                 lastAccumulated: currentLapData.milliseconds_acumulated,
-                lapsCompleted: driver.lapsCompleted + 1
+                lapsCompleted: driver.lapsCompleted + 1,
+                tyre: tyreData[driver.driverId][lap + 1] // Atualiza o pneu para a volta atual (lap começa em 0)
             };
         });
 
@@ -466,10 +519,10 @@ function generateLaps(drivers, lapsTime) {
                 if (driver.lastAccumulated === leaderAccumulated) {
                     score = driver.lastAccumulated;
                 } else {
-                    score = leaderAccumulated + 2.5*(leaderAccumulated - driver.lastAccumulated);
+                    score = leaderAccumulated + 2.5 * (leaderAccumulated - driver.lastAccumulated);
                 }
             } else {
-                score = (2 * leaderAccumulated) - 100000;
+                score = leaderAccumulated - 100000;
             }
 
             // Penalização pra quem tomou volta
@@ -480,7 +533,7 @@ function generateLaps(drivers, lapsTime) {
 
             return {
                 ...driver,
-                score: 2 * score / 10000
+                score: score
             };
         });
 
@@ -489,6 +542,7 @@ function generateLaps(drivers, lapsTime) {
 
     return laps;
 }
+
 
 // Vai reiniciar a contagem de voltas
 function stopPlayback() {
@@ -535,14 +589,15 @@ function updateUI() {
     lapText.textContent = `Volta ${currentLap + 1}`;
 }
 
+
 function renderLap(data, lapNum) {
     const tooltip = d3.select("#tooltip");
 
     const sorted = [...data].sort((a, b) => b.score - a.score);
-    
+
     y.domain(sorted.map(d => d.name));
-    
-    // BARRAS
+    x.domain([0, largerScore]);
+
     const bars = g.selectAll(".bar").data(sorted, d => d.name);
     bars.enter()
         .append("rect")
@@ -557,10 +612,10 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(bars)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("width", d => x(d.score))  // Largura da barra de acordo com o score
         .attr("y", d => y(d.name))
-        .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc");
+        .attr("fill", d => cores_equipes[selectedYear][d.constructorRef] || "#ccc");
     bars.exit().remove();
 
     // LABELS
@@ -576,7 +631,7 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(labels)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("fill", d => {
             const estimatedTextWidth = d.name.length * 10;
             const margemErro = 15;
@@ -604,7 +659,7 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(sprites)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("transform", d => {
           const posX = x(d.score) + 5;
           const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;  // Posicionamento corrigido
@@ -626,7 +681,7 @@ function renderLap(data, lapNum) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
                         Nacionalidade: ${d.nationality}<br>
-                        Pneus: ${d.pneus}<br>
+                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase() + " " + emojiByStringTyre(d.tyre)}<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min<br>
                     </div>

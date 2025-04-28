@@ -61,8 +61,8 @@ const initialDrivers2023 = [
     {name: "Logan Sargeant", equipe: "williams", equipe_real: "Williams (🇺🇸)", idade: 23, nacionalidade: "🇺🇸", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Daniel Ricciardo", equipe: "alphatauri", equipe_real: "AlphaTauri (🇦🇺)", idade: 34, nacionalidade: "🇦🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Nyck De Vries", equipe: "alphatauri", equipe_real: "AlphaTauri (🇳🇱)", idade: 28, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Valtteri Bottas", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 34, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Guanyu Zhou", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 24, nacionalidade: "🇨🇳", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
+    {name: "Valtteri Bottas", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 34, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
+    {name: "Guanyu Zhou", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 24, nacionalidade: "🇨🇳", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 31, nacionalidade: "🇩🇰", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Nico Hulkenberg", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 36, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
 ];
@@ -78,8 +78,8 @@ const initialDrivers2022 = [
     {name: "Daniel Ricciardo", equipe: "mclaren", equipe_real: "McLaren (🇦🇺)", idade: 33, nacionalidade: "🇦🇺", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Esteban Ocon", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 26, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Fernando Alonso", equipe: "alpine", equipe_real: "Alpine (🇪🇸)", idade: 41, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Valtteri Bottas", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 33, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Guanyu Zhou", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 23, nacionalidade: "🇨🇳", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
+    {name: "Valtteri Bottas", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 33, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
+    {name: "Guanyu Zhou", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 23, nacionalidade: "🇨🇳", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Sebastian Vettel", equipe: "aston_martin", equipe_real: "Aston Martin (🇩🇪)", idade: 35, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 23, nacionalidade: "🇨🇦", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Mick Schumacher", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 23, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
@@ -107,8 +107,8 @@ const initialDrivers2021 = [
     {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 22, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
     {name: "Nicholas Latifi", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 26, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
     {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 23, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 42, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 27, nacionalidade: "🇮🇹", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
+    {name: "Kimi Raikkonen", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 42, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
+    {name: "Antonio Giovinazzi", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 27, nacionalidade: "🇮🇹", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
     {name: "Mick Schumacher", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 22, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
     {name: "Nikita Mazepin", equipe: "haas", equipe_real: "Haas (🇷🇺)", idade: 22, nacionalidade: "🇷🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
 ];
@@ -128,8 +128,8 @@ const initialDrivers2020 = [
     {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 20, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Pierre Gasly", equipe: "alphatauri", equipe_real: "AlphaTauri (🇫🇷)", idade: 24, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Daniil Kvyat", equipe: "alphatauri", equipe_real: "AlphaTauri (🇷🇺)", idade: 26, nacionalidade: "🇷🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 41, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 26, nacionalidade: "🇮🇹", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
+    {name: "Kimi Raikkonen", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 41, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
+    {name: "Antonio Giovinazzi", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 26, nacionalidade: "🇮🇹", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Nicholas Latifi", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 25, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 22, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
     {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 28, nacionalidade: "🇩🇰", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
@@ -148,12 +148,12 @@ const initialDrivers2019 = [
     {name: "Carlos Sainz", equipe: "mclaren", equipe_real: "Renault (🇦🇺)", idade: 30, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Sergio Perez", equipe: "racing_point", equipe_real: "Racing Point (🇲🇽)", idade: 29, nacionalidade: "🇲🇽", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 19, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 40, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
+    {name: "Kimi Raikkonen", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 40, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Daniil Kvyat", equipe: "toro_rosso", equipe_real: "Scuderia Toro Rosso (🇷🇺)", idade: 25, nacionalidade: "🇷🇺", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Nico Hulkenberg", equipe: "renault", equipe_real: "Renault (🇩🇪)", idade: 32, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Lance Stroll", equipe: "racing_point", equipe_real: "Racing Point (🇨🇦)", idade: 20, nacionalidade: "🇨🇦", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 27, nacionalidade: "🇩🇰", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 25, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
+    {name: "Antonio Giovinazzi", equipe: "alfa", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 25, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Romain Grosjean", equipe: "haas", equipe_real: "Haas (🇫🇷)", idade: 33, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "Robert Kubica", equipe: "williams", equipe_real: "Williams (🇵🇱)", idade: 35, nacionalidade: "🇵🇱", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
     {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 21, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
@@ -282,14 +282,101 @@ export const mockRacesByYear = {
     
 
 export const cores_equipes = {
-    red_bull: "#181740",
-    mercedez: "#41F2D2",
-    ferrari: "#D90707",
-    alpine: "#0090FF",
-    hass: "#BF0A2B",
-    aston_martin: "#048C5A",
-    mclaren: "#F28D35",
-    sauber: "#05A61D",
-    williams: "#113A8C",
-    toro_roso: "#F2F2F2"
-};
+    "2025": {
+        red_bull: "#181740",
+        mercedez: "#41F2D2",
+        ferrari: "#D90707",
+        alpine: "#0090FF",
+        hass: "#BF0A2B",
+        aston_martin: "#048C5A",
+        mclaren: "#F28D35",
+        sauber: "#00FF00",
+        williams: "#476497",
+        rb: "#002244"
+    },
+
+    "2024": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        // 
+      sauber: "#00FF00",         // 
+      williams: "#476497",       // 
+      rb: "#002244"              // 
+    },
+    "2023": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        // 
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
+    },
+    "2022": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#F266B3",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        //
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
+    },
+    "2021": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      alpine: "#0E2773",         // 
+      haas: "#FFFFFF",           // 
+      aston_martin: "#006F62",   // 
+      mclaren: "#F38F1C",        // 
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
+    },
+    "2020": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      renault: "#FFD700",        // 
+      haas: "#000000",           // 
+      racing_point: "#F266B3",   // 
+      mclaren: "#F38F1C",        // 
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      alphatauri: "#0A111F"      // 
+    },
+    "2019": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      renault: "#FFD700",        // 
+      haas: "#000000",           // 
+      racing_point: "#F266B3",   // 
+      mclaren: "#F38F1C",        // 
+      alfa: "#99141D",           // 
+      williams: "#476497",       // 
+      toro_rosso: "#0C2672"      // 
+    },
+    "2018": {
+      red_bull: "#0A111F",       // 
+      mercedes: "#5F6970",       // 
+      ferrari: "#F12323",        // 
+      renault: "#FFD700",        // 
+      haas: "#99141D",           // 
+      force_india: "#F266B3",    // 
+      mclaren: "#F38F1C",        // 
+      sauber: "#FDFCFC",         // 
+      williams: "#476497",       // 
+      toro_rosso: "#0C2672"      // 
+    }
+  };
