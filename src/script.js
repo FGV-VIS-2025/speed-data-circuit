@@ -14,6 +14,7 @@ const driversFilePath = "../f1db/drivers.csv";
 const constructorsFilePath = "../f1db/constructors.csv";
 const weatherDataFilePath = "../f1db/weather.csv";
 const lapTimesFilePath = "../f1db/lap_times.csv";
+const circuitsFilePath = "../f1db/circuits.csv";
 
 function getAllValidSeasons() {
     return [
@@ -220,6 +221,12 @@ async function getLapTimes(raceId) {
     return lapTimesByDriver;
 }
 
+async function getCircuitIdByRaceId(raceId){
+    const raceData = await loadCSVData(racesFilePath);
+    const circuitData = raceData.filter(l => Number(l.raceId) === Number(raceId));
+    return circuitData[0].circuitId;
+}
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
@@ -349,7 +356,8 @@ raceSelect.addEventListener("change", async () => {
         <p>Vento: ${clima.avg_windspeed} km/h</p>
         <p>Clima: ${clima.rainfall ? "Chuva" : "Limpo"}`;
 
-    lapIMG.innerHTML = `<img src="${"../assets/others/interlagos.jpg"}" alt="">`;
+    const circuitId = await getCircuitIdByRaceId(raceID);
+    lapIMG.innerHTML = `<img src="../assets/circuits/${circuitId}.png" alt="">`;
 
     stopPlayback();
 
