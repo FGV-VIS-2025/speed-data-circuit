@@ -1,7 +1,4 @@
-import {initialDrivers,
-        evolucaoData,
-        mockRacesByYear,
-        climas,
+import {
         cores_equipes
  } from "./mock-consts.js";
 
@@ -606,10 +603,10 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(bars)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("width", d => x(d.score))  // Largura da barra de acordo com o score
         .attr("y", d => y(d.name))
-        .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc");
+        .attr("fill", d => cores_equipes[selectedYear][d.constructorRef] || "#ccc");
     bars.exit().remove();
 
     // LABELS
@@ -625,7 +622,7 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(labels)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("fill", d => {
             const estimatedTextWidth = d.name.length * 10;
             const margemErro = 15;
@@ -653,7 +650,7 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(sprites)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("transform", d => {
           const posX = x(d.score) + 5;
           const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;  // Posicionamento corrigido
