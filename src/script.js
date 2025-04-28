@@ -102,6 +102,8 @@ async function getConstructorDataByID(constructorID) {
     }
 }
 
+function calculaIdade()
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 const grid = document.getElementById('grid');
 const cols = [1360, 1380, 1400, 1420];
