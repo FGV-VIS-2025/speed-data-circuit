@@ -81,15 +81,25 @@ async function getDriversByRace(raceId) {
     }
 };
 
-async function getTeamsByRaceAndDriver(raceId, driverId) {
-    try{
+async function getTeamsByRace(raceId) {
+    try {
         const racesData = await loadCSVData(resultsFilePath);
-        return racesData.filter(l => Number(l.raceId) === Number(raceId) && Number(l.driverId) === Number(driverId));
+        const filteredData = racesData.filter(l => Number(l.raceId) === Number(raceId));
+
+        const driverTeams = {};
+
+        filteredData.forEach(result => {
+            const driverId = result.driverId;
+            driverTeams[driverId] = result; // ou só { constructorId: result.constructorId } se quiser menos info
+        });
+
+        return driverTeams;
     } catch (error) {
         console.error('Erro ao carregar drivers da corrida:', error);
-        return [];
+        return {};
     }
-};
+}
+
 
 async function getConstructorDataByID(constructorID) {
     try{
@@ -267,12 +277,12 @@ raceSelect.addEventListener("change", async () => {
 
     const raceDrivers = await getDriversByRace(parseInt(raceID));
     const raceAges = await getAgesByRace(parseInt(raceID));
+    const raceTeams = await getTeamsByRace(parseInt(raceID));
 
     for (const driver of raceDrivers) {
-        const teste = await getTeamsByRaceAndDriver(parseInt(raceID), parseInt(driver.driverId));
-        driver.constructorId = teste[0].constructorId;
-        driver.grid = teste[0].grid;
-        driver.fastestLap = teste[0].fastestLapTime;
+        driver.constructorId = raceTeams[parseInt(driver.driverId)].constructorId;
+        driver.grid = raceTeams[parseInt(driver.driverId)].grid;
+        driver.fastestLap = raceTeams[parseInt(driver.driverId)].fastestLapTime;
         const teste2 = await getConstructorDataByID(parseInt(driver.constructorId));
         driver.constructorRef = teste2[0].constructorRef;
         driver.constructorName = teste2[0].name;
