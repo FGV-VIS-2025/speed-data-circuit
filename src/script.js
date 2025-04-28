@@ -339,7 +339,7 @@ raceSelect.addEventListener("change", async () => {
     const clima = await getWeatherRace(raceID);
     const dateAndTime = await getDateAndTime(raceID);
 
-    climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
+    climaIMG.innerHTML = `<img src="../assets/weather/${clima.rainfall}.png" alt="">`;
     climaInfo.innerHTML = `
         <p>Data: ${formatDate(dateAndTime.date)}</p>
         <p>Horário: ${dateAndTime.time.split(":")[0]}:${dateAndTime.time.split(":")[1]} UTC</p>
