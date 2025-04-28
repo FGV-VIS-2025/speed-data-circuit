@@ -128,6 +128,12 @@ async function getLapTimesByDriverRace(raceId, driverId) {
     return lapTimes.filter(l => Number(l.raceId) === Number(raceId) && Number(l.driverId) === Number(driverId));
 }
 
+
+async function getLapTimesByDriverRace(raceId, driverId) {
+    const racesData = await loadCSVData(constructorsFilePath);
+    return racesData.filter(l => Number(l.raceId) === Number(raceId) && Number(l.driverId) === Number(driverId));
+}
+
 async function getDriversPositionsByRace(raceId) {
 
     const lapTimes = await loadCSVData(lapTimesFilePath);
