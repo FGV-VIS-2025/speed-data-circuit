@@ -445,7 +445,7 @@ function generateLaps(drivers, lapsTime, tyreData) {
 
     const driversWithScore = drivers.map(driver => ({
         ...driver,
-        score: 0,
+        score: (20 - driver.grid)/1000000,
         name: `${driver.forename} ${driver.surname}`,
         totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
         running: true,
