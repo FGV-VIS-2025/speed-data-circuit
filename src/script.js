@@ -645,12 +645,49 @@ async function loadCSVData(filePath) {
             throw new Error('Erro ao carregar o arquivo CSV');
         }
         const text = await response.text();
-        return d3.csvParse(text);  // Parse CSV com d3
+        return d3.csvParse(text); 
     } catch (error) {
         console.error('Erro ao ler o arquivo CSV:', error);
-        throw error;  // Lança o erro para quem chamar a função
+        throw error; 
     }
 }
+
+// Função para calcular a pontuação dos pilotos por corrida
+async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath) {
+    const results = await loadCSVData(resultsFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+    const races = await loadCSVData(racesFilePath);
+  
+    const race = races.find(r => Number(r.raceId) === Number(raceId));
+    if (!race) return [];
+  
+    const year = Number(race.year);
+    const round = Number(race.round);
+  
+    const raceIdsUntilNow = races
+      .filter(r => Number(r.year) === year && Number(r.round) <= round)
+      .map(r => r.raceId);
+  
+    const filteredResults = results.filter(r => raceIdsUntilNow.includes(r.raceId));
+  
+    const pointsByDriver = {};
+    filteredResults.forEach(r => {
+      const driverId = r.driverId;
+      const pts = parseFloat(r.points) || 0;
+      if (!pointsByDriver[driverId]) pointsByDriver[driverId] = 0;
+      pointsByDriver[driverId] += pts;
+    });
+  
+    return Object.entries(pointsByDriver).map(([driverId, points]) => {
+      const driver = drivers.find(d => d.driverId === driverId);
+      return {
+        driverId,
+        driver,
+        points
+      };
+    }).sort((a, b) => b.points - a.points);
+  }
+  
 
 // EVOLUÇÃO
 // Escala X: voltas
