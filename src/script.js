@@ -12,6 +12,7 @@ const pitStopsFilePath = "../f1db/pit_stops.csv";
 const resultsFilePath = "../f1db/results.csv";
 const driversFilePath = "../f1db/drivers.csv";
 const constructorsFilePath = "../f1db/constructors.csv";
+const weatherDataFilePath = "../f1db/weather.csv"
 
 function getAllValidSeasons() {
     return [
@@ -104,7 +105,6 @@ async function getTeamsByRace(raceId) {
 async function getConstructorDataByID(constructorID) {
     try{
         const results = await loadCSVData(constructorsFilePath);
-        console.log("OK");
         return results.filter(l => Number(l.constructorId) === Number(constructorID));
     } catch (error) {
         console.error('Erro ao carregar drivers da corrida:', error);
@@ -144,6 +144,42 @@ async function getAgesByRace(raceId) {
 
     return driverAges;
 }
+
+async function getWeatherRace(raceId) {
+    const weatherData = await loadCSVData(weatherDataFilePath);
+
+    const raceWeather = weatherData.find(w => Number(w.raceId) === Number(raceId));
+    if (!raceWeather) return null;
+
+    return {
+        raceId: Number(raceWeather.raceId),
+        avg_airtemp: parseFloat(raceWeather.avg_airtemp),
+        avg_tracktemp: parseFloat(raceWeather.avg_tracktemp),
+        avg_humidity: parseFloat(raceWeather.avg_humidity),
+        avg_pressure: parseFloat(raceWeather.avg_pressure),
+        avg_windspeed: parseFloat(raceWeather.avg_windspeed),
+        rainfall: raceWeather.rainfall === 'True'
+    };
+}
+
+async function getDateAndTime(raceId) {
+    const raceData = await loadCSVData(racesFilePath);
+    const race = raceData.find(l => Number(l.raceId) === Number(raceId));
+
+    if (!race) return null;
+
+    return {
+        date: race.date,
+        time: race.time
+    }
+}
+
+function formatDate(date) {
+    const aux = date.split("-");
+    const formattedDate = `${aux[2]}/${aux[1]}/${aux[0]}`;
+    return formattedDate;
+}
+
 
 
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
@@ -259,21 +295,27 @@ yearSelect.addEventListener("change", async () => {
 raceSelect.addEventListener("change", async () => {
     clearChart();
 
+    const raceChosen = raceSelect.textContent;
+    const raceID = raceSelect.value;
+
+    const clima = await getWeatherRace(raceID);
+    const dateAndTime = await getDateAndTime(raceID);
+
+    console.log(formatDate(dateAndTime.date));
+
     climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
     climaInfo.innerHTML = `
-        <p>Horário: ${new Date().toLocaleTimeString()}</p>
-        <p>Data: ${new Date().toLocaleDateString()}</p>
-        <p>Temperatura: ${Math.floor(Math.random() * 30) + 20}°C</p>
-        <p>Temp. Pista: ${Math.floor(Math.random() * 40) + 20}°C</p>
-        <p>Umidade: ${Math.floor(Math.random() * 100)}%</p>
-        <p>Vento: ${Math.floor(Math.random() * 20) + 5} km/h</p>`;
+        <p>Data: ${formatDate(dateAndTime.date)}</p>
+        <p>Horário: ${dateAndTime.time.split(":")[0]}:${dateAndTime.time.split(":")[1]} UTC</p>
+        <p>Temperatura: ${clima.avg_airtemp}°C</p>
+        <p>Temp. Pista: ${clima.avg_tracktemp}°C</p>
+        <p>Umidade: ${clima.avg_humidity}%</p>
+        <p>Vento: ${clima.avg_windspeed} km/h</p>
+        <p>Clima: ${clima.rainfall ? "Chuva" : "Limpo"}`;
 
     lapIMG.innerHTML = `<img src="${"../assets/others/interlagos.jpg"}" alt="">`;
 
     stopPlayback();
-
-    const raceChosen = raceSelect.textContent;
-    const raceID = raceSelect.value;
 
     const raceDrivers = await getDriversByRace(parseInt(raceID));
     const raceAges = await getAgesByRace(parseInt(raceID));
