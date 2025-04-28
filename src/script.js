@@ -458,7 +458,7 @@ function generateLaps(drivers, lapsTime) {
                 if (driver.lastAccumulated === leaderAccumulated) {
                     score = driver.lastAccumulated;
                 } else {
-                    score = leaderAccumulated + 5*(leaderAccumulated - driver.lastAccumulated);
+                    score = leaderAccumulated + 2.5*(leaderAccumulated - driver.lastAccumulated);
                 }
             } else {
                 score = (2 * leaderAccumulated) - 100000;
