@@ -708,12 +708,14 @@ function renderLap(data, lapNum) {
         .transition().duration(500)
         .attr("fill", d => {
             const estimatedTextWidth = d.name.length * 10;
-            const margemErro = 15;
-            return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+            const margemErro = 50;
+            return x(d.score) > estimatedTextWidth + margemErro
+                ? "#ffffff"
+                : "#000000"
         })
         .attr("x", d => {
             const estimatedTextWidth = d.name.length * 10;
-            const margemErro = 25;
+            const margemErro = 50;
             return x(d.score) > estimatedTextWidth + margemErro
                 ? x(d.score) - estimatedTextWidth - 35
                 : x(d.score) + spriteWidth + 35;

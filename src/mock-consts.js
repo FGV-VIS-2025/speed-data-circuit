@@ -284,10 +284,10 @@ export const mockRacesByYear = {
 export const cores_equipes = {
     "2025": {
         red_bull: "#181740",
-        mercedez: "#41F2D2",
+        mercedes: "#41F2D2",      
         ferrari: "#D90707",
         alpine: "#0090FF",
-        hass: "#BF0A2B",
+        haas: "#BF0A2B",           
         aston_martin: "#048C5A",
         mclaren: "#F28D35",
         sauber: "#00FF00",
@@ -296,87 +296,93 @@ export const cores_equipes = {
     },
 
     "2024": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      alpine: "#F266B3",         // 
-      haas: "#FFFFFF",           // 
-      aston_martin: "#006F62",   // 
-      mclaren: "#F38F1C",        // 
-      sauber: "#00FF00",         // 
-      williams: "#476497",       // 
-      rb: "#002244"              // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      alpine: "#F266B3",
+      haas: "#000000",             
+      aston_martin: "#006F62",
+      mclaren: "#F38F1C",
+      sauber: "#00FF00",
+      williams: "#476497",
+      rb: "#002244"
     },
+
     "2023": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      alpine: "#F266B3",         // 
-      haas: "#FFFFFF",           // 
-      aston_martin: "#006F62",   // 
-      mclaren: "#F38F1C",        // 
-      alfa: "#99141D",           // 
-      williams: "#476497",       // 
-      alphatauri: "#0A111F"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      alpine: "#F266B3",
+      haas: "#000000",             
+      aston_martin: "#006F62",
+      mclaren: "#F38F1C",
+      alfa: "#99141D",
+      williams: "#476497",
+      alphatauri: "#0A111F"
     },
+
     "2022": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      alpine: "#F266B3",         // 
-      haas: "#FFFFFF",           // 
-      aston_martin: "#006F62",   // 
-      mclaren: "#F38F1C",        //
-      alfa: "#99141D",           // 
-      williams: "#476497",       // 
-      alphatauri: "#0A111F"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      alpine: "#F266B3",
+      haas: "#000000",             
+      aston_martin: "#006F62",
+      mclaren: "#F38F1C",
+      alfa: "#99141D",
+      williams: "#476497",
+      alphatauri: "#0A111F"
     },
+
     "2021": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      alpine: "#0E2773",         // 
-      haas: "#FFFFFF",           // 
-      aston_martin: "#006F62",   // 
-      mclaren: "#F38F1C",        // 
-      alfa: "#99141D",           // 
-      williams: "#476497",       // 
-      alphatauri: "#0A111F"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      alpine: "#0E2773",
+      haas: "#000000",             
+      aston_martin: "#006F62",
+      mclaren: "#F38F1C",
+      alfa: "#99141D",
+      williams: "#476497",
+      alphatauri: "#0A111F"
     },
+
     "2020": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      renault: "#FFD700",        // 
-      haas: "#000000",           // 
-      racing_point: "#F266B3",   // 
-      mclaren: "#F38F1C",        // 
-      alfa: "#99141D",           // 
-      williams: "#476497",       // 
-      alphatauri: "#0A111F"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      renault: "#FFD700",
+      haas: "#000000",             
+      racing_point: "#F266B3",
+      mclaren: "#F38F1C",
+      alfa: "#99141D",
+      williams: "#476497",
+      alphatauri: "#0A111F"
     },
+
     "2019": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      renault: "#FFD700",        // 
-      haas: "#000000",           // 
-      racing_point: "#F266B3",   // 
-      mclaren: "#F38F1C",        // 
-      alfa: "#99141D",           // 
-      williams: "#476497",       // 
-      toro_rosso: "#0C2672"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      renault: "#FFD700",
+      haas: "#000000",            
+      racing_point: "#F266B3",
+      mclaren: "#F38F1C",
+      alfa: "#99141D",
+      williams: "#476497",
+      toro_rosso: "#0C2672"
     },
+
     "2018": {
-      red_bull: "#0A111F",       // 
-      mercedes: "#5F6970",       // 
-      ferrari: "#F12323",        // 
-      renault: "#FFD700",        // 
-      haas: "#99141D",           // 
-      force_india: "#F266B3",    // 
-      mclaren: "#F38F1C",        // 
-      sauber: "#FDFCFC",         // 
-      williams: "#476497",       // 
-      toro_rosso: "#0C2672"      // 
+      red_bull: "#0A111F",
+      mercedes: "#5F6970",
+      ferrari: "#F12323",
+      renault: "#FFD700",
+      haas: "#99141D",             
+      force_india: "#F266B3",
+      mclaren: "#F38F1C",
+      sauber: "#5e0a02",           
+      williams: "#476497",
+      toro_rosso: "#0C2672"
     }
-  };
+};
