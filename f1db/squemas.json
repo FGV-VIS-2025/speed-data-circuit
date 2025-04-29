@@ -19,7 +19,9 @@
         "results",
         "sprintResults",
         "seasons",
-        "status"
+        "status",
+        "weather",
+        "stints"
     ],
     "general_notes": [
         "Dates, times and durations are in ISO 8601 format",
@@ -1169,6 +1171,151 @@
                     "default": "",
                     "extra": "",
                     "description": "Finishing status e.g. \"Retired\""
+                }
+            ]
+        },
+        {
+            "name": "weather",
+            "fields": [
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "avg_airtemp",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Average air temperature during the race"
+                },
+                {
+                    "name": "avg_tracktemp",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Average track temperature during the race"
+                },
+                {
+                    "name": "avg_humidity",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Average humidity during the race"
+                },
+                {
+                    "name": "avg_pressure",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Average pressure during the race"
+                },
+                {
+                    "name": "avg_windspeed",
+                    "type": "float",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Average wind speed during the race"
+                },
+                {
+                    "name": "rainfall",
+                    "type": "boolean",
+                    "null": true,
+                    "key": "",
+                    "default": null,
+                    "extra": "",
+                    "description": "Whether there was rainfall during the race"
+                }
+            ]
+        },
+        {
+            "name": "tyre_stints",
+            "fields": [
+                {
+                    "name": "raceId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → races.raceId"
+                },
+                {
+                    "name": "driverId",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "FK → drivers.driverId"
+                },
+                {
+                    "name": "stintNumber",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Stint number for the driver in the race"
+                },
+                {
+                    "name": "compound",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Tyre compound used during the stint"
+                },
+                {
+                    "name": "startLap",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Lap number when the stint started"
+                },
+                {
+                    "name": "lapCount",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Number of laps in the stint"
+                },
+                {
+                    "name": "tyreAgeAtStart",
+                    "type": "int(11)",
+                    "null": false,
+                    "key": "",
+                    "default": 0,
+                    "extra": "",
+                    "description": "Age of the tyre at the start of the stint"
+                },
+                {
+                    "name": "teamName",
+                    "type": "varchar(255)",
+                    "null": false,
+                    "key": "",
+                    "default": "",
+                    "extra": "",
+                    "description": "Name of the constructor/team"
                 }
             ]
         }
