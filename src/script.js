@@ -1,353 +1,390 @@
-const initialDrivers2025 = [
-    { name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 25, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 1, volta_mais_rapida: "1:18.235" },
-    { name: "Yuki Tsunoda", equipe: "red_bull", equipe_real: "Red Bull (🇦🇹)", idade: 23, nacionalidade: "🇯🇵", pneus: "Médios (🟡)", posicao_grid: 2, volta_mais_rapida: "1:20.412" },
-    { name: "Lewis Hamilton", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 39, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 3, volta_mais_rapida: "1:19.832" },
-    { name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇮🇹)", idade: 26, nacionalidade: "🇲🇨", pneus: "Macios (⚪)", posicao_grid: 4, volta_mais_rapida: "1:19.574" },
-    { name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 24, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 5, volta_mais_rapida: "1:20.001" },
-    { name: "Oscar Piastri", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 23, nacionalidade: "🇦🇺", pneus: "Duros (🔴)", posicao_grid: 6, volta_mais_rapida: "1:21.033" },
-    { name: "Pierre Gasly", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 28, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 7, volta_mais_rapida: "1:20.546" },
-    { name: "Jack Doohan", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 21, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 8, volta_mais_rapida: "1:21.928" },
-    { name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 43, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 9, volta_mais_rapida: "1:20.238" },
-    { name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇬🇧)", idade: 26, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 10, volta_mais_rapida: "1:21.411" },
-    { name: "Alexander Albon", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 28, nacionalidade: "🇹🇭", pneus: "Médios (🟡)", posicao_grid: 11, volta_mais_rapida: "1:21.015" },
-    { name: "Carlos Sainz", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 30, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 12, volta_mais_rapida: "1:20.372" },
-    { name: "Isack Hadjar", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 20, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 13, volta_mais_rapida: "1:22.007" },
-    { name: "Liam Lawson", equipe: "toro_roso", equipe_real: "Toro Roso (🇮🇹)", idade: 23, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 14, volta_mais_rapida: "1:21.842" },
-    { name: "Kimi Antonelli", equipe: "mercedes", equipe_real: "Mercedes (🇩🇪)", idade: 18, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 15, volta_mais_rapida: "1:23.001" },
-    { name: "George Russell", equipe: "mercedes", equipe_real: "Mercedes (🇩🇪)", idade: 26, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617" },
-    { name: "Oliver Bearman", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 19, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 17, volta_mais_rapida: "1:22.366" },
-    { name: "Esteban Ocon", equipe: "hass", equipe_real: "Haas (🇺🇸)", idade: 28, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774" },
-    { name: "Nico Hulkenberg", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 37, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 19, volta_mais_rapida: "1:23.377" },
-    { name: "Gabriel Bortoleto", equipe: "sauber", equipe_real: "Sauber (🇨🇭)", idade: 20, nacionalidade: "🇧🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983" }
-];
+import {
+        cores_equipes
+ } from "./mock-consts.js";
 
-const initialDrivers2024 = [
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇦🇹)", idade: 26, nacionalidade: "🇳🇱", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sergio Perez", equipe: "red_bull", equipe_real: "Red Bull Racing (🇲🇽)", idade: 34, nacionalidade: "🇲🇽", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 24, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Oscar Piastri", equipe: "mclaren", equipe_real: "McLaren (🇦🇺)", idade: 23, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 26, nacionalidade: "🇲🇨", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Carlos Sainz", equipe: "ferrari", equipe_real: "Ferrari (🇪🇸)", idade: 30, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 39, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "George Russell", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 26, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 25, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "Aston Martin (🇪🇸)", idade: 43, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Esteban Ocon", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 28, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Pierre Gasly", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 29, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 32, nacionalidade: "🇩🇰", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Nico Hulkenberg", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 37, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Daniel Ricciardo", equipe: "rb", equipe_real: "RB Racing (🇦🇺)", idade: 35, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Yuki Tsunoda", equipe: "rb", equipe_real: "RB Racing (🇯🇵)", idade: 24, nacionalidade: "🇯🇵", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Alexander Albon", equipe: "williams", equipe_real: "Williams (🇹🇭)", idade: 29, nacionalidade: "🇹🇭", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Logan Sargeant", equipe: "williams", equipe_real: "Williams (🇺🇸)", idade: 24, nacionalidade: "🇺🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Guanyu Zhou", equipe: "sauber", equipe_real: "Kick Sauber (🇨🇳)", idade: 25, nacionalidade: "🇨🇳", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Valtteri Bottas", equipe: "sauber", equipe_real: "Kick Sauber (🇫🇮)", idade: 35, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-];
+// FUNÇÕES DOS DADOS --------------------------------------------------------------------------------------------------------------------------------
 
-const initialDrivers2023 = [
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 25, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Sergio Perez", equipe: "red_bull", equipe_real: "Red Bull Racing (🇲🇽)", idade: 33, nacionalidade: "🇲🇽", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 25, nacionalidade: "🇲🇨", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Carlos Sainz", equipe: "ferrari", equipe_real: "Ferrari (🇪🇸)", idade: 29, nacionalidade: "🇪🇸", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 38, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "George Russell", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 25, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 23, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Oscar Piastri", equipe: "mclaren", equipe_real: "McLaren (🇦🇺)", idade: 22, nacionalidade: "🇦🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 24, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Fernando Alonso", equipe: "aston_martin", equipe_real: "Aston Martin (🇪🇸)", idade: 42, nacionalidade: "🇪🇸", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Esteban Ocon", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 27, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Pierre Gasly", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 28, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Alexander Albon", equipe: "williams", equipe_real: "Williams (🇹🇭)", idade: 28, nacionalidade: "🇹🇭", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Logan Sargeant", equipe: "williams", equipe_real: "Williams (🇺🇸)", idade: 23, nacionalidade: "🇺🇸", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Daniel Ricciardo", equipe: "alphatauri", equipe_real: "AlphaTauri (🇦🇺)", idade: 34, nacionalidade: "🇦🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Nyck De Vries", equipe: "alphatauri", equipe_real: "AlphaTauri (🇳🇱)", idade: 28, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Valtteri Bottas", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 34, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Guanyu Zhou", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 24, nacionalidade: "🇨🇳", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 31, nacionalidade: "🇩🇰", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Nico Hulkenberg", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 36, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-];
-  
-const initialDrivers2022 = [
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 24, nacionalidade: "🇳🇱", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Sergio Perez", equipe: "red_bull", equipe_real: "Red Bull Racing (🇲🇽)", idade: 32, nacionalidade: "🇲🇽", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 24, nacionalidade: "🇲🇨", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Carlos Sainz", equipe: "ferrari", equipe_real: "Ferrari (🇪🇸)", idade: 28, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 37, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "George Russell", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 24, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 22, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Daniel Ricciardo", equipe: "mclaren", equipe_real: "McLaren (🇦🇺)", idade: 33, nacionalidade: "🇦🇺", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Esteban Ocon", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 26, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Fernando Alonso", equipe: "alpine", equipe_real: "Alpine (🇪🇸)", idade: 41, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Valtteri Bottas", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 33, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Guanyu Zhou", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇨🇳)", idade: 23, nacionalidade: "🇨🇳", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Sebastian Vettel", equipe: "aston_martin", equipe_real: "Aston Martin (🇩🇪)", idade: 35, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 23, nacionalidade: "🇨🇦", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Mick Schumacher", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 23, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 30, nacionalidade: "🇩🇰", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Pierre Gasly", equipe: "alphatauri", equipe_real: "AlphaTauri (🇫🇷)", idade: 27, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Yuki Tsunoda", equipe: "alphatauri", equipe_real: "AlphaTauri (🇯🇵)", idade: 22, nacionalidade: "🇯🇵", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Alexander Albon", equipe: "williams", equipe_real: "Williams (🇹🇭)", idade: 27, nacionalidade: "🇹🇭", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Nicholas Latifi", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 27, nacionalidade: "🇨🇦", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-];  
+const racesFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/races.csv";
+const pitStopsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/pit_stops.csv";
+const resultsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/results.csv";
+const driversFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/drivers.csv";
+const constructorsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/constructors.csv";
+const weatherDataFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/weather.csv";
+const lapTimesFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/lap_times.csv";
+const circuitsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/circuits.csv";
+const tyreStintsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/tyre_stints.csv";
 
-const initialDrivers2021 = [
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 36, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Valtteri Bottas", equipe: "mercedes", equipe_real: "Mercedes (🇫🇮)", idade: 32, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 23, nacionalidade: "🇳🇱", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sergio Perez", equipe: "red_bull", equipe_real: "Red Bull Racing (🇲🇽)", idade: 31, nacionalidade: "🇲🇽", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 23, nacionalidade: "🇲🇨", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Carlos Sainz", equipe: "ferrari", equipe_real: "Ferrari (🇪🇸)", idade: 27, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 21, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Daniel Ricciardo", equipe: "mclaren", equipe_real: "McLaren (🇦🇺)", idade: 32, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Pierre Gasly", equipe: "alphatauri", equipe_real: "AlphaTauri (🇫🇷)", idade: 26, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Yuki Tsunoda", equipe: "alphatauri", equipe_real: "AlphaTauri (🇯🇵)", idade: 21, nacionalidade: "🇯🇵", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Esteban Ocon", equipe: "alpine", equipe_real: "Alpine (🇫🇷)", idade: 25, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Fernando Alonso", equipe: "alpine", equipe_real: "Alpine (🇪🇸)", idade: 40, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sebastian Vettel", equipe: "aston_martin", equipe_real: "Aston Martin (🇩🇪)", idade: 34, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lance Stroll", equipe: "aston_martin", equipe_real: "Aston Martin (🇨🇦)", idade: 22, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Nicholas Latifi", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 26, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 23, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 42, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 27, nacionalidade: "🇮🇹", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Mick Schumacher", equipe: "haas", equipe_real: "Haas (🇩🇪)", idade: 22, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Nikita Mazepin", equipe: "haas", equipe_real: "Haas (🇷🇺)", idade: 22, nacionalidade: "🇷🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-];
 
-const initialDrivers2020 = [
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 35, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Valtteri Bottas", equipe: "mercedes", equipe_real: "Mercedes (🇫🇮)", idade: 31, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 22, nacionalidade: "🇳🇱", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Alexander Albon", equipe: "red_bull", equipe_real: "Red Bull Racing (🇹🇭)", idade: 24, nacionalidade: "🇹🇭", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Sebastian Vettel", equipe: "ferrari", equipe_real: "Ferrari (🇩🇪)", idade: 33, nacionalidade: "🇩🇪", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 22, nacionalidade: "🇲🇨", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Sergio Perez", equipe: "racing_point", equipe_real: "Racing Point (🇲🇽)", idade: 30, nacionalidade: "🇲🇽", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Lance Stroll", equipe: "racing_point", equipe_real: "Racing Point (🇨🇦)", idade: 21, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Daniel Ricciardo", equipe: "renault", equipe_real: "Renault (🇦🇺)", idade: 31, nacionalidade: "🇦🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Esteban Ocon", equipe: "renault", equipe_real: "Renault (🇫🇷)", idade: 24, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Carlos Sainz", equipe: "mclaren", equipe_real: "McLaren (🇪🇸)", idade: 26, nacionalidade: "🇪🇸", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 20, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Pierre Gasly", equipe: "alphatauri", equipe_real: "AlphaTauri (🇫🇷)", idade: 24, nacionalidade: "🇫🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Daniil Kvyat", equipe: "alphatauri", equipe_real: "AlphaTauri (🇷🇺)", idade: 26, nacionalidade: "🇷🇺", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 41, nacionalidade: "🇫🇮", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 26, nacionalidade: "🇮🇹", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Nicholas Latifi", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 25, nacionalidade: "🇨🇦", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 22, nacionalidade: "🇬🇧", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 28, nacionalidade: "🇩🇰", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-    {name: "Pietro Fittipaldi", equipe: "haas", equipe_real: "Haas (🇧🇷)", idade: 24, nacionalidade: "🇧🇷", pneus: "Macios (⚪)", posicao_grid: 16, volta_mais_rapida: "1:19.617"},
-];
-
-const initialDrivers2019 = [
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 34, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Valtteri Bottas", equipe: "mercedes", equipe_real: "Mercedes (🇫🇮)", idade: 30, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 21, nacionalidade: "🇳🇱", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Sebastian Vettel", equipe: "ferrari", equipe_real: "Ferrari (🇩🇪)", idade: 32, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Charles Leclerc", equipe: "ferrari", equipe_real: "Ferrari (🇲🇨)", idade: 21, nacionalidade: "🇲🇨", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Daniel Ricciardo", equipe: "renault", equipe_real: "Renault (🇪🇸)", idade: 25, nacionalidade: "🇪🇸", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Pierre Gasly", equipe: "toro_rosso", equipe_real: "Scuderia Toro Rosso (🇫🇷)", idade: 23, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Alexander Albon", equipe: "red_bull", equipe_real: "Red Bull Racing (🇹🇭)", idade: 23, nacionalidade: "🇹🇭", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Carlos Sainz", equipe: "mclaren", equipe_real: "Renault (🇦🇺)", idade: 30, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Sergio Perez", equipe: "racing_point", equipe_real: "Racing Point (🇲🇽)", idade: 29, nacionalidade: "🇲🇽", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Lando Norris", equipe: "mclaren", equipe_real: "McLaren (🇬🇧)", idade: 19, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Kimi Raikkonen", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇫🇮)", idade: 40, nacionalidade: "🇫🇮", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Daniil Kvyat", equipe: "toro_rosso", equipe_real: "Scuderia Toro Rosso (🇷🇺)", idade: 25, nacionalidade: "🇷🇺", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Nico Hulkenberg", equipe: "renault", equipe_real: "Renault (🇩🇪)", idade: 32, nacionalidade: "🇩🇪", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Lance Stroll", equipe: "racing_point", equipe_real: "Racing Point (🇨🇦)", idade: 20, nacionalidade: "🇨🇦", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 27, nacionalidade: "🇩🇰", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Antonio Giovinazzi", equipe: "alfa_romeo", equipe_real: "Alfa Romeo Racing (🇮🇹)", idade: 25, nacionalidade: "🇮🇹", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Romain Grosjean", equipe: "haas", equipe_real: "Haas (🇫🇷)", idade: 33, nacionalidade: "🇫🇷", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "Robert Kubica", equipe: "williams", equipe_real: "Williams (🇵🇱)", idade: 35, nacionalidade: "🇵🇱", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-    {name: "George Russell", equipe: "williams", equipe_real: "Williams (🇬🇧)", idade: 21, nacionalidade: "🇬🇧", pneus: "Duros (🔴)", posicao_grid: 18, volta_mais_rapida: "1:21.774"},
-];
-
-const initialDrivers2018 = [
-    {name: "Lewis Hamilton", equipe: "mercedes", equipe_real: "Mercedes (🇬🇧)", idade: 33, nacionalidade: "🇬🇧", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sebastian Vettel", equipe: "ferrari", equipe_real: "Ferrari (🇩🇪)", idade: 31, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Kimi Raikkonen", equipe: "ferrari", equipe_real: "Ferrari (🇫🇮)", idade: 39, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Max Verstappen", equipe: "red_bull", equipe_real: "Red Bull Racing (🇳🇱)", idade: 20, nacionalidade: "🇳🇱", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Valtteri Bottas", equipe: "mercedes", equipe_real: "Mercedes (🇫🇮)", idade: 29, nacionalidade: "🇫🇮", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Daniel Ricciardo", equipe: "red_bull", equipe_real: "Red Bull Racing (🇦🇺)", idade: 29, nacionalidade: "🇦🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Nico Hulkenberg", equipe: "renault", equipe_real: "Renault (🇩🇪)", idade: 31, nacionalidade: "🇩🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sergio Perez", equipe: "force_india", equipe_real: "Force India (🇲🇽)", idade: 28, nacionalidade: "🇲🇽", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Kevin Magnussen", equipe: "haas", equipe_real: "Haas (🇩🇰)", idade: 26, nacionalidade: "🇩🇰", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Carlos Sainz", equipe: "renault", equipe_real: "Renault (🇪🇸)", idade: 24, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Fernando Alonso", equipe: "mclaren", equipe_real: "McLaren (🇪🇸)", idade: 37, nacionalidade: "🇪🇸", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Esteban Ocon", equipe: "force_india", equipe_real: "Force India (🇫🇷)", idade: 21, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Charles Leclerc", equipe: "sauber", equipe_real: "Sauber (🇲🇨)", idade: 20, nacionalidade: "🇲🇨", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Romain Grosjean", equipe: "haas", equipe_real: "Haas (🇫🇷)", idade: 32, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Pierre Gasly", equipe: "toro_rosso", equipe_real: "Scuderia Toro Rosso (🇫🇷)", idade: 22, nacionalidade: "🇫🇷", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Stoffel Vandoorne", equipe: "mclaren", equipe_real: "McLaren (🇧🇪)", idade: 26, nacionalidade: "🇧🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Marcus Ericsson", equipe: "sauber", equipe_real: "Sauber (🇸🇪)", idade: 28, nacionalidade: "🇸🇪", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Lance Stroll", equipe: "williams", equipe_real: "Williams (🇨🇦)", idade: 19, nacionalidade: "🇨🇦", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Brendon Hartley", equipe: "toro_rosso", equipe_real: "Scuderia Toro Rosso (🇳🇿)", idade: 28, nacionalidade: "🇳🇿", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-    {name: "Sergey Sirotkin", equipe: "williams", equipe_real: "Williams (🇷🇺)", idade: 22, nacionalidade: "🇷🇺", pneus: "Médios (🟡)", posicao_grid: 20, volta_mais_rapida: "1:18.983"},
-];
-
-const initialDrivers = {
-    "2025": initialDrivers2025,
-    "2024": initialDrivers2024,
-    "2023": initialDrivers2023,
-    "2022": initialDrivers2022,
-    "2021": initialDrivers2021,
-    "2020": initialDrivers2020,
-    "2019": initialDrivers2019,
-    "2018": initialDrivers2018
+function getAllValidSeasons() {
+    return [
+        { year: '2018' },
+        { year: '2019' },
+        { year: '2020' },
+        { year: '2021' },
+        { year: '2022' },
+        { year: '2023' },
+        { year: '2024' },
+    ];
 }
 
-const evolucaoData = [
-    { name: "Verstappen", posicoes: [1,1,1,2,3,3,1,2,1,1], pontuacao: 95 },
-    { name: "Leclerc", posicoes: [2,3,3,4,2,2,4,3,2,4], pontuacao: 88 },
-    { name: "Norris", posicoes: [3,4,4,3,4,4,3,5,4,3], pontuacao: 82 },
-    { name: "Sainz", posicoes: [4,2,5,6,5,6,5,6,5,6], pontuacao: 79 },
-    { name: "Hamilton", posicoes: [5,5,6,5,6,5,6,4,6,5], pontuacao: 77 },
-    { name: "Russell", posicoes: [6,6,7,7,7,7,7,7,7,7], pontuacao: 70 },
-    { name: "Piastri", posicoes: [7,8,8,8,8,8,8,8,8,8], pontuacao: 65 },
-    { name: "Alonso", posicoes: [8,7,9,9,9,9,9,9,9,9], pontuacao: 63 },
-    { name: "Stroll", posicoes: [9,9,10,10,10,10,10,10,10,10], pontuacao: 58 },
-    { name: "Gasly", posicoes: [10,10,11,11,12,12,12,11,12,11], pontuacao: 56 },
-    { name: "Ocon", posicoes: [11,12,12,13,13,13,13,12,13,12], pontuacao: 52 },
-    { name: "Tsunoda", posicoes: [12,13,13,12,12,14,14,13,14,13], pontuacao: 49 },
-    { name: "Ricciardo", posicoes: [13,14,14,15,14,15,15,14,15,14], pontuacao: 45 },
-    { name: "Albon", posicoes: [14,15,15,14,15,16,16,15,16,15], pontuacao: 43 },
-    { name: "Sargeant", posicoes: [15,16,16,17,17,17,17,16,17,16], pontuacao: 38 },
-    { name: "Zhou", posicoes: [16,17,17,16,16,17,17,17,16,17], pontuacao: 36 },
-    { name: "Bottas", posicoes: [17,18,18,18,18,18,18,18,18,18], pontuacao: 32 },
-    { name: "Magnussen", posicoes: [18,19,19,19,19,19,19,19,19,19], pontuacao: 29 },
-    { name: "Hülkenberg", posicoes: [19,20,20,20,20,20,20,20,20,20], pontuacao: 26 },
-    { name: "Perez", posicoes: [20,20,19,18,18,18,18,19,19,19], pontuacao: 31 }
-]; 
+function loadCSVData(filePath) {
+    return d3.csv(filePath);
+}
 
-const climas = {
-"1": ["sol", "../assets/weather/clima_sol.jpg"],
-"2": ["neve", "../assets/weather/clima_neve.jpg"],
-"3": ["chuva", "../assets/weather/clima_chuva.jpg"]
+function filterValidRaces(data, raceIds) {
+    return data.filter(row => {
+        const raceId = Number(row.raceId);
+        return raceIds.includes(raceId);
+    });
+}
+
+async function getValidRaceIds() {
+    try {
+        const data = await loadCSVData(pitStopsFilePath);
+        const validRaceIds = new Set();
+        data.forEach(row => {
+            if (row.raceId) {
+                validRaceIds.add(Number(row.raceId));
+            }
+        });
+        return Array.from(validRaceIds);
+    } catch (error) {
+        console.error('Erro ao carregar os dados de pit stops:', error);
+        return [];
+    }
+}
+
+
+async function getValidRacesByYear(year) {
+    try {
+        const data = await loadCSVData(racesFilePath);
+        const validRaceIds = await getValidRaceIds();
+        const validRaces = data.filter(row => Number(row.year) === Number(year));
+        return filterValidRaces(validRaces, validRaceIds);
+    } catch (error) {
+        console.error('Erro ao carregar as corridas:', error);
+        return [];
+    }
+}
+
+async function getDriversByRace(raceId) {
+    try {
+        const results = await loadCSVData(resultsFilePath);
+        const drivers = await loadCSVData(driversFilePath);
+
+        const driverIds = results
+            .filter(r => Number(r.raceId) === Number(raceId))
+            .map(r => Number(r.driverId)); // Garante que driverId vira número
+
+        return drivers.filter(d => driverIds.includes(Number(d.driverId)));
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
+        return [];
+    }
 };
 
-const mockRacesByYear = {
-    "2025": [
-        "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Japanese GP (🇯🇵)", "Chinese GP (🇨🇳)",
-        "Miami GP (🇺🇸)", "Emilia Romagna GP (🇮🇹)", "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "Spanish GP (🇪🇸)",
-        "Austrian GP (🇦🇹)", "British GP (🇬🇧)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
-        "Italian GP (🇮🇹)", "Azerbaijan GP (🇦🇿)", "Singapore GP (🇸🇬)", "United States GP (🇺🇸)",
-        "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Qatar GP (🇶🇦)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2024": [
-        "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Japanese GP (🇯🇵)", "Chinese GP (🇨🇳)",
-        "Miami GP (🇺🇸)", "Emilia Romagna GP (🇮🇹)", "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "Spanish GP (🇪🇸)",
-        "Austrian GP (🇦🇹)", "British GP (🇬🇧)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
-        "Italian GP (🇮🇹)", "Azerbaijan GP (🇦🇿)", "Singapore GP (🇸🇬)", "United States GP (🇺🇸)",
-        "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Qatar GP (🇶🇦)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2023": [
-        "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Azerbaijan GP (🇦🇿)", "Miami GP (🇺🇸)",
-        "Monaco GP (🇲🇨)", "Spanish GP (🇪🇸)", "Canadian GP (🇨🇦)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
-        "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)",
-        "Japanese GP (🇯🇵)", "Qatar GP (🇶🇦)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)",
-        "São Paulo GP (🇧🇷)", "Las Vegas GP (🇺🇸)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2022": [
-        "Bahrain GP (🇧🇭)", "Saudi Arabian GP (🇸🇦)", "Australian GP (🇦🇺)", "Emilia Romagna GP (🇮🇹)", "Miami GP (🇺🇸)",
-        "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)", "Azerbaijan GP (🇦🇿)", "Canadian GP (🇨🇦)", "British GP (🇬🇧)",
-        "Austrian GP (🇦🇹)", "French GP (🇫🇷)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)",
-        "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)", "Japanese GP (🇯🇵)", "United States GP (🇺🇸)",
-        "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2021": [
-        "Bahrain GP (🇧🇭)", "Emilia Romagna GP (🇮🇹)", "Portuguese GP (🇵🇹)", "Spanish GP (🇪🇸)", "Monaco GP (🇲🇨)",
-        "Azerbaijan GP (🇦🇿)", "French GP (🇫🇷)", "Styrian GP (🇦🇹)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
-        "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Dutch GP (🇳🇱)", "Italian GP (🇮🇹)", "Russian GP (🇷🇺)",
-        "Turkish GP (🇹🇷)", "United States GP (🇺🇸)", "Mexico City GP (🇲🇽)", "São Paulo GP (🇧🇷)",
-        "Qatar GP (🇶🇦)", "Saudi Arabian GP (🇸🇦)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2020": [
-        "Austrian GP (🇦🇹)", "Styrian GP (🇦🇹)", "Hungarian GP (🇭🇺)", "British GP (🇬🇧)", "70th Anniversary GP (🇬🇧)",
-        "Spanish GP (🇪🇸)", "Belgian GP (🇧🇪)", "Italian GP (🇮🇹)", "Tuscan GP (🇮🇹)", "Russian GP (🇷🇺)",
-        "Eifel GP (🇩🇪)", "Portuguese GP (🇵🇹)", "Emilia Romagna GP (🇮🇹)", "Turkish GP (🇹🇷)",
-        "Bahrain GP (🇧🇭)", "Sakhir GP (🇧🇭)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2019": [
-        "Australian GP (🇦🇺)", "Bahrain GP (🇧🇭)", "Chinese GP (🇨🇳)", "Azerbaijan GP (🇦🇿)", "Spanish GP (🇪🇸)",
-        "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "French GP (🇫🇷)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
-        "German GP (🇩🇪)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)",
-        "Russian GP (🇷🇺)", "Japanese GP (🇯🇵)", "Mexican GP (🇲🇽)", "United States GP (🇺🇸)",
-        "Brazilian GP (🇧🇷)", "Abu Dhabi GP (🇦🇪)"
-    ],
-    "2018": [
-        "Australian GP (🇦🇺)", "Bahrain GP (🇧🇭)", "Chinese GP (🇨🇳)", "Azerbaijan GP (🇦🇿)", "Spanish GP (🇪🇸)",
-        "Monaco GP (🇲🇨)", "Canadian GP (🇨🇦)", "French GP (🇫🇷)", "Austrian GP (🇦🇹)", "British GP (🇬🇧)",
-        "German GP (🇩🇪)", "Hungarian GP (🇭🇺)", "Belgian GP (🇧🇪)", "Italian GP (🇮🇹)", "Singapore GP (🇸🇬)",
-        "Russian GP (🇷🇺)", "Japanese GP (🇯🇵)", "United States GP (🇺🇸)", "Mexican GP (🇲🇽)",
-        "Brazilian GP (🇧🇷)", "Abu Dhabi GP (🇦🇪)"
-    ]
-};
+async function getTeamsByRace(raceId) {
+    try {
+        const racesData = await loadCSVData(resultsFilePath);
+        const filteredData = racesData.filter(l => Number(l.raceId) === Number(raceId));
+
+        const driverTeams = {};
+
+        filteredData.forEach(result => {
+            const driverId = result.driverId;
+            driverTeams[driverId] = result; // ou só { constructorId: result.constructorId } se quiser menos info
+        });
+
+        return driverTeams;
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
+        return {};
+    }
+}
+
+
+async function getConstructorDataByID(constructorID) {
+    try{
+        const results = await loadCSVData(constructorsFilePath);
+        return results.filter(l => Number(l.constructorId) === Number(constructorID));
+    } catch (error) {
+        console.error('Erro ao carregar drivers da corrida:', error);
+        return [];
+    }
+}
+
+async function getAgesByRace(raceId) {
+    const drivers = await loadCSVData(driversFilePath);
+    const results = await loadCSVData(resultsFilePath);
+    const races = await loadCSVData(racesFilePath);
+
+    const race = races.find(r => Number(r.raceId) === Number(raceId));
+    if (!race) return {};
+    const raceDate = new Date(race.date);
+
+    const raceDriverIds = results
+        .filter(r => Number(r.raceId) === Number(raceId))
+        .map(r => r.driverId);
+
+    const driverAges = {}; // cria um objeto vazio
+
+    raceDriverIds.forEach(driverId => {
+        const driver = drivers.find(d => d.driverId === driverId);
+        if (!driver || !driver.dob) {
+            driverAges[driverId] = { driverId, driver, age: null };
+        } else {
+            const dob = new Date(driver.dob);
+            let age = raceDate.getFullYear() - dob.getFullYear();
+            const m = raceDate.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && raceDate.getDate() < dob.getDate())) {
+                age--;
+            }
+            driverAges[driverId] = { driverId, driver, age };
+        }
+    });
+
+    return driverAges;
+}
+
+async function getWeatherRace(raceId) {
+    const weatherData = await loadCSVData(weatherDataFilePath);
+
+    const raceWeather = weatherData.find(w => Number(w.raceId) === Number(raceId));
+    if (!raceWeather) return null;
+
+    return {
+        raceId: Number(raceWeather.raceId),
+        avg_airtemp: parseFloat(raceWeather.avg_airtemp),
+        avg_tracktemp: parseFloat(raceWeather.avg_tracktemp),
+        avg_humidity: parseFloat(raceWeather.avg_humidity),
+        avg_pressure: parseFloat(raceWeather.avg_pressure),
+        avg_windspeed: parseFloat(raceWeather.avg_windspeed),
+        rainfall: raceWeather.rainfall === 'True'
+    };
+}
+
+async function getDateAndTime(raceId) {
+    const raceData = await loadCSVData(racesFilePath);
+    const race = raceData.find(l => Number(l.raceId) === Number(raceId));
+
+    if (!race) return null;
+
+    return {
+        date: race.date,
+        time: race.time
+    }
+}
+
+function formatDate(date) {
+    const aux = date.split("-");
+    const formattedDate = `${aux[2]}/${aux[1]}/${aux[0]}`;
+    return formattedDate;
+}
+
+function timeInSeconds(time){
+    const aux = time.split(":");
+    const seconds = Number(aux[1]);
+    const minutesInSeconds = Number(aux[0])*60;
+    return seconds + minutesInSeconds;
+}
+
+async function getLapTimes(raceId) {
+    const raceData = await loadCSVData(lapTimesFilePath);
     
+    // Filtra os dados pela corrida
+    const raceLapData = raceData.filter(l => Number(l.raceId) === Number(raceId));
+    
+    // Cria o dicionário com driverId como chave e acumula os milissegundos
+    const lapTimesByDriver = raceLapData.reduce((acc, lap) => {
+        const driverId = lap.driverId;
+        if (!acc[driverId]) {
+            acc[driverId] = []; // Se não existir o driverId, cria um array vazio
+        }
+        
+        // Acumula os milissegundos
+        const previousMilliseconds = acc[driverId].length > 0 ? acc[driverId][acc[driverId].length - 1].milliseconds_acumulated : 0;
+        const millisecondsAccumulated = previousMilliseconds + Number(lap.milliseconds);
 
-const cores_equipes = {
-    red_bull: "#181740",
-    mercedez: "#41F2D2",
-    ferrari: "#D90707",
-    alpine: "#0090FF",
-    hass: "#BF0A2B",
-    aston_martin: "#048C5A",
-    mclaren: "#F28D35",
-    sauber: "#05A61D",
-    williams: "#113A8C",
-    toro_roso: "#F2F2F2"
-};
+        // Adiciona a volta com o acumulado de milissegundos
+        acc[driverId].push({
+            position: lap.position,
+            lap: lap.lap,
+            time: lap.time,
+            milliseconds: Number(lap.milliseconds),
+            milliseconds_acumulated: millisecondsAccumulated
+        });
+        
+        return acc;
+    }, {});
+    
+    return lapTimesByDriver;
+}
+
+async function getCircuitIdByRaceId(raceId){
+    const raceData = await loadCSVData(racesFilePath);
+    const circuitData = raceData.filter(l => Number(l.raceId) === Number(raceId));
+    return circuitData[0].circuitId;
+}
+
+async function getTyreStintsByRace(raceId) {
+    const drivers = await loadCSVData(driversFilePath);
+    const stints = await loadCSVData(tyreStintsFilePath);
+
+    const raceStints = stints.filter(s => Number(s.raceId) === Number(raceId));
+    const driverIds = [...new Set(raceStints.map(s => s.driverId))];
+
+    const result = {};
+
+    driverIds.forEach(driverId => {
+        const stintsByDriver = raceStints
+            .filter(s => s.driverId === driverId)
+            .sort((a, b) => Number(a.startLap) - Number(b.startLap));
+        
+        const stintPorVolta = {};
+
+        stintsByDriver.forEach(stint => {
+            const start = Number(stint.startLap);
+            const end = start + Number(stint.lapCount) - 1;
+            for (let lap = start; lap <= end; lap++) {
+                stintPorVolta[lap] = stint.compound;
+            }
+        });
+
+        result[driverId] = stintPorVolta;
+    });
+
+    return result;
+}
 
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
-const grid = document.getElementById('grid');
-const cols = [1360, 1380, 1400, 1420];
-const numRows = Math.floor((860 - 20) / 20) + 1;
 
-for (let row = 0; row < numRows - 2; row++) {
-    const y = 20 + row * 20;
-    for (let i = 0; i < cols.length; i++) {
-    const x = cols[cols.length - 1 - i];
-    let fill;
-    if (row % 2 === 0) {
-        fill = (i % 2 === 0) ? "#ffffff" : "#000000";
-    } else {
-        fill = (i % 2 === 0) ? "#000000" : "#ffffff";
+const rect0 = document.getElementById('rect0');
+const rect1 = document.getElementById('rect1');
+const rect2 = document.getElementById('rect2');
+
+function updateRects() {
+const bbox = rect0.getBBox();
+
+function adjustRect(rect, reduction) {
+    rect.setAttribute('x', bbox.x + reduction / 2);
+    rect.setAttribute('y', bbox.y + reduction / 2);
+    rect.setAttribute('width', bbox.width - reduction);
+    rect.setAttribute('height', bbox.height - reduction);
+}
+
+  adjustRect(rect1, 20);
+  adjustRect(rect2, 40);
+}
+
+// Roda quando a página carrega
+updateRects();
+
+// Observa mudanças nos atributos de rect0
+const observer = new MutationObserver(updateRects);
+
+observer.observe(rect0, {
+  attributes: true,
+  attributeFilter: ['x', 'y', 'width', 'height']
+});
+
+window.addEventListener('resize', updateRects);
+
+function drawFinishLine() {
+    const rect0 = document.getElementById('rect0');
+    const rect2 = document.getElementById('rect2');
+    const grid = document.getElementById('grid');
+
+    const bbox0 = rect0.getBBox();
+    const bbox2 = rect2.getBBox();
+
+    const baseX = bbox0.x + bbox0.width - 150;
+
+    const squareSize = 20;
+    const numCols = 4;
+    const numRows = Math.floor(bbox2.height / squareSize);
+
+    grid.innerHTML = "";
+
+    for (let row = 0; row < numRows; row++) {
+        const y = bbox2.y + row * squareSize;
+        for (let col = 0; col < numCols; col++) {
+            const x = baseX + col * squareSize;
+            let fill;
+            if (row % 2 === 0) {
+                fill = (col % 2 === 0) ? "#ffffff" : "#000000";
+            } else {
+                fill = (col % 2 === 0) ? "#000000" : "#ffffff";
+            }
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", squareSize);
+            rect.setAttribute("height", squareSize);
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("style", "fill:" + fill + ";");
+            grid.appendChild(rect);
+        }
     }
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "20");
-    rect.setAttribute("height", "20");
-    rect.setAttribute("x", x);
-    rect.setAttribute("y", y);
-    rect.setAttribute("style", "fill:" + fill + ";");
-    grid.appendChild(rect);
+
+    // Desenhar a última linha cortada
+    const sobra = bbox2.height - numRows * squareSize;
+    if (sobra > 0.5) { // evita erro numérico pequeno
+        const y = bbox2.y + numRows * squareSize;
+        for (let col = 0; col < numCols; col++) {
+            const x = baseX + col * squareSize;
+            let fill;
+            if (numRows % 2 === 0) {
+                fill = (col % 2 === 0) ? "#ffffff" : "#000000";
+            } else {
+                fill = (col % 2 === 0) ? "#000000" : "#ffffff";
+            }
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", squareSize);
+            rect.setAttribute("height", sobra);
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("style", "fill:" + fill + ";");
+            grid.appendChild(rect);
+        }
     }
 }
+
+// Ao carregar
+drawFinishLine();
+window.addEventListener('resize', drawFinishLine);
+
+
 // VARIÁVEIS ------------------------------------------------------------------------------------------------------------------------------------
+
+const bbox0 = rect0.getBBox();
 
 const mainChartSVG = d3.select("#main_chart");
 const mainChartWidth = +mainChartSVG.attr("width");
 const mainChartHeight = +mainChartSVG.attr("height");
-const mainChartMargin = { top: 825, right: 200, bottom: -30, left: 30 };
+const mainChartMargin = { top: bbox0.height/20, left: 20 };
 
 const mainChartRealWidth = mainChartWidth - mainChartMargin.left - mainChartMargin.right;
 const mainChartRealHeight = mainChartHeight - mainChartMargin.top - mainChartMargin.bottom;
 const g = mainChartSVG.append("g").attr("transform", `translate(${mainChartMargin.left},${mainChartMargin.top})`);
 
-const auxChartWidth = 450;
-const auxChartHeight = 300;
-const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 60 };
-
 // Manter a proporção 8:5
-const spriteWidth = 72;
-const spriteHeight = 45;
+const bbox2 = rect2.getBBox();
+const altura = bbox2.height/19
+const spriteWidth = altura*1.6;
+const spriteHeight = altura;
+
+let largerScore = 0;
 
 // Escala X dinâmica (alteração crucial)
 const x = d3.scaleLinear()
-  .range([mainChartRealWidth, 0]).domain([mainChartRealWidth, 0]); // Agora usa toda a largura disponível
+  .range([0, bbox0.width*0.85]); 
 
 // Escala Y com padding reduzido para barras mais altas (alteração importante)
 const y = d3.scaleBand()
-  .range([mainChartRealHeight, 0])
+  .range([0, bbox0.height*0.9])
   .padding(0.05); // Reduzindo o espaçamento entre as barras
 
 
-const validYears = ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"];
+const validYears = getAllValidSeasons();
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -368,6 +405,18 @@ const numberOfLaps = 20;
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
+function emojiByStringTyre(compound) {
+    const tyreEmojis = {
+      MEDIUM: '(⚪)', 
+      HARD: '(🔴)',   
+      SOFT: '(🟡)',   
+      INTERMEDIATE: '(🟢)', 
+      WET: '(🔵)'     
+    };
+  
+    return tyreEmojis[compound.toUpperCase()] || ''; 
+}
+
 function clearChart() {
     g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
     d3.select("#tooltip").style("opacity", 0); // Esconde o tooltip
@@ -375,51 +424,85 @@ function clearChart() {
 }
 
 // Insere os anos no select
-validYears.forEach(year => {
+validYears.forEach(eachYear => {
     const option = document.createElement("option");
-    option.value = year;
-    option.textContent = year;
+    option.value = eachYear.year;
+    option.textContent = eachYear.year;
     yearSelect.appendChild(option);
 });
 
 // Insere corridas no select
-yearSelect.addEventListener("change", () => {
+yearSelect.addEventListener("change", async () => {
     selectedYear = yearSelect.value;
     raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
     raceSelect.disabled = false;
     
-    if (selectedYear && mockRacesByYear[selectedYear]) {
-        mockRacesByYear[selectedYear].forEach(race => {
-        const opt = document.createElement("option");
-        opt.value = race;
-        opt.textContent = race;
-        raceSelect.appendChild(opt);
-    });
-    raceSelect.disabled = false;
+    const validRaces = await getValidRacesByYear(parseInt(selectedYear));
+
+    if (selectedYear && validRaces.length > 0) {
+        validRaces.forEach(race => {
+            const opt = document.createElement("option");
+            opt.value = race.raceId;
+            opt.textContent = race.name;
+            raceSelect.appendChild(opt);
+        });
+        raceSelect.disabled = false;
     }
     stopPlayback();
 });
 
+
 // Muda o clima e o circuito
-raceSelect.addEventListener("change", () => {
+raceSelect.addEventListener("change", async () => {
     clearChart();
 
-    climaIMG.innerHTML = `<img src="${climas[Math.floor(Math.random() * 3) + 1][1]}" alt="">`;
-    climaInfo.innerHTML = `
-        <p>Horário: ${new Date().toLocaleTimeString()}</p>
-        <p>Data: ${new Date().toLocaleDateString()}</p>
-        <p>Temperatura: ${Math.floor(Math.random() * 30) + 20}°C</p>
-        <p>Temp. Pista: ${Math.floor(Math.random() * 40) + 20}°C</p>
-        <p>Umidade: ${Math.floor(Math.random() * 100)}%</p>
-        <p>Vento: ${Math.floor(Math.random() * 20) + 5} km/h</p>`;
+    const raceChosen = raceSelect.textContent;
+    const raceID = raceSelect.value;
 
-    lapIMG.innerHTML = `<img src="${"../assets/others/interlagos.jpg"}" alt="">`;
+    const clima = await getWeatherRace(raceID);
+    const dateAndTime = await getDateAndTime(raceID);
+
+    climaIMG.innerHTML = `<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/weather/${clima.rainfall}.png" alt="">`;
+    climaInfo.innerHTML = `
+        <p>Data: ${formatDate(dateAndTime.date)}</p>
+        <p>Horário: ${dateAndTime.time.split(":")[0]}:${dateAndTime.time.split(":")[1]} UTC</p>
+        <p>Temperatura: ${clima.avg_airtemp}°C</p>
+        <p>Temp. Pista: ${clima.avg_tracktemp}°C</p>
+        <p>Umidade: ${clima.avg_humidity}%</p>
+        <p>Vento: ${clima.avg_windspeed} km/h</p>
+        <p>Clima: ${clima.rainfall ? "Chuva" : "Limpo"}`;
+
+    const circuitId = await getCircuitIdByRaceId(raceID);
+    lapIMG.innerHTML = `<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/circuits/${circuitId}.png" alt="">`;
 
     stopPlayback();
 
-    laps = generateMockLaps(selectedYear);
+    const raceDrivers = await getDriversByRace(parseInt(raceID));
+    const raceAges = await getAgesByRace(parseInt(raceID));
+    const raceTeams = await getTeamsByRace(parseInt(raceID));
 
-    const raceChosen = raceSelect.value;
+    for (const driver of raceDrivers) {
+        driver.constructorId = raceTeams[parseInt(driver.driverId)].constructorId;
+        driver.grid = raceTeams[parseInt(driver.driverId)].grid;
+        driver.fastestLap = raceTeams[parseInt(driver.driverId)].fastestLapTime;
+        const teste2 = await getConstructorDataByID(parseInt(driver.constructorId));
+        driver.constructorRef = teste2[0].constructorRef;
+        driver.constructorName = teste2[0].name;
+        driver.age = raceAges[parseInt(driver.driverId)].age;
+    }
+
+    const lapsTime = await getLapTimes(raceID);
+    const tyreData = await getTyreStintsByRace(raceID);
+
+    laps = generateLaps(raceDrivers, lapsTime, tyreData);
+    largerScore = 0;
+    for (const each_lap of laps) {
+        for (const each_driver of each_lap) {
+            if (each_driver.score > largerScore) {
+                largerScore = each_driver.score;
+            }
+        }
+    }
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
         const existingBars = g.selectAll(".bar").data([], d => d.name);
@@ -436,26 +519,104 @@ raceSelect.addEventListener("change", () => {
     }
 });
 
-// Função que gera dados falsos
-function generateMockLaps(year){
+function generateLaps(drivers, lapsTime, tyreData) {
     const laps = [];
-    const drivers = initialDrivers[year].map(driver => ({ ...driver, score: 0 }));
-    laps.push(JSON.parse(JSON.stringify(drivers)));
 
-    for (let lap = 1; lap < numberOfLaps; lap++) {
+    const driversWithScore = drivers.map(driver => ({
+        ...driver,
+        score: (20 - driver.grid)/1000000,
+        name: `${driver.forename} ${driver.surname}`,
+        totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
+        running: true,
+        lapsCompleted: 0,
+        lastAccumulated: 0,
+        tyre: tyreData[driver.driverId][1] // Pneu da primeira volta
+    }));
+
+    laps.push(JSON.parse(JSON.stringify(driversWithScore)));
+
+    const realNumberOfLaps = lapsTime[Number(drivers[0].driverId)].length;
+
+    for (let lap = 1; lap < realNumberOfLaps; lap++) {
         const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
+
         const newLap = previousLap.map(driver => {
-        const noise = d3.randomNormal(0, Math.sqrt(5))();
-        const increment = (15 + noise)*4.25;
-        return {
-            ...driver,
-            score: Math.max(0, driver.score + increment)
-        };
-    });
-    laps.push(newLap);  
+            const driverLaps = lapsTime[driver.driverId];
+            const currentLapData = driverLaps[lap];
+            const previousLapData = driverLaps[lap - 1];
+
+            // Se já abandonou, só copia
+            if (!driver.running) {
+                return driver;
+            }
+
+            // Se não existe volta atual -> abandonou
+            if (!currentLapData) {
+                return {
+                    ...driver,
+                    running: false
+                };
+            }
+
+            // Se acumulado não mudou, também abandonou
+            if (currentLapData.milliseconds_acumulated === previousLapData.milliseconds_acumulated) {
+                return {
+                    ...driver,
+                    running: false
+                };
+            }
+
+            return {
+                ...driver,
+                lastAccumulated: currentLapData.milliseconds_acumulated,
+                lapsCompleted: driver.lapsCompleted + 1,
+                tyre: tyreData[driver.driverId][lap + 1] // Atualiza o pneu para a volta atual (lap começa em 0)
+            };
+        });
+
+        // Só consideramos pilotos que estão "running"
+        const activeDrivers = newLap.filter(d => d.running && d.lastAccumulated !== undefined);
+        const leaderAccumulated = Math.min(...activeDrivers.map(d => d.lastAccumulated));
+        const leaderLapsCompleted = Math.max(...activeDrivers.map(d => d.lapsCompleted));
+
+        const finalLap = newLap.map(driver => {
+            if (!driver.running) {
+                return {
+                    ...driver,
+                    score: driver.score
+                };
+            }
+
+            let score;
+
+            if (driver.lastAccumulated !== undefined) {
+                if (driver.lastAccumulated === leaderAccumulated) {
+                    score = driver.lastAccumulated;
+                } else {
+                    score = leaderAccumulated + 2.5 * (leaderAccumulated - driver.lastAccumulated);
+                }
+            } else {
+                score = leaderAccumulated - 100000;
+            }
+
+            // Penalização pra quem tomou volta
+            const lapsBehind = leaderLapsCompleted - driver.lapsCompleted;
+            if (lapsBehind > 0) {
+                score *= Math.pow(0.9, lapsBehind);
+            }
+
+            return {
+                ...driver,
+                score: score
+            };
+        });
+
+        laps.push(finalLap);
     }
+
     return laps;
-};
+}
+
 
 // Vai reiniciar a contagem de voltas
 function stopPlayback() {
@@ -502,14 +663,15 @@ function updateUI() {
     lapText.textContent = `Volta ${currentLap + 1}`;
 }
 
+
 function renderLap(data, lapNum) {
     const tooltip = d3.select("#tooltip");
 
     const sorted = [...data].sort((a, b) => b.score - a.score);
 
     y.domain(sorted.map(d => d.name));
-    
-    // BARRAS
+    x.domain([0, largerScore]);
+
     const bars = g.selectAll(".bar").data(sorted, d => d.name);
     bars.enter()
         .append("rect")
@@ -518,16 +680,16 @@ function renderLap(data, lapNum) {
         .attr("y", d => y(d.name))  // Posicionamento vertical corrigido
         .attr("x", 0)
         .attr("width", 0)  // Inicialmente com largura 0 para animação
-        .attr("fill", d => cores_equipes[d.equipe] || "#ccc")
+        .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc")
         .attr("fill-opacity", 1)
         .on("mouseover", (event, d) => showTooltip(event, d))
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(bars)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("width", d => x(d.score))  // Largura da barra de acordo com o score
         .attr("y", d => y(d.name))
-        .attr("fill", d => cores_equipes[d.equipe] || "#ccc");
+        .attr("fill", d => cores_equipes[selectedYear][d.constructorRef] || "#ccc");
     bars.exit().remove();
 
     // LABELS
@@ -543,15 +705,17 @@ function renderLap(data, lapNum) {
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(labels)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("fill", d => {
             const estimatedTextWidth = d.name.length * 10;
-            const margemErro = 15;
-            return x(d.score) > estimatedTextWidth + margemErro ? "white" : "black";
+            const margemErro = 50;
+            return x(d.score) > estimatedTextWidth + margemErro
+                ? "#ffffff"
+                : "#000000"
         })
         .attr("x", d => {
             const estimatedTextWidth = d.name.length * 10;
-            const margemErro = 25;
+            const margemErro = 50;
             return x(d.score) > estimatedTextWidth + margemErro
                 ? x(d.score) - estimatedTextWidth - 35
                 : x(d.score) + spriteWidth + 35;
@@ -564,14 +728,14 @@ function renderLap(data, lapNum) {
     sprites.enter()
         .append("image")
         .attr("class", "sprite")
-        .attr("xlink:href", d => `../assets/${selectedYear}/sprites/${d.equipe}.png`)
+        .attr("xlink:href", d => `https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/sprites/${d.constructorRef}.png`)
         .attr("width", spriteWidth)
         .attr("height", spriteHeight)
         .on("mouseover", (event, d) => showTooltip(event, d))
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .merge(sprites)
-        .transition().duration(1000)
+        .transition().duration(500)
         .attr("transform", d => {
           const posX = x(d.score) + 5;
           const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;  // Posicionamento corrigido
@@ -587,15 +751,15 @@ function renderLap(data, lapNum) {
             .style("opacity", 1)
             .html(`
                 <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
-                    <img src="../assets/${selectedYear}/drivers/${d.name.split(" ")[1].toLowerCase()}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
+                    <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driverRef}.png" alt="${d.name}" style="width:8vw; margin-right:10px;">
                     <div>
                         <strong>${d.name}</strong><br>
-                        Idade: ${d.idade} anos<br>
-                        Equipe: ${d.equipe_real}<br>
-                        Nacionalidade: ${d.nacionalidade}<br>
-                        Pneus: ${d.pneus}<br>
-                        Largada: ${d.posicao_grid}º<br>
-                        VMR: ${d.volta_mais_rapida} min<br>
+                        Idade: ${d.age} anos<br>
+                        Equipe: ${d.constructorName}<br>
+                        Nacionalidade: ${d.nationality}<br>
+                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase() + " " + emojiByStringTyre(d.tyre)}<br>
+                        Largada: ${d.grid}º<br>
+                        VMR: ${d.fastestLap} min<br>
                     </div>
                 </div>
             `);
@@ -617,38 +781,6 @@ function renderLap(data, lapNum) {
 
     function hideTooltip() {
         tooltip.style("opacity", 0);
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Função para carregar os dados CSV
-async function loadCSVData(filePath) {
-    try {
-        const response = await fetch(filePath);
-        if (!response.ok) {
-            throw new Error('Erro ao carregar o arquivo CSV');
-        }
-        const text = await response.text();
-        return d3.csvParse(text); 
-    } catch (error) {
-        console.error('Erro ao ler o arquivo CSV:', error);
-        throw error; 
     }
 }
 
@@ -690,9 +822,6 @@ async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFileP
   
 // Exemplo de uso da função com dados
 const raceId = 1139;
-const resultsFilePath = './f1db/results.csv';
-const driversFilePath = './f1db/drivers.csv';
-const racesFilePath = './f1db/races.csv';
 
 // Função para criar o gráfico de ranking
 async function createRankingChart() {
@@ -795,8 +924,6 @@ async function getRaceEvolution(raceId, maxLap = null) {
     });
 }
 
-const lapTimesFilePath = './f1db/lap_times.csv';
-
 async function createEvolutionChart() {
     try {
         const evolucaoData = await getRaceEvolution(raceId);
@@ -869,29 +996,29 @@ async function createEvolutionChart() {
 // Chamando para gerar o gráfico:
 createEvolutionChart();
 
-// Eixo Y
-evolucaoSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left},0)`)
-    .call(d3.axisLeft(evolucaoY)
-        .ticks(20)
-        .tickFormat(d => posicaoParaPiloto[d]));
+// // Eixo Y
+// evolucaoSvg.append("g")
+//     .attr("transform", `translate(${auxChartMargin.left},0)`)
+//     .call(d3.axisLeft(evolucaoY)
+//         .ticks(20)
+//         .tickFormat(d => posicaoParaPiloto[d]));
 
-// VELOCIDADE
-const velocidadeSvg = d3.select("#velocidade_chart");
-const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
-const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
+// // VELOCIDADE
+// const velocidadeSvg = d3.select("#velocidade_chart");
+// const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
+// const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
 
-velocidadeSvg.selectAll("path")
-    .data([velocidades])
-    .enter()
-    .append("path")
-    .attr("transform", `translate(0, ${auxChartMargin.top})`)
-    .attr("d", d3.line()
-        .x((d, i) => velocidadeX(i + 1))
-        .y(d => velocidadeY(d)))
-    .attr("fill", "none")
-    .attr("stroke", "orange")
-    .attr("stroke-width", 2);
+// velocidadeSvg.selectAll("path")
+//     .data([velocidades])
+//     .enter()
+//     .append("path")
+//     .attr("transform", `translate(0, ${auxChartMargin.top})`)
+//     .attr("d", d3.line()
+//         .x((d, i) => velocidadeX(i + 1))
+//         .y(d => velocidadeY(d)))
+//     .attr("fill", "none")
+//     .attr("stroke", "orange")
+//     .attr("stroke-width", 2);
 
 
 

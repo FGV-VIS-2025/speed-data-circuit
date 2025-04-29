@@ -12,7 +12,7 @@
         <div id="painel_de_controle">
             <center>
                 <div id="logo">
-                    <img src="../assets/others/f1.png" alt="Logo" style="width: 95%; height: auto;">
+                    <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/others/f1.png" alt="Logo" style="width: 95%; height: auto;">
                 </div>
             </center>
 
@@ -28,12 +28,13 @@
             </div>
 
             <div id="clima_info">
-                <p>Horário:</p>
                 <p>Data:</p>
+                <p>Horário:</p>
                 <p>Temperatura:</p>
                 <p>Temp. Pista:</p>
                 <p>Umidade:</p>
                 <p>Vento:</p>
+                <p>Clima:</p>
             </div>
 
             <div id="lap_display">
@@ -46,9 +47,9 @@
 
         <div id="main_chart_area">
             <svg id="main_chart">
-                <rect width="100%" height="100%" x="0" y="0" style="fill:#303030;" />
-                <rect width="1480" height="840" x="10" y="10" style="fill:#818181;" />
-                <rect width="1460" height="820" x="20" y="20" style="fill:#383737;" />
+                <rect id="rect0" width="100%" height="100%" x="0" y="0" style="fill:#303030;" />
+                <rect id="rect1" x="10" y="10" style="fill:#818181;" />
+                <rect id="rect2" x="20" y="20" style="fill:#383737;" />
                 <g id="grid"></g>
             </svg>
         </div>
@@ -69,6 +70,7 @@
     </div>
 
     <div id="tooltip"></div>
-    <script src="src/script.js"></script>
+    <script src="src/mock-consts.js" type="module"></script>
+    <script src="src/script.js" type="module"></script>
 </body>
 </html>

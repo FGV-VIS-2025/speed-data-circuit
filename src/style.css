@@ -191,6 +191,7 @@ legend {
   justify-content: center;
   align-items: right;
   font-size: 95%;
+  overflow-y: auto;
 }
 
 #clima_info p {
@@ -201,7 +202,6 @@ legend {
 /* Tipografia SVG */
 svg text {
   font-family: F1;
-  fill: #111;
 }
 
 #ranking_chart text, #evolucao_chart text, #velocidade_chart text {
@@ -217,5 +217,10 @@ svg text {
 }
 
 #lapText{
-  color: white;
+  color: #ffffff;
+}
+
+#main_chart{
+  overflow-y: auto;
+  overflow-x: auto;
 }
