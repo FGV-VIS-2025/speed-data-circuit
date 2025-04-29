@@ -475,7 +475,7 @@ const validYears = getAllValidSeasons();
 
 const auxChartWidth = window.innerWidth*0.32;
 const auxChartHeight = Math.max(auxChartWidth*3/4, 500);
-const auxChartMargin = { top: auxChartWidth/8, right: auxChartWidth/8, bottom: auxChartWidth/8, left: Math.max(auxChartWidth/8, 40)};
+const auxChartMargin = { top: auxChartWidth/8, right: auxChartWidth/8, bottom: auxChartWidth/8, left: Math.max(auxChartWidth/8, 70)};
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -1082,6 +1082,13 @@ async function createEvolutionChart(raceId) {
                 .tickFormat(d => `${d + 1}`)
             );
 
+        evolucaoSvg.append("text")
+            .attr("x", auxChartWidth / 2)
+            .attr("y", auxChartHeight - 10)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .text("Voltas");
+
         // Eixo Y: posições iniciais dos pilotos
         const posicaoParaPiloto = {};
         dadosFiltrados.forEach(piloto => {
@@ -1097,6 +1104,14 @@ async function createEvolutionChart(raceId) {
                 .ticks(20)
                 .tickFormat(pos => posicaoParaPiloto[Math.round(pos)] || "")
             );
+
+        evolucaoSvg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -auxChartHeight / 2)
+            .attr("y", 15)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .text("Posição dos Pilotos");
 
     } catch (err) {
         console.error("Erro ao gerar gráfico de evolução:", err);
