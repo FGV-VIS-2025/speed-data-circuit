@@ -257,35 +257,110 @@ async function getTyreStintsByRace(raceId) {
 }
 
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
-const grid = document.getElementById('grid');
-const cols = [1360, 1380, 1400, 1420];
-const numRows = Math.floor((860 - 20) / 20) + 1;
 
-for (let row = 0; row < numRows - 2; row++) {
-    const y = 20 + row * 20;
-    for (let i = 0; i < cols.length; i++) {
-    const x = cols[cols.length - 1 - i];
-    let fill;
-    if (row % 2 === 0) {
-        fill = (i % 2 === 0) ? "#ffffff" : "#000000";
-    } else {
-        fill = (i % 2 === 0) ? "#000000" : "#ffffff";
+const rect0 = document.getElementById('rect0');
+const rect1 = document.getElementById('rect1');
+const rect2 = document.getElementById('rect2');
+
+function updateRects() {
+const bbox = rect0.getBBox();
+
+function adjustRect(rect, reduction) {
+    rect.setAttribute('x', bbox.x + reduction / 2);
+    rect.setAttribute('y', bbox.y + reduction / 2);
+    rect.setAttribute('width', bbox.width - reduction);
+    rect.setAttribute('height', bbox.height - reduction);
+}
+
+  adjustRect(rect1, 20);
+  adjustRect(rect2, 40);
+}
+
+// Roda quando a página carrega
+updateRects();
+
+// Observa mudanças nos atributos de rect0
+const observer = new MutationObserver(updateRects);
+
+observer.observe(rect0, {
+  attributes: true,
+  attributeFilter: ['x', 'y', 'width', 'height']
+});
+
+window.addEventListener('resize', updateRects);
+
+function drawFinishLine() {
+    const rect0 = document.getElementById('rect0');
+    const rect2 = document.getElementById('rect2');
+    const grid = document.getElementById('grid');
+
+    const bbox0 = rect0.getBBox();
+    const bbox2 = rect2.getBBox();
+
+    const baseX = bbox0.x + bbox0.width - 150;
+
+    const squareSize = 20;
+    const numCols = 4;
+    const numRows = Math.floor(bbox2.height / squareSize);
+
+    grid.innerHTML = "";
+
+    for (let row = 0; row < numRows; row++) {
+        const y = bbox2.y + row * squareSize;
+        for (let col = 0; col < numCols; col++) {
+            const x = baseX + col * squareSize;
+            let fill;
+            if (row % 2 === 0) {
+                fill = (col % 2 === 0) ? "#ffffff" : "#000000";
+            } else {
+                fill = (col % 2 === 0) ? "#000000" : "#ffffff";
+            }
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", squareSize);
+            rect.setAttribute("height", squareSize);
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("style", "fill:" + fill + ";");
+            grid.appendChild(rect);
+        }
     }
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "20");
-    rect.setAttribute("height", "20");
-    rect.setAttribute("x", x);
-    rect.setAttribute("y", y);
-    rect.setAttribute("style", "fill:" + fill + ";");
-    grid.appendChild(rect);
+
+    // Desenhar a última linha cortada
+    const sobra = bbox2.height - numRows * squareSize;
+    if (sobra > 0.5) { // evita erro numérico pequeno
+        const y = bbox2.y + numRows * squareSize;
+        for (let col = 0; col < numCols; col++) {
+            const x = baseX + col * squareSize;
+            let fill;
+            if (numRows % 2 === 0) {
+                fill = (col % 2 === 0) ? "#ffffff" : "#000000";
+            } else {
+                fill = (col % 2 === 0) ? "#000000" : "#ffffff";
+            }
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", squareSize);
+            rect.setAttribute("height", sobra);
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("style", "fill:" + fill + ";");
+            grid.appendChild(rect);
+        }
     }
 }
+
+// Ao carregar
+drawFinishLine();
+window.addEventListener('resize', drawFinishLine);
+
+
 // VARIÁVEIS ------------------------------------------------------------------------------------------------------------------------------------
+
+const bbox0 = rect0.getBBox();
 
 const mainChartSVG = d3.select("#main_chart");
 const mainChartWidth = +mainChartSVG.attr("width");
 const mainChartHeight = +mainChartSVG.attr("height");
-const mainChartMargin = { top: 825, right: 200, bottom: -30, left: 30 };
+const mainChartMargin = { top: bbox0.height/20, right: 200, left: 30 };
 
 const mainChartRealWidth = mainChartWidth - mainChartMargin.left - mainChartMargin.right;
 const mainChartRealHeight = mainChartHeight - mainChartMargin.top - mainChartMargin.bottom;
@@ -293,21 +368,23 @@ const g = mainChartSVG.append("g").attr("transform", `translate(${mainChartMargi
 
 const auxChartWidth = 450;
 const auxChartHeight = 300;
-const auxChartMargin = { top: 30, right: 20, bottom: 30, left: 110 };
+const auxChartMargin = { top: bbox0.height/20, right: 20, bottom: 30, left: 110 };
 
 // Manter a proporção 8:5
-const spriteWidth = 72;
-const spriteHeight = 45;
+const bbox2 = rect2.getBBox();
+const altura = bbox2.height/19
+const spriteWidth = altura*1.6;
+const spriteHeight = altura;
 
 let largerScore = 0;
 
 // Escala X dinâmica (alteração crucial)
 const x = d3.scaleLinear()
-  .range([0, 1350]); // Agora usa toda a largura disponível
+  .range([0, bbox0.width*0.85]); 
 
 // Escala Y com padding reduzido para barras mais altas (alteração importante)
 const y = d3.scaleBand()
-  .range([mainChartRealHeight, 0])
+  .range([0, bbox0.height*0.9])
   .padding(0.05); // Reduzindo o espaçamento entre as barras
 
 

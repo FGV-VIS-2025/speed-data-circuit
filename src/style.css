@@ -220,3 +220,8 @@ svg text {
 #lapText{
   color: white;
 }
+
+#main_chart{
+  overflow-y: auto;
+  overflow-x: auto;
+}
