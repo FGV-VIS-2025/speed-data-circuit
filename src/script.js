@@ -828,7 +828,8 @@ async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFileP
     }).sort((a, b) => b.points - a.points);
   }
 
-// Função para criar o gráfico de ranking
+let pilotosSelecionados = [];  // Declaração da lista de pilotos selecionados fora da função
+
 async function createRankingChart(raceId) {
     try {
         // Obtendo os dados de pontuação dos pilotos pela corrida
@@ -853,7 +854,7 @@ async function createRankingChart(raceId) {
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
 
-        rankingSvg.selectAll("*").remove();
+        rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
 
         // Cria novo título
         rankingSvg.append("text")
@@ -873,16 +874,23 @@ async function createRankingChart(raceId) {
             .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
             .padding(0.1);
 
-        // Adiciona barras ao gráfico
+        // Se nenhum piloto estiver selecionado, exibe todos os pilotos
+        const dadosFiltrados = pilotosSelecionados.length > 0 ? data.filter(d => pilotosSelecionados.includes(d.driver.driverId)) : data;
+
+        // Adiciona barras ao gráfico para todos os pilotos ou apenas os selecionados
         rankingSvg.selectAll("rect")
-            .data(data.sort((a, b) => b.points - a.points))
+            .data(dadosFiltrados)
             .enter()
             .append("rect")
             .attr("x", auxChartMargin.left)
             .attr("y", d => rankingY(d.driver.code))
             .attr("width", d => rankingX(d.points))
             .attr("height", rankingY.bandwidth())
-            .style("fill", "#4CAF50");
+            .style("fill", d => pilotosSelecionados.includes(d.driver.driverId) ? "#4CAF50" : "#4CAF50") // Cor de destaque
+            .style("opacity", d => pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Opacidade dos não selecionados
+            .on("click", function(event, d) {
+                togglePilotoSelecionado(d.driver.driverId, raceId);  // Passa o raceId junto com o driverId
+            });
 
         // Adiciona eixo Y com os nomes dos pilotos
         rankingSvg.append("g")
@@ -903,6 +911,15 @@ async function createRankingChart(raceId) {
     }
 }
 
+// Função para alternar a seleção do piloto
+function togglePilotoSelecionado(driverId, raceId) {
+    if (pilotosSelecionados.includes(driverId)) {
+        pilotosSelecionados = pilotosSelecionados.filter(id => id !== driverId); // Remove piloto
+    } else {
+        pilotosSelecionados.push(driverId); // Adiciona piloto
+    }
+    createRankingChart(raceId); // Atualiza o gráfico com os pilotos selecionados
+}
 
 // EVOLUÇÃO
 async function getRaceEvolution(raceId, maxLap = null) {
