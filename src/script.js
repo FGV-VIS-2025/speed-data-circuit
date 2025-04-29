@@ -181,13 +181,6 @@ function formatDate(date) {
     return formattedDate;
 }
 
-function timeInSeconds(time){
-    const aux = time.split(":");
-    const seconds = Number(aux[1]);
-    const minutesInSeconds = Number(aux[0])*60;
-    return seconds + minutesInSeconds;
-}
-
 async function getLapTimes(raceId) {
     const raceData = await loadCSVData(lapTimesFilePath);
     
@@ -480,9 +473,9 @@ const y = d3.scaleBand()
 
 const validYears = getAllValidSeasons();
 
-const auxChartWidth = 450;
-const auxChartHeight = 300;
-const auxChartMargin = { top: 50, right: 50, bottom: 50, left: 100 };
+const auxChartWidth = window.innerWidth*0.32;
+const auxChartHeight = Math.max(auxChartWidth*3/4, 500);
+const auxChartMargin = { top: auxChartWidth/8, right: auxChartWidth/8, bottom: auxChartWidth/8, left: Math.max(auxChartWidth/8, 40)};
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -894,6 +887,19 @@ async function createRankingChart(raceId) {
     try {
         // Obtendo os dados de pontuação dos pilotos pela corrida
         const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
+        const data2 = await getTeamsByRace(raceId);
+
+        for (const driver of data) {
+            try {
+                driver.teamId = data2[driver.driverId].constructorId;
+                const teamName = await getConstructorDataByID(driver.teamId);
+                driver.teamRef = teamName[0].constructorRef
+            }
+            catch (err) {
+                console.warn(`Erro ao buscar dados para o piloto ${driver.driverId}:`, err);
+                continue;
+            }
+        }
 
         if (data.length === 0) {
             console.log("Nenhum dado encontrado para esta corrida.");
@@ -918,13 +924,13 @@ async function createRankingChart(raceId) {
         rankingSvg.append("text")
             .attr("x", 10)
             .attr("y", 20)
-            .attr("font-size", "16px")
+            .attr("font-size", "14px")
             .attr("font-weight", "bold")
-            .text("Ranking dos Pilotos");
+            .text("Pontuação dos Pilotos No Campeonato Mundial (Na Data da Corrida)");
 
         // Escalas
         const rankingX = d3.scaleLinear()
-            .domain([0, d3.max(valoresRanking)])
+            .domain([-10, d3.max(valoresRanking)])
             .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
 
         const rankingY = d3.scaleBand()
@@ -941,8 +947,8 @@ async function createRankingChart(raceId) {
             .attr("y", d => rankingY(d.driver.code))
             .attr("width", d => rankingX(d.points))
             .attr("height", rankingY.bandwidth())
-            .style("fill", "#4CAF50")  // cor verde para todos
-            .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Destaque
+            .style("fill", d => cores_equipes[selectedYear][d.teamRef])
+            .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)
             .on("click", function(event, d) {
                 togglePilotoSelecionado(d.driver.driverId, raceId);  
                 createEvolutionChart(raceId);
@@ -1008,9 +1014,9 @@ async function createEvolutionChart(raceId) {
         evolucaoSvg.append("text")
             .attr("x", 10)
             .attr("y", 20)
-            .attr("font-size", "16px")
+            .attr("font-size", "14px")
             .attr("font-weight", "bold")
-            .text("Evolução por Volta");
+            .text("Posição dos Pilotos ao Longo da Corrida");
 
         // Escala X: voltas
         const evolucaoX = d3.scaleLinear()
@@ -1097,13 +1103,14 @@ async function createRaceTimesChart(raceId) {
         temposSvg.append("text")
             .attr("x", 10)
             .attr("y", 20)
-            .attr("font-size", "16px")
+            .attr("font-size", "14px")
             .attr("font-weight", "bold")
-            .text("Tempos por Volta na Corrida");
+            .text("Tempo De Volta dos Pilotos por Volta");
 
         // Definindo máximo de voltas e máximo de tempo (em ms) com base apenas nos selecionados
         const maxLapNumber = d3.max(dadosFiltrados.flatMap(d => d.laps.map(l => l.lap)));
         const maxMilliseconds = d3.max(dadosFiltrados.flatMap(d => d.laps.map(l => l.milliseconds)));
+        const minMilliseconds = d3.min(dadosFiltrados.flatMap(d => d.laps.map(l => l.milliseconds)));
 
         // Escala X: número da volta
         const temposX = d3.scaleLinear()
@@ -1112,7 +1119,7 @@ async function createRaceTimesChart(raceId) {
 
         // Escala Y: tempo de volta (milissegundos)
         const temposY = d3.scaleLinear()
-            .domain([0, maxMilliseconds])
+            .domain([minMilliseconds - 10, maxMilliseconds])
             .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
 
         // Criar linha
