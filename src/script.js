@@ -726,7 +726,7 @@ async function createRankingChart() {
 
         const rankingY = d3.scaleBand()
             .domain(pilotosOrdenadosGrid)
-            .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
+            .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom ])
             .padding(0.1);
 
         // Adiciona barras ao gráfico
@@ -868,13 +868,6 @@ async function createEvolutionChart() {
 
 // Chamando para gerar o gráfico:
 createEvolutionChart();
-
-// Eixo Y
-evolucaoSvg.append("g")
-    .attr("transform", `translate(${auxChartMargin.left},0)`)
-    .call(d3.axisLeft(evolucaoY)
-        .ticks(20)
-        .tickFormat(d => posicaoParaPiloto[d]));
 
 // TEMPOS
 async function getRaceTimes(raceId, maxLap = null) {
