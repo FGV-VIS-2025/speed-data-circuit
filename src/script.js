@@ -360,15 +360,11 @@ const bbox0 = rect0.getBBox();
 const mainChartSVG = d3.select("#main_chart");
 const mainChartWidth = +mainChartSVG.attr("width");
 const mainChartHeight = +mainChartSVG.attr("height");
-const mainChartMargin = { top: bbox0.height/20, right: 200, left: 30 };
+const mainChartMargin = { top: bbox0.height/20, left: 20 };
 
 const mainChartRealWidth = mainChartWidth - mainChartMargin.left - mainChartMargin.right;
 const mainChartRealHeight = mainChartHeight - mainChartMargin.top - mainChartMargin.bottom;
 const g = mainChartSVG.append("g").attr("transform", `translate(${mainChartMargin.left},${mainChartMargin.top})`);
-
-const auxChartWidth = 450;
-const auxChartHeight = 300;
-const auxChartMargin = { top: bbox0.height/20, right: 20, bottom: 30, left: 110 };
 
 // Manter a proporção 8:5
 const bbox2 = rect2.getBBox();
