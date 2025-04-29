@@ -406,17 +406,18 @@ let pilotosSelecionados = [];
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-function emojiByStringTyre(compound) {
-    const tyreEmojis = {
-      MEDIUM: '(⚪)', 
-      HARD: '(🔴)',   
-      SOFT: '(🟡)',   
-      INTERMEDIATE: '(🟢)', 
-      WET: '(🔵)'     
+function tyreImageByString(compound) {
+    const tyreImages = {
+      MEDIUM: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/MEDIUM.png" alt="Medium Tyre" style="width: 18px; vertical-align: middle;">',
+      HARD: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/HARD.png" alt="Hard Tyre" style="width: 18px; vertical-align: middle;">',
+      SOFT: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/SOFT.png" alt="Soft Tyre" style="width: 18px; vertical-align: middle;">',
+      INTERMEDIATE: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/INTERMEDIATE.png" alt="Intermediate Tyre" style="width: 18px; vertical-align: middle;">',
+      WET: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/WET.png" alt="Wet Tyre" style="width: 18px; vertical-align: middle;">'
     };
   
-    return tyreEmojis[compound.toUpperCase()] || ''; 
-}
+    return tyreImages[compound.toUpperCase()] || '';
+  }
+  
 
 function clearChart() {
     g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
@@ -764,7 +765,7 @@ function renderLap(data, lapNum) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
                         Nacionalidade: ${d.nationality}<br>
-                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase() + " " + emojiByStringTyre(d.tyre)}<br>
+                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase() + " (" + tyreImageByString(d.tyre) + ")"}<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min<br>
                     </div>
