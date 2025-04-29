@@ -938,12 +938,22 @@ async function createRankingChart(raceId) {
         rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
 
         // Cria novo título
-        rankingSvg.append("text")
+        const titulo = rankingSvg.append("text")
             .attr("x", 10)
             .attr("y", 20)
             .attr("font-size", "14px")
-            .attr("font-weight", "bold")
-            .text("Pontuação dos Pilotos No Campeonato Mundial (Na Data da Corrida)");
+            .attr("font-weight", "bold");
+
+        titulo.append("tspan")
+            .attr("x", 10)
+            .attr("dy", "0em")
+            .text("Pontuação dos Pilotos No Campeonato Mundial");
+
+        titulo.append("tspan")
+            .attr("x", 10)
+            .attr("dy", "1.2em")
+            .text("(Na Data da Corrida)");
+
 
         // Escalas
         const rankingX = d3.scaleLinear()
@@ -979,12 +989,27 @@ async function createRankingChart(raceId) {
             .selectAll("text")
             .style("text-anchor", "end");
 
+        rankingSvg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -auxChartMargin.top - (auxChartHeight - auxChartMargin.top - auxChartMargin.bottom) / 2)
+            .attr("y", 15)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .text("Pilotos");
+
         // Adiciona eixo X com os valores de pontuação
         rankingSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
             .call(d3.axisBottom(rankingX).ticks(5))
             .selectAll("text")
             .style("text-anchor", "middle");
+
+        rankingSvg.append("text")
+            .attr("x", auxChartMargin.left + (auxChartWidth - auxChartMargin.left - auxChartMargin.right) / 2)
+            .attr("y", auxChartHeight - 10)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .text("Pontuação");
 
     } catch (err) {
         console.error("Erro ao gerar o gráfico:", err);
