@@ -256,6 +256,103 @@ async function getTyreStintsByRace(raceId) {
     return result;
 }
 
+async function getRaceTimes(raceId, maxLap = null) {
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+
+    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+    if (maxLap !== null) {
+        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= Number(maxLap));
+    }
+
+    const driversMap = Object.fromEntries(drivers.map(d => [d.driverId, d]));
+    const lapsByDriver = {};
+
+    raceLapTimes.forEach(lap => {
+        const driverId = lap.driverId;
+        if (!lapsByDriver[driverId]) {
+            lapsByDriver[driverId] = {
+                driverId,
+                driver: driversMap[driverId] || null,
+                laps: []
+            };
+        }
+        lapsByDriver[driverId].laps.push({
+            lap: Number(lap.lap),
+            time: lap.time,
+            milliseconds: lap.milliseconds ? Number(lap.milliseconds) : null
+        });
+    });
+
+    return Object.values(lapsByDriver);
+}
+
+async function getRaceEvolution(raceId, maxLap = null) {
+    const results = await loadCSVData(resultsFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+
+    const raceDriverIds = results.filter(r => Number(r.raceId) === Number(raceId)).map(r => r.driverId);
+    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+
+    let maxLapNumber;
+    if (maxLap !== null) {
+        maxLapNumber = Number(maxLap);
+        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= maxLapNumber);
+    } else {
+        maxLapNumber = Math.max(...raceLapTimes.map(l => Number(l.lap)));
+    }
+
+    return raceDriverIds.map(driverId => {
+        const driverInfo = drivers.find(d => d.driverId === driverId);
+        const positions = [];
+        for (let lap = 1; lap <= maxLapNumber; lap++) {
+            const lapEntry = raceLapTimes.find(l => Number(l.driverId) === Number(driverId) && Number(l.lap) === lap);
+            positions.push(lapEntry ? Number(lapEntry.position) : null);
+        }
+        return {
+            driverId,
+            driver: driverInfo,
+            positions
+        };
+    });
+}
+
+async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath) {
+    const results = await loadCSVData(resultsFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+    const races = await loadCSVData(racesFilePath);
+  
+    const race = races.find(r => Number(r.raceId) === Number(raceId));
+    if (!race) return [];
+  
+    const year = Number(race.year);
+    const round = Number(race.round);
+  
+    const raceIdsUntilNow = races
+      .filter(r => Number(r.year) === year && Number(r.round) <= round)
+      .map(r => r.raceId);
+  
+    const filteredResults = results.filter(r => raceIdsUntilNow.includes(r.raceId));
+  
+    const pointsByDriver = {};
+    filteredResults.forEach(r => {
+      const driverId = r.driverId;
+      const pts = parseFloat(r.points) || 0;
+      if (!pointsByDriver[driverId]) pointsByDriver[driverId] = 0;
+      pointsByDriver[driverId] += pts;
+    });
+  
+    return Object.entries(pointsByDriver).map(([driverId, points]) => {
+      const driver = drivers.find(d => d.driverId === driverId);
+      return {
+        driverId,
+        driver,
+        points
+      };
+    }).sort((a, b) => b.points - a.points);
+}
+
 // CONSTRUINDO A LINHA DE CHEGADA -------------------------------------------------------------------------------------------------------------------
 
 const rect0 = document.getElementById('rect0');
@@ -361,9 +458,6 @@ const mainChartSVG = d3.select("#main_chart");
 const mainChartWidth = +mainChartSVG.attr("width");
 const mainChartHeight = +mainChartSVG.attr("height");
 const mainChartMargin = { top: bbox0.height/20, left: 20 };
-
-const mainChartRealWidth = mainChartWidth - mainChartMargin.left - mainChartMargin.right;
-const mainChartRealHeight = mainChartHeight - mainChartMargin.top - mainChartMargin.bottom;
 const g = mainChartSVG.append("g").attr("transform", `translate(${mainChartMargin.left},${mainChartMargin.top})`);
 
 // Manter a proporção 8:5
@@ -385,6 +479,10 @@ const y = d3.scaleBand()
 
 
 const validYears = getAllValidSeasons();
+
+const auxChartWidth = 450;
+const auxChartHeight = 300;
+const auxChartMargin = { top: 50, right: 50, bottom: 50, left: 100 };
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -792,166 +890,92 @@ function renderLap(data, lapNum) {
     }
 }
 
-const auxChartWidth = 450;
-const auxChartHeight = 300;
-const auxChartMargin = { top: 50, right: 50, bottom: 50, left: 100 };
+async function createRankingChart(raceId) {
+    try {
+        // Obtendo os dados de pontuação dos pilotos pela corrida
+        const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
 
-// Função para calcular a pontuação dos pilotos por corrida
-async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath) {
-    const results = await loadCSVData(resultsFilePath);
-    const drivers = await loadCSVData(driversFilePath);
-    const races = await loadCSVData(racesFilePath);
-  
-    const race = races.find(r => Number(r.raceId) === Number(raceId));
-    if (!race) return [];
-  
-    const year = Number(race.year);
-    const round = Number(race.round);
-  
-    const raceIdsUntilNow = races
-      .filter(r => Number(r.year) === year && Number(r.round) <= round)
-      .map(r => r.raceId);
-  
-    const filteredResults = results.filter(r => raceIdsUntilNow.includes(r.raceId));
-  
-    const pointsByDriver = {};
-    filteredResults.forEach(r => {
-      const driverId = r.driverId;
-      const pts = parseFloat(r.points) || 0;
-      if (!pointsByDriver[driverId]) pointsByDriver[driverId] = 0;
-      pointsByDriver[driverId] += pts;
-    });
-  
-    return Object.entries(pointsByDriver).map(([driverId, points]) => {
-      const driver = drivers.find(d => d.driverId === driverId);
-      return {
-        driverId,
-        driver,
-        points
-      };
-    }).sort((a, b) => b.points - a.points);
-  }
-
-  async function createRankingChart(raceId) {
-      try {
-          // Obtendo os dados de pontuação dos pilotos pela corrida
-          const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
-  
-          if (data.length === 0) {
-              console.log("Nenhum dado encontrado para esta corrida.");
-              return;
-          }
-  
-          // Ordena todos os pilotos por pontos
-          const pilotosOrdenadosGrid = data
-              .sort((a, b) => b.points - a.points)
-              .map(d => d.driver.code);
-  
-          const valoresRanking = data.map(d => d.points);
-  
-          // Criando o SVG para o gráfico
-          const rankingSvg = d3.select("#ranking_chart")
-              .attr("width", auxChartWidth)
-              .attr("height", auxChartHeight);
-  
-          rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
-  
-          // Cria novo título
-          rankingSvg.append("text")
-              .attr("x", 10)
-              .attr("y", 20)
-              .attr("font-size", "16px")
-              .attr("font-weight", "bold")
-              .text("Ranking dos Pilotos");
-  
-          // Escalas
-          const rankingX = d3.scaleLinear()
-              .domain([0, d3.max(valoresRanking)])
-              .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
-  
-          const rankingY = d3.scaleBand()
-              .domain(pilotosOrdenadosGrid)
-              .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
-              .padding(0.1);
-  
-          // Adiciona barras para TODOS os pilotos
-          rankingSvg.selectAll("rect")
-              .data(data)
-              .enter()
-              .append("rect")
-              .attr("x", auxChartMargin.left)
-              .attr("y", d => rankingY(d.driver.code))
-              .attr("width", d => rankingX(d.points))
-              .attr("height", rankingY.bandwidth())
-              .style("fill", "#4CAF50")  // cor verde para todos
-              .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Destaque
-              .on("click", function(event, d) {
-                  togglePilotoSelecionado(d.driver.driverId, raceId);  
-                    createEvolutionChart(raceId);
-                    createRaceTimesChart(raceId);
-                });
-  
-          // Adiciona eixo Y com os nomes dos pilotos
-          rankingSvg.append("g")
-              .attr("transform", `translate(${auxChartMargin.left}, 0)`)
-              .call(d3.axisLeft(rankingY).tickSize(0))
-              .selectAll("text")
-              .style("text-anchor", "end");
-  
-          // Adiciona eixo X com os valores de pontuação
-          rankingSvg.append("g")
-              .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
-              .call(d3.axisBottom(rankingX).ticks(5))
-              .selectAll("text")
-              .style("text-anchor", "middle");
-  
-      } catch (err) {
-          console.error("Erro ao gerar o gráfico:", err);
-      }
-  }
-  
-  // Função para alternar a seleção do piloto
-  function togglePilotoSelecionado(driverId, raceId) {
-      if (pilotosSelecionados.includes(driverId)) {
-          pilotosSelecionados = pilotosSelecionados.filter(id => id !== driverId); // Remove piloto
-      } else {
-          pilotosSelecionados.push(driverId); // Adiciona piloto
-      }
-      createRankingChart(raceId); // Atualiza o gráfico com os pilotos selecionados
-  }
-  
-  
-
-// EVOLUÇÃO
-async function getRaceEvolution(raceId, maxLap = null) {
-    const results = await loadCSVData(resultsFilePath);
-    const drivers = await loadCSVData(driversFilePath);
-    const lapTimes = await loadCSVData(lapTimesFilePath);
-
-    const raceDriverIds = results.filter(r => Number(r.raceId) === Number(raceId)).map(r => r.driverId);
-    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
-
-    let maxLapNumber;
-    if (maxLap !== null) {
-        maxLapNumber = Number(maxLap);
-        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= maxLapNumber);
-    } else {
-        maxLapNumber = Math.max(...raceLapTimes.map(l => Number(l.lap)));
-    }
-
-    return raceDriverIds.map(driverId => {
-        const driverInfo = drivers.find(d => d.driverId === driverId);
-        const positions = [];
-        for (let lap = 1; lap <= maxLapNumber; lap++) {
-            const lapEntry = raceLapTimes.find(l => Number(l.driverId) === Number(driverId) && Number(l.lap) === lap);
-            positions.push(lapEntry ? Number(lapEntry.position) : null);
+        if (data.length === 0) {
+            console.log("Nenhum dado encontrado para esta corrida.");
+            return;
         }
-        return {
-            driverId,
-            driver: driverInfo,
-            positions
-        };
-    });
+
+        // Ordena todos os pilotos por pontos
+        const pilotosOrdenadosGrid = data
+            .sort((a, b) => b.points - a.points)
+            .map(d => d.driver.code);
+
+        const valoresRanking = data.map(d => d.points);
+
+        // Criando o SVG para o gráfico
+        const rankingSvg = d3.select("#ranking_chart")
+            .attr("width", auxChartWidth)
+            .attr("height", auxChartHeight);
+
+        rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
+
+        // Cria novo título
+        rankingSvg.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .attr("font-size", "16px")
+            .attr("font-weight", "bold")
+            .text("Ranking dos Pilotos");
+
+        // Escalas
+        const rankingX = d3.scaleLinear()
+            .domain([0, d3.max(valoresRanking)])
+            .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
+
+        const rankingY = d3.scaleBand()
+            .domain(pilotosOrdenadosGrid)
+            .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
+            .padding(0.1);
+
+        // Adiciona barras para TODOS os pilotos
+        rankingSvg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", auxChartMargin.left)
+            .attr("y", d => rankingY(d.driver.code))
+            .attr("width", d => rankingX(d.points))
+            .attr("height", rankingY.bandwidth())
+            .style("fill", "#4CAF50")  // cor verde para todos
+            .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Destaque
+            .on("click", function(event, d) {
+                togglePilotoSelecionado(d.driver.driverId, raceId);  
+                createEvolutionChart(raceId);
+                createRaceTimesChart(raceId);
+            });
+
+        // Adiciona eixo Y com os nomes dos pilotos
+        rankingSvg.append("g")
+            .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+            .call(d3.axisLeft(rankingY).tickSize(0))
+            .selectAll("text")
+            .style("text-anchor", "end");
+
+        // Adiciona eixo X com os valores de pontuação
+        rankingSvg.append("g")
+            .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
+            .call(d3.axisBottom(rankingX).ticks(5))
+            .selectAll("text")
+            .style("text-anchor", "middle");
+
+    } catch (err) {
+        console.error("Erro ao gerar o gráfico:", err);
+    }
+}
+  
+// Função para alternar a seleção do piloto
+function togglePilotoSelecionado(driverId, raceId) {
+    if (pilotosSelecionados.includes(driverId)) {
+        pilotosSelecionados = pilotosSelecionados.filter(id => id !== driverId); // Remove piloto
+    } else {
+        pilotosSelecionados.push(driverId); // Adiciona piloto
+    }
+    createRankingChart(raceId); // Atualiza o gráfico com os pilotos selecionados
 }
 
 async function createEvolutionChart(raceId) {
@@ -1041,38 +1065,6 @@ async function createEvolutionChart(raceId) {
     } catch (err) {
         console.error("Erro ao gerar gráfico de evolução:", err);
     }
-}
-
-// TEMPOS
-async function getRaceTimes(raceId, maxLap = null) {
-    const lapTimes = await loadCSVData(lapTimesFilePath);
-    const drivers = await loadCSVData(driversFilePath);
-
-    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
-    if (maxLap !== null) {
-        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= Number(maxLap));
-    }
-
-    const driversMap = Object.fromEntries(drivers.map(d => [d.driverId, d]));
-    const lapsByDriver = {};
-
-    raceLapTimes.forEach(lap => {
-        const driverId = lap.driverId;
-        if (!lapsByDriver[driverId]) {
-            lapsByDriver[driverId] = {
-                driverId,
-                driver: driversMap[driverId] || null,
-                laps: []
-            };
-        }
-        lapsByDriver[driverId].laps.push({
-            lap: Number(lap.lap),
-            time: lap.time,
-            milliseconds: lap.milliseconds ? Number(lap.milliseconds) : null
-        });
-    });
-
-    return Object.values(lapsByDriver);
 }
 
 async function createRaceTimesChart(raceId) {
