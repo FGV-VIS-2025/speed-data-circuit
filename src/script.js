@@ -1227,14 +1227,29 @@ async function createRaceTimesChart(raceId) {
                 .ticks(Math.floor(maxLapNumber / 10))
                 .tickFormat(d => `${d}`)
             );
+        
+        temposSvg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("x", (auxChartWidth) / 2)
+            .attr("y", auxChartHeight - 10)
+            .attr("font-size", "12px")
+            .text("Voltas");
 
         // Eixo Y (tempo em ms convertido para segundos)
         temposSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left},0)`)
             .call(d3.axisLeft(temposY)
                 .ticks(6)
-                .tickFormat(d => `${Math.round(d/1000)}s`)
+                .tickFormat(d => `${Math.round(d/1000)}`)
             );
+        
+        temposSvg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("transform", `rotate(-90)`)
+            .attr("x", -auxChartHeight / 2)
+            .attr("y", 15)
+            .attr("font-size", "12px")
+            .text("Tempo (s)");
 
     } catch (err) {
         console.error("Erro ao gerar o gráfico de tempos:", err);
