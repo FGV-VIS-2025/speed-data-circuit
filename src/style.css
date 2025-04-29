@@ -191,6 +191,7 @@ legend {
   justify-content: center;
   align-items: right;
   font-size: 95%;
+  overflow-y: auto;
 }
 
 #clima_info p {
