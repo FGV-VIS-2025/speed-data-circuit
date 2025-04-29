@@ -913,7 +913,7 @@ const tooltip = d3.select("body")
   .style("pointer-events", "none")
   .style("opacity", 0);
 
-function showTooltipAuxCharts(event, d){
+function showTooltipAuxCharts1(event, d){
     tooltip
         .style("opacity", 1)
         .style("visibility", "visible")
@@ -925,6 +925,42 @@ function showTooltipAuxCharts(event, d){
                     Equipe: ${d.teamName}<br>
                     Nacionalidade: ${d.driver.nationality}<br>
                     Pontos: ${d.points}<br>
+                </div>
+            </div>
+        `);
+}
+
+function showTooltipAuxCharts2(event, d){
+    tooltip
+        .style("opacity", 1)
+        .style("visibility", "visible")
+        .html(`
+            <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+                <div>
+                    <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
+                    Equipe: ${d.driver.teamName}<br>
+                    Nacionalidade: ${d.driver.nationality}<br>
+                    Posição: 1º<br>
+                    Volta: 20
+                </div>
+            </div>
+        `);
+}
+
+function showTooltipAuxCharts3(event, d){
+    tooltip
+        .style("opacity", 1)
+        .style("visibility", "visible")
+        .html(`
+            <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+                <div>
+                    <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
+                    Equipe: ${d.driver.teamName}<br>
+                    Nacionalidade: ${d.driver.nationality}<br>
+                    Tempo de Volta: 1:40.583<br>
+                    Volta: 20
                 </div>
             </div>
         `);
@@ -1003,7 +1039,7 @@ async function createRankingChart(raceId) {
             .style("fill", d => cores_equipes[selectedYear][d.teamRef])
             .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)
             .on("mouseover", function(event, d) {
-                showTooltipAuxCharts(event, d);
+                showTooltipAuxCharts1(event, d);
             })
             .on("mousemove", function(event) {
                 tooltip
@@ -1125,6 +1161,8 @@ async function createEvolutionChart(raceId) {
             .x((d, i) => evolucaoX(i))
             .y(d => evolucaoY(d));
 
+        console.log(evolucaoData);
+
         // Desenhando as linhas dos pilotos filtrados
         evolucaoSvg.selectAll(".linha-piloto")
             .data(dadosFiltrados)
@@ -1134,7 +1172,18 @@ async function createEvolutionChart(raceId) {
             .attr("d", d => line(d.positions))
             .attr("fill", "none")
             .attr("stroke", (d, i) => cores_equipes[selectedYear][d.driver.teamRef])
-            .attr("stroke-width", 2.5);
+            .attr("stroke-width", 2.5)
+            .on("mouseover", function(event, d) {
+                showTooltipAuxCharts2(event, d);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("opacity", 0).style("visibility", "hidden");
+            });
 
         // Eixo X: voltas
         evolucaoSvg.append("g")
@@ -1256,7 +1305,18 @@ async function createRaceTimesChart(raceId) {
             .attr("d", d => line(d.laps))
             .attr("fill", "none")
             .attr("stroke", (d, i) => cores_equipes[selectedYear][d.driver.teamRef])
-            .attr("stroke-width", 2.5);
+            .attr("stroke-width", 2.5)
+            .on("mouseover", function(event, d) {
+                showTooltipAuxCharts3(event, d);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("opacity", 0).style("visibility", "hidden");
+            });
 
         // Eixo X
         temposSvg.append("g")
