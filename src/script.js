@@ -784,6 +784,10 @@ function renderLap(data, lapNum) {
     }
 }
 
+const auxChartWidth = 450;
+const auxChartHeight = 300;
+const auxChartMargin = { top: 50, right: 50, bottom: 50, left: 100 };
+
 // Função para calcular a pontuação dos pilotos por corrida
 async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath) {
     const results = await loadCSVData(resultsFilePath);
@@ -995,62 +999,3 @@ async function createEvolutionChart() {
 
 // Chamando para gerar o gráfico:
 createEvolutionChart();
-
-// // Eixo Y
-// evolucaoSvg.append("g")
-//     .attr("transform", `translate(${auxChartMargin.left},0)`)
-//     .call(d3.axisLeft(evolucaoY)
-//         .ticks(20)
-//         .tickFormat(d => posicaoParaPiloto[d]));
-
-// // VELOCIDADE
-// const velocidadeSvg = d3.select("#velocidade_chart");
-// const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
-// const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
-
-// velocidadeSvg.selectAll("path")
-//     .data([velocidades])
-//     .enter()
-//     .append("path")
-//     .attr("transform", `translate(0, ${auxChartMargin.top})`)
-//     .attr("d", d3.line()
-//         .x((d, i) => velocidadeX(i + 1))
-//         .y(d => velocidadeY(d)))
-//     .attr("fill", "none")
-//     .attr("stroke", "orange")
-//     .attr("stroke-width", 2);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
