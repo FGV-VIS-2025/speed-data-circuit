@@ -999,3 +999,97 @@ async function createEvolutionChart() {
 
 // Chamando para gerar o gráfico:
 createEvolutionChart();
+
+// TEMPOS
+async function getRaceTimes(raceId, maxLap = null) {
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+    const drivers = await loadCSVData(driversFilePath);
+
+    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+    if (maxLap !== null) {
+        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= Number(maxLap));
+    }
+
+    const driversMap = Object.fromEntries(drivers.map(d => [d.driverId, d]));
+    const lapsByDriver = {};
+
+    raceLapTimes.forEach(lap => {
+        const driverId = lap.driverId;
+        if (!lapsByDriver[driverId]) {
+            lapsByDriver[driverId] = {
+                driverId,
+                driver: driversMap[driverId] || null,
+                laps: []
+            };
+        }
+        lapsByDriver[driverId].laps.push({
+            lap: Number(lap.lap),
+            time: lap.time,
+            milliseconds: lap.milliseconds ? Number(lap.milliseconds) : null
+        });
+    });
+
+    return Object.values(lapsByDriver);
+}
+
+async function createRaceTimesChart() {
+    try {
+        const temposData = await getRaceTimes(raceId);
+
+        if (temposData.length === 0) {
+            console.log("Nenhum dado de tempo encontrado para essa corrida.");
+            return;
+        }
+
+        // SVG setup
+        const temposSvg = d3.select("#tempos_chart")
+            .attr("width", auxChartWidth)
+            .attr("height", auxChartHeight);
+
+        // Definindo máximo de voltas e máximo de tempo (em ms)
+        const maxLapNumber = d3.max(temposData.flatMap(d => d.laps.map(l => l.lap)));
+        const maxMilliseconds = d3.max(temposData.flatMap(d => d.laps.map(l => l.milliseconds)));
+
+        // Escala X: número da volta
+        const temposX = d3.scaleLinear()
+            .domain([1, maxLapNumber])
+            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+
+        // Escala Y: tempo de volta (milissegundos)
+        const temposY = d3.scaleLinear()
+            .domain([0, maxMilliseconds])
+            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+
+        // Criar linha
+        const line = d3.line()
+            .x(d => temposX(d.lap))
+            .y(d => temposY(d.milliseconds));
+
+        // Desenhando as linhas dos pilotos
+        temposSvg.selectAll(".linha-tempo")
+            .data(temposData)
+            .enter()
+            .append("path")
+            .attr("class", "linha-tempo")
+            .attr("d", d => line(d.laps))
+            .attr("fill", "none")
+            .attr("stroke", (d, i) => d3.schemeCategory10[i % 10])
+            .attr("stroke-width", 2);
+
+        // Eixo X
+        temposSvg.append("g")
+            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
+            .call(d3.axisBottom(temposX).ticks(Math.floor(maxLapNumber / 10)).tickFormat(d => `${d}`)); // ticks de 10 em 10
+
+        // Eixo Y (tempo em ms)
+        temposSvg.append("g")
+            .attr("transform", `translate(${auxChartMargin.left},0)`)
+            .call(d3.axisLeft(temposY).ticks(6).tickFormat(d => `${Math.round(d/1000)}s`)); // converter ms para segundos no eixo Y
+
+    } catch (err) {
+        console.error("Erro ao gerar o gráfico de tempos:", err);
+    }
+}
+
+// Chamar a função para criar o gráfico
+createRaceTimesChart();
