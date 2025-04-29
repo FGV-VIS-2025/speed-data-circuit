@@ -402,6 +402,7 @@ let intervalId = null;
 let isPlaying = false;
 let laps = [];
 const numberOfLaps = 20;
+let pilotosSelecionados = [];
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -477,6 +478,7 @@ raceSelect.addEventListener("change", async () => {
 
     stopPlayback();
 
+    pilotosSelecionados = [];
     createRankingChart(raceID);
     createEvolutionChart(raceID);
     createRaceTimesChart(raceID);
@@ -522,6 +524,7 @@ raceSelect.addEventListener("change", async () => {
         updateUI();
     }
 });
+
 
 function generateLaps(drivers, lapsTime, tyreData) {
     const laps = [];
@@ -828,98 +831,95 @@ async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFileP
     }).sort((a, b) => b.points - a.points);
   }
 
-let pilotosSelecionados = [];  // Declaração da lista de pilotos selecionados fora da função
-
-async function createRankingChart(raceId) {
-    try {
-        // Obtendo os dados de pontuação dos pilotos pela corrida
-        const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
-        
-        if (data.length === 0) {
-            console.log("Nenhum dado encontrado para esta corrida.");
-            return;
-        }
-
-        // Pegando os nomes dos pilotos e suas pontuações
-        const pilotosOrdenadosGrid = data
-            .sort((a, b) => b.points - a.points)  // Ordena por pontuação decrescente
-            .map(d => d.driver.code);
-
-        const valoresRanking = data
-            .sort((a, b) => b.points - a.points)
-            .map(d => d.points);
-
-        // Criando o SVG para o gráfico
-        const rankingSvg = d3.select("#ranking_chart")
-            .attr("width", auxChartWidth)
-            .attr("height", auxChartHeight);
-
-        rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
-
-        // Cria novo título
-        rankingSvg.append("text")
-            .attr("x", 10)
-            .attr("y", 20)
-            .attr("font-size", "16px")
-            .attr("font-weight", "bold")
-            .text("Ranking dos Pilotos");
-
-        // Escalas
-        const rankingX = d3.scaleLinear()
-            .domain([0, d3.max(valoresRanking)])
-            .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
-
-        const rankingY = d3.scaleBand()
-            .domain(pilotosOrdenadosGrid)
-            .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
-            .padding(0.1);
-
-        // Se nenhum piloto estiver selecionado, exibe todos os pilotos
-        const dadosFiltrados = pilotosSelecionados.length > 0 ? data.filter(d => pilotosSelecionados.includes(d.driver.driverId)) : data;
-
-        // Adiciona barras ao gráfico para todos os pilotos ou apenas os selecionados
-        rankingSvg.selectAll("rect")
-            .data(dadosFiltrados)
-            .enter()
-            .append("rect")
-            .attr("x", auxChartMargin.left)
-            .attr("y", d => rankingY(d.driver.code))
-            .attr("width", d => rankingX(d.points))
-            .attr("height", rankingY.bandwidth())
-            .style("fill", d => pilotosSelecionados.includes(d.driver.driverId) ? "#4CAF50" : "#4CAF50") // Cor de destaque
-            .style("opacity", d => pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Opacidade dos não selecionados
-            .on("click", function(event, d) {
-                togglePilotoSelecionado(d.driver.driverId, raceId);  // Passa o raceId junto com o driverId
-            });
-
-        // Adiciona eixo Y com os nomes dos pilotos
-        rankingSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left}, 0)`)
-            .call(d3.axisLeft(rankingY).tickSize(0))  // remove ticks
-            .selectAll("text")
-            .style("text-anchor", "end"); 
-
-        // Adiciona eixo X com os valores de pontuação
-        rankingSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
-            .call(d3.axisBottom(rankingX).ticks(5))
-            .selectAll("text")
-            .style("text-anchor", "middle");
-
-    } catch (err) {
-        console.error("Erro ao gerar o gráfico:", err);
-    }
-}
-
-// Função para alternar a seleção do piloto
-function togglePilotoSelecionado(driverId, raceId) {
-    if (pilotosSelecionados.includes(driverId)) {
-        pilotosSelecionados = pilotosSelecionados.filter(id => id !== driverId); // Remove piloto
-    } else {
-        pilotosSelecionados.push(driverId); // Adiciona piloto
-    }
-    createRankingChart(raceId); // Atualiza o gráfico com os pilotos selecionados
-}
+  async function createRankingChart(raceId) {
+      try {
+          // Obtendo os dados de pontuação dos pilotos pela corrida
+          const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
+  
+          if (data.length === 0) {
+              console.log("Nenhum dado encontrado para esta corrida.");
+              return;
+          }
+  
+          // Ordena todos os pilotos por pontos
+          const pilotosOrdenadosGrid = data
+              .sort((a, b) => b.points - a.points)
+              .map(d => d.driver.code);
+  
+          const valoresRanking = data.map(d => d.points);
+  
+          // Criando o SVG para o gráfico
+          const rankingSvg = d3.select("#ranking_chart")
+              .attr("width", auxChartWidth)
+              .attr("height", auxChartHeight);
+  
+          rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
+  
+          // Cria novo título
+          rankingSvg.append("text")
+              .attr("x", 10)
+              .attr("y", 20)
+              .attr("font-size", "16px")
+              .attr("font-weight", "bold")
+              .text("Ranking dos Pilotos");
+  
+          // Escalas
+          const rankingX = d3.scaleLinear()
+              .domain([0, d3.max(valoresRanking)])
+              .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
+  
+          const rankingY = d3.scaleBand()
+              .domain(pilotosOrdenadosGrid)
+              .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
+              .padding(0.1);
+  
+          // Adiciona barras para TODOS os pilotos
+          rankingSvg.selectAll("rect")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", auxChartMargin.left)
+              .attr("y", d => rankingY(d.driver.code))
+              .attr("width", d => rankingX(d.points))
+              .attr("height", rankingY.bandwidth())
+              .style("fill", "#4CAF50")  // cor verde para todos
+              .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)  // Destaque
+              .on("click", function(event, d) {
+                  togglePilotoSelecionado(d.driver.driverId, raceId);  
+                    createEvolutionChart(raceId);
+                    createRaceTimesChart(raceId);
+                });
+  
+          // Adiciona eixo Y com os nomes dos pilotos
+          rankingSvg.append("g")
+              .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+              .call(d3.axisLeft(rankingY).tickSize(0))
+              .selectAll("text")
+              .style("text-anchor", "end");
+  
+          // Adiciona eixo X com os valores de pontuação
+          rankingSvg.append("g")
+              .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
+              .call(d3.axisBottom(rankingX).ticks(5))
+              .selectAll("text")
+              .style("text-anchor", "middle");
+  
+      } catch (err) {
+          console.error("Erro ao gerar o gráfico:", err);
+      }
+  }
+  
+  // Função para alternar a seleção do piloto
+  function togglePilotoSelecionado(driverId, raceId) {
+      if (pilotosSelecionados.includes(driverId)) {
+          pilotosSelecionados = pilotosSelecionados.filter(id => id !== driverId); // Remove piloto
+      } else {
+          pilotosSelecionados.push(driverId); // Adiciona piloto
+      }
+      createRankingChart(raceId); // Atualiza o gráfico com os pilotos selecionados
+  }
+  
+  
 
 // EVOLUÇÃO
 async function getRaceEvolution(raceId, maxLap = null) {
@@ -962,12 +962,22 @@ async function createEvolutionChart(raceId) {
             return;
         }
 
+        // Filtra apenas os pilotos selecionados
+        const dadosFiltrados = pilotosSelecionados.length > 0
+            ? evolucaoData.filter(d => pilotosSelecionados.includes(d.driverId))
+            : evolucaoData;
+
+        if (dadosFiltrados.length === 0) {
+            console.log("Nenhum piloto selecionado para exibir a evolução.");
+            return;
+        }
+
         // Criando (ou limpando) o SVG
         const evolucaoSvg = d3.select("#evolucao_chart")
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
 
-        evolucaoSvg.selectAll("*").remove(); // <--- LIMPA TUDO ANTES DE DESENHAR
+        evolucaoSvg.selectAll("*").remove(); // LIMPA TUDO ANTES DE DESENHAR
 
         // Cria novo título
         evolucaoSvg.append("text")
@@ -979,7 +989,7 @@ async function createEvolutionChart(raceId) {
 
         // Escala X: voltas
         const evolucaoX = d3.scaleLinear()
-            .domain([0, evolucaoData[0].positions.length - 1])
+            .domain([0, dadosFiltrados[0].positions.length - 1])
             .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
 
         // Escala Y: posições (invertido)
@@ -992,9 +1002,9 @@ async function createEvolutionChart(raceId) {
             .x((d, i) => evolucaoX(i))
             .y(d => evolucaoY(d));
 
-        // Desenhando as linhas dos pilotos
+        // Desenhando as linhas dos pilotos filtrados
         evolucaoSvg.selectAll(".linha-piloto")
-            .data(evolucaoData)
+            .data(dadosFiltrados)
             .enter()
             .append("path")
             .attr("class", "linha-piloto")
@@ -1007,13 +1017,13 @@ async function createEvolutionChart(raceId) {
         evolucaoSvg.append("g")
             .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
             .call(d3.axisBottom(evolucaoX)
-                .ticks(Math.ceil(evolucaoData[0].positions.length / 10))
+                .ticks(Math.ceil(dadosFiltrados[0].positions.length / 10))
                 .tickFormat(d => `${d + 1}`)
             );
 
         // Eixo Y: posições iniciais dos pilotos
         const posicaoParaPiloto = {};
-        evolucaoData.forEach(piloto => {
+        dadosFiltrados.forEach(piloto => {
             const posicaoInicial = piloto.positions[0];
             if (posicaoInicial !== null) {
                 posicaoParaPiloto[posicaoInicial] = piloto.driver.code;
@@ -1031,7 +1041,6 @@ async function createEvolutionChart(raceId) {
         console.error("Erro ao gerar gráfico de evolução:", err);
     }
 }
-
 
 // TEMPOS
 async function getRaceTimes(raceId, maxLap = null) {
@@ -1074,6 +1083,16 @@ async function createRaceTimesChart(raceId) {
             return;
         }
 
+        // Filtra apenas os pilotos selecionados
+        const dadosFiltrados = pilotosSelecionados.length > 0
+            ? temposData.filter(d => pilotosSelecionados.includes(d.driverId))
+            : temposData;
+
+        if (dadosFiltrados.length === 0) {
+            console.log("Nenhum piloto selecionado para exibir os tempos.");
+            return;
+        }
+
         // SVG setup
         const temposSvg = d3.select("#tempos_chart")
             .attr("width", auxChartWidth)
@@ -1089,9 +1108,9 @@ async function createRaceTimesChart(raceId) {
             .attr("font-weight", "bold")
             .text("Tempos por Volta na Corrida");
 
-        // Definindo máximo de voltas e máximo de tempo (em ms)
-        const maxLapNumber = d3.max(temposData.flatMap(d => d.laps.map(l => l.lap)));
-        const maxMilliseconds = d3.max(temposData.flatMap(d => d.laps.map(l => l.milliseconds)));
+        // Definindo máximo de voltas e máximo de tempo (em ms) com base apenas nos selecionados
+        const maxLapNumber = d3.max(dadosFiltrados.flatMap(d => d.laps.map(l => l.lap)));
+        const maxMilliseconds = d3.max(dadosFiltrados.flatMap(d => d.laps.map(l => l.milliseconds)));
 
         // Escala X: número da volta
         const temposX = d3.scaleLinear()
@@ -1108,9 +1127,9 @@ async function createRaceTimesChart(raceId) {
             .x(d => temposX(d.lap))
             .y(d => temposY(d.milliseconds));
 
-        // Desenhando as linhas dos pilotos
+        // Desenhando as linhas dos pilotos filtrados
         temposSvg.selectAll(".linha-tempo")
-            .data(temposData)
+            .data(dadosFiltrados)
             .enter()
             .append("path")
             .attr("class", "linha-tempo")
@@ -1122,14 +1141,21 @@ async function createRaceTimesChart(raceId) {
         // Eixo X
         temposSvg.append("g")
             .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
-            .call(d3.axisBottom(temposX).ticks(Math.floor(maxLapNumber / 10)).tickFormat(d => `${d}`)); // ticks de 10 em 10
+            .call(d3.axisBottom(temposX)
+                .ticks(Math.floor(maxLapNumber / 10))
+                .tickFormat(d => `${d}`)
+            );
 
-        // Eixo Y (tempo em ms)
+        // Eixo Y (tempo em ms convertido para segundos)
         temposSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left},0)`)
-            .call(d3.axisLeft(temposY).ticks(6).tickFormat(d => `${Math.round(d/1000)}s`)); // converter ms para segundos no eixo Y
+            .call(d3.axisLeft(temposY)
+                .ticks(6)
+                .tickFormat(d => `${Math.round(d/1000)}s`)
+            );
 
     } catch (err) {
         console.error("Erro ao gerar o gráfico de tempos:", err);
     }
 }
+
