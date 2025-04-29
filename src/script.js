@@ -477,6 +477,10 @@ raceSelect.addEventListener("change", async () => {
 
     stopPlayback();
 
+    createRankingChart(raceID);
+    createEvolutionChart(raceID);
+    createRaceTimesChart(raceID);
+
     const raceDrivers = await getDriversByRace(parseInt(raceID));
     const raceAges = await getAgesByRace(parseInt(raceID));
     const raceTeams = await getTeamsByRace(parseInt(raceID));
@@ -823,12 +827,9 @@ async function getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFileP
       };
     }).sort((a, b) => b.points - a.points);
   }
-  
-// Exemplo de uso da função com dados
-const raceId = 1139;
 
 // Função para criar o gráfico de ranking
-async function createRankingChart() {
+async function createRankingChart(raceId) {
     try {
         // Obtendo os dados de pontuação dos pilotos pela corrida
         const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
@@ -851,6 +852,16 @@ async function createRankingChart() {
         const rankingSvg = d3.select("#ranking_chart")
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
+
+        rankingSvg.selectAll("*").remove();
+
+        // Cria novo título
+        rankingSvg.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .attr("font-size", "16px")
+            .attr("font-weight", "bold")
+            .text("Ranking dos Pilotos");
 
         // Escalas
         const rankingX = d3.scaleLinear()
@@ -892,9 +903,6 @@ async function createRankingChart() {
     }
 }
 
-// Chama a função para criar o gráfico de ranking
-createRankingChart();
-
 
 // EVOLUÇÃO
 async function getRaceEvolution(raceId, maxLap = null) {
@@ -928,7 +936,7 @@ async function getRaceEvolution(raceId, maxLap = null) {
     });
 }
 
-async function createEvolutionChart() {
+async function createEvolutionChart(raceId) {
     try {
         const evolucaoData = await getRaceEvolution(raceId);
 
@@ -937,25 +945,35 @@ async function createEvolutionChart() {
             return;
         }
 
-        // Escala X: voltas
-        const evolucaoX = d3.scaleLinear()
-            .domain([0, evolucaoData[0].positions.length - 1]) // Número de voltas - 1
-            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
-
-        // Escala Y: posições (invertido)
-        const evolucaoY = d3.scaleLinear()
-            .domain([20.5, 0.5]) // da posição 20 até posição 1
-            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
-
-        // Criando o SVG
+        // Criando (ou limpando) o SVG
         const evolucaoSvg = d3.select("#evolucao_chart")
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
 
+        evolucaoSvg.selectAll("*").remove(); // <--- LIMPA TUDO ANTES DE DESENHAR
+
+        // Cria novo título
+        evolucaoSvg.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .attr("font-size", "16px")
+            .attr("font-weight", "bold")
+            .text("Evolução por Volta");
+
+        // Escala X: voltas
+        const evolucaoX = d3.scaleLinear()
+            .domain([0, evolucaoData[0].positions.length - 1])
+            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+
+        // Escala Y: posições (invertido)
+        const evolucaoY = d3.scaleLinear()
+            .domain([20.5, 0.5])
+            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+
         // Linha para cada piloto
         const line = d3.line()
-            .x((d, i) => evolucaoX(i)) // i é o número da volta
-            .y(d => evolucaoY(d));     // d é a posição
+            .x((d, i) => evolucaoX(i))
+            .y(d => evolucaoY(d));
 
         // Desenhando as linhas dos pilotos
         evolucaoSvg.selectAll(".linha-piloto")
@@ -972,10 +990,11 @@ async function createEvolutionChart() {
         evolucaoSvg.append("g")
             .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
             .call(d3.axisBottom(evolucaoX)
-                .ticks(Math.ceil(evolucaoData[0].positions.length / 10)) // <-- menos ticks
-                .tickFormat(d => `${d + 1}`) // volta começa de 1
+                .ticks(Math.ceil(evolucaoData[0].positions.length / 10))
+                .tickFormat(d => `${d + 1}`)
             );
 
+        // Eixo Y: posições iniciais dos pilotos
         const posicaoParaPiloto = {};
         evolucaoData.forEach(piloto => {
             const posicaoInicial = piloto.positions[0];
@@ -983,12 +1002,11 @@ async function createEvolutionChart() {
                 posicaoParaPiloto[posicaoInicial] = piloto.driver.code;
             }
         });
-            
-        // Eixo Y
+
         evolucaoSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left}, 0)`)
             .call(d3.axisLeft(evolucaoY)
-                .ticks(20) // para posições de 1 a 20
+                .ticks(20)
                 .tickFormat(pos => posicaoParaPiloto[Math.round(pos)] || "")
             );
 
@@ -997,8 +1015,6 @@ async function createEvolutionChart() {
     }
 }
 
-// Chamando para gerar o gráfico:
-createEvolutionChart();
 
 // TEMPOS
 async function getRaceTimes(raceId, maxLap = null) {
@@ -1032,7 +1048,7 @@ async function getRaceTimes(raceId, maxLap = null) {
     return Object.values(lapsByDriver);
 }
 
-async function createRaceTimesChart() {
+async function createRaceTimesChart(raceId) {
     try {
         const temposData = await getRaceTimes(raceId);
 
@@ -1045,6 +1061,16 @@ async function createRaceTimesChart() {
         const temposSvg = d3.select("#tempos_chart")
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
+
+        temposSvg.selectAll("*").remove();
+
+        // Cria novo título
+        temposSvg.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .attr("font-size", "16px")
+            .attr("font-weight", "bold")
+            .text("Tempos por Volta na Corrida");
 
         // Definindo máximo de voltas e máximo de tempo (em ms)
         const maxLapNumber = d3.max(temposData.flatMap(d => d.laps.map(l => l.lap)));
@@ -1090,6 +1116,3 @@ async function createRaceTimesChart() {
         console.error("Erro ao gerar o gráfico de tempos:", err);
     }
 }
-
-// Chamar a função para criar o gráfico
-createRaceTimesChart();
