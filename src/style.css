@@ -27,6 +27,10 @@ body {
   height: 100vh;
 }
 
+html, body {
+  max-width: 100%;
+}
+
 #layout-container {
   display: flex;
   flex-direction: row;
@@ -82,17 +86,14 @@ body {
 #extra_charts {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin-top: 10px;
+  width: 98.5%;
   gap: 10px;
 }
 
 #extra_charts svg {
   flex: 1;
-  height: 300px;
+  height: auto;
   background-color: #f0f0f0;
-  border-radius: 8px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* ------------------------------
@@ -199,7 +200,6 @@ legend {
   margin-left: 5%;
 }
 
-/* Tipografia SVG */
 svg text {
   font-family: F1;
 }
@@ -210,17 +210,11 @@ svg text {
   fill: #000;
 }
 
-/* Interação */
 .bar:hover {
-  fill: #F21905;
+  fill: #000000;
   cursor: pointer;
 }
 
 #lapText{
   color: #ffffff;
-}
-
-#main_chart{
-  overflow-y: auto;
-  overflow-x: auto;
 }
