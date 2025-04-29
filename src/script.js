@@ -900,9 +900,39 @@ function renderLap(data, lapNum) {
     }
 }
 
+const tooltip = d3.select("body")
+  .append("div")
+  .attr("id", "tooltip")
+  .style("position", "absolute")
+  .style("visibility", "hidden")
+  .style("background", "white")
+  .style("border", "1px solid #ccc")
+  .style("padding", "8px")
+  .style("border-radius", "5px")
+  .style("font-size", "16px")
+  .style("pointer-events", "none")
+  .style("opacity", 0);
+
+function showTooltipAuxCharts(event, d){
+    tooltip
+        .style("opacity", 1)
+        .style("visibility", "visible")
+        .html(`
+            <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
+                <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+                <div>
+                    <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
+                    Equipe: ${d.teamName}<br>
+                    Nacionalidade: ${d.driver.nationality}<br>
+                    Pontos: ${d.points}<br>
+                </div>
+            </div>
+        `);
+}
+
+// Função principal do gráfico
 async function createRankingChart(raceId) {
     try {
-        // Obtendo os dados de pontuação dos pilotos pela corrida
         const data = await getDriversSeasonScorebyRace(raceId, resultsFilePath, driversFilePath, racesFilePath);
         const data2 = await getTeamsByRace(raceId);
 
@@ -910,9 +940,9 @@ async function createRankingChart(raceId) {
             try {
                 driver.teamId = data2[driver.driverId].constructorId;
                 const teamName = await getConstructorDataByID(driver.teamId);
-                driver.teamRef = teamName[0].constructorRef
-            }
-            catch (err) {
+                driver.teamRef = teamName[0].constructorRef;
+                driver.teamName = teamName[0].name;
+            } catch (err) {
                 console.warn(`Erro ao buscar dados para o piloto ${driver.driverId}:`, err);
                 continue;
             }
@@ -923,21 +953,18 @@ async function createRankingChart(raceId) {
             return;
         }
 
-        // Ordena todos os pilotos por pontos
         const pilotosOrdenadosGrid = data
             .sort((a, b) => b.points - a.points)
             .map(d => d.driver.code);
 
         const valoresRanking = data.map(d => d.points);
 
-        // Criando o SVG para o gráfico
         const rankingSvg = d3.select("#ranking_chart")
             .attr("width", auxChartWidth)
             .attr("height", auxChartHeight);
 
-        rankingSvg.selectAll("*").remove();  // Remove todos os elementos antes de adicionar novos
+        rankingSvg.selectAll("*").remove();
 
-        // Cria novo título
         const titulo = rankingSvg.append("text")
             .attr("x", 10)
             .attr("y", 20)
@@ -954,8 +981,6 @@ async function createRankingChart(raceId) {
             .attr("dy", "1.2em")
             .text("(Na Data da Corrida)");
 
-
-        // Escalas
         const rankingX = d3.scaleLinear()
             .domain([-10, d3.max(valoresRanking)])
             .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
@@ -965,7 +990,8 @@ async function createRankingChart(raceId) {
             .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
             .padding(0.1);
 
-        // Adiciona barras para TODOS os pilotos
+        console.log(data);
+
         rankingSvg.selectAll("rect")
             .data(data)
             .enter()
@@ -976,13 +1002,23 @@ async function createRankingChart(raceId) {
             .attr("height", rankingY.bandwidth())
             .style("fill", d => cores_equipes[selectedYear][d.teamRef])
             .style("opacity", d => pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId) ? 1 : 0.3)
+            .on("mouseover", function(event, d) {
+                showTooltipAuxCharts(event, d);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("opacity", 0).style("visibility", "hidden");
+            })
             .on("click", function(event, d) {
-                togglePilotoSelecionado(d.driver.driverId, raceId);  
+                togglePilotoSelecionado(d.driver.driverId, raceId);
                 createEvolutionChart(raceId);
                 createRaceTimesChart(raceId);
             });
 
-        // Adiciona eixo Y com os nomes dos pilotos
         rankingSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left}, 0)`)
             .call(d3.axisLeft(rankingY).tickSize(0))
@@ -997,7 +1033,6 @@ async function createRankingChart(raceId) {
             .attr("font-size", "12px")
             .text("Pilotos");
 
-        // Adiciona eixo X com os valores de pontuação
         rankingSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
             .call(d3.axisBottom(rankingX).ticks(5))
@@ -1015,6 +1050,7 @@ async function createRankingChart(raceId) {
         console.error("Erro ao gerar o gráfico:", err);
     }
 }
+
   
 // Função para alternar a seleção do piloto
 function togglePilotoSelecionado(driverId, raceId) {
@@ -1036,6 +1072,7 @@ async function createEvolutionChart(raceId) {
                 item.driver.teamId = data2[item.driver.driverId].constructorId;
                 const teamName = await getConstructorDataByID(item.driver.teamId);
                 item.driver.teamRef = teamName[0].constructorRef;
+                item.driver.teamName = teamName[0].name;
             } catch (err) {
                 console.warn(`Erro ao buscar dados para o piloto ${item.driver.driverId}:`, err);
                 continue;
@@ -1153,6 +1190,7 @@ async function createRaceTimesChart(raceId) {
                 item.driver.teamId = data2[item.driver.driverId].constructorId;
                 const teamName = await getConstructorDataByID(item.driver.teamId);
                 item.driver.teamRef = teamName[0].constructorRef;
+                item.driver.teamName = teamName[0].name;
             } catch (err) {
                 console.warn(`Erro ao buscar dados para o piloto ${item.driver.driverId}:`, err);
                 continue;
