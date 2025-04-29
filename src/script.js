@@ -621,16 +621,33 @@ raceSelect.addEventListener("change", async () => {
 function generateLaps(drivers, lapsTime, tyreData) {
     const laps = [];
 
-    const driversWithScore = drivers.map(driver => ({
-        ...driver,
-        score: (20 - driver.grid)/1000000,
-        name: `${driver.forename} ${driver.surname}`,
-        totalTime: lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated,
-        running: true,
-        lapsCompleted: 0,
-        lastAccumulated: 0,
-        tyre: tyreData[driver.driverId][1] // Pneu da primeira volta
-    }));
+    const driversWithScore = drivers.map(driver => {
+        let totalTime = 0;
+        try {
+            totalTime = lapsTime[driver.driverId][lapsTime[driver.driverId].length - 1].milliseconds_acumulated;
+        } catch (err) {
+            totalTime = 0;
+        }
+        
+        let firstLapTyre = 0;
+        try {
+            firstLapTyre = tyreData[driver.driverId][1];
+        } catch (err) {
+            firstLapTyre = "HARD";
+        }
+    
+        return {
+            ...driver,
+            score: (20 - driver.grid)/1000000,
+            name: `${driver.forename} ${driver.surname}`,
+            totalTime: totalTime,
+            running: true,
+            lapsCompleted: 0,
+            lastAccumulated: 0,
+            tyre: firstLapTyre
+        };
+    });
+    
 
     laps.push(JSON.parse(JSON.stringify(driversWithScore)));
 
@@ -987,6 +1004,19 @@ function togglePilotoSelecionado(driverId, raceId) {
 async function createEvolutionChart(raceId) {
     try {
         const evolucaoData = await getRaceEvolution(raceId);
+        const data2 = await getTeamsByRace(raceId);
+        
+        for (const item of evolucaoData) {
+            try {
+                item.driver.teamId = data2[item.driver.driverId].constructorId;
+                const teamName = await getConstructorDataByID(item.driver.teamId);
+                item.driver.teamRef = teamName[0].constructorRef;
+            } catch (err) {
+                console.warn(`Erro ao buscar dados para o piloto ${item.driver.driverId}:`, err);
+                continue;
+            }
+        }
+
 
         if (evolucaoData.length === 0) {
             console.log("Nenhum dado encontrado para evolução da corrida.");
@@ -1041,8 +1071,8 @@ async function createEvolutionChart(raceId) {
             .attr("class", "linha-piloto")
             .attr("d", d => line(d.positions))
             .attr("fill", "none")
-            .attr("stroke", (d, i) => d3.schemeCategory10[i % 10])
-            .attr("stroke-width", 2);
+            .attr("stroke", (d, i) => cores_equipes[selectedYear][d.driver.teamRef])
+            .attr("stroke-width", 2.5);
 
         // Eixo X: voltas
         evolucaoSvg.append("g")
@@ -1076,6 +1106,18 @@ async function createEvolutionChart(raceId) {
 async function createRaceTimesChart(raceId) {
     try {
         const temposData = await getRaceTimes(raceId);
+        const data2 = await getTeamsByRace(raceId);
+        
+        for (const item of temposData) {
+            try {
+                item.driver.teamId = data2[item.driver.driverId].constructorId;
+                const teamName = await getConstructorDataByID(item.driver.teamId);
+                item.driver.teamRef = teamName[0].constructorRef;
+            } catch (err) {
+                console.warn(`Erro ao buscar dados para o piloto ${item.driver.driverId}:`, err);
+                continue;
+            }
+        }
 
         if (temposData.length === 0) {
             console.log("Nenhum dado de tempo encontrado para essa corrida.");
@@ -1135,8 +1177,8 @@ async function createRaceTimesChart(raceId) {
             .attr("class", "linha-tempo")
             .attr("d", d => line(d.laps))
             .attr("fill", "none")
-            .attr("stroke", (d, i) => d3.schemeCategory10[i % 10])
-            .attr("stroke-width", 2);
+            .attr("stroke", (d, i) => cores_equipes[selectedYear][d.driver.teamRef])
+            .attr("stroke-width", 2.5);
 
         // Eixo X
         temposSvg.append("g")
