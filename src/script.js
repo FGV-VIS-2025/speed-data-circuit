@@ -513,7 +513,7 @@ function tyreImageByString(compound) {
 function clearChart() {
     g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
     d3.select("#tooltip").style("opacity", 0); // Esconde o tooltip
-    d3.select("h2").text("F1 Bar Chart Race"); // Reseta o título
+    d3.select("h2").text("Visualização Interativa de Corridas da Fórmula 1"); // Reseta o título
 }
 
 // Insere os anos no select
@@ -859,7 +859,7 @@ function renderLap(data, lapNum) {
         });
 
     // Atualiza o título
-    d3.select("h2").text(`F1 Bar Chart Race - Volta ${lapNum + 1}`);
+    d3.select("h2").text(`Visualização Interativa de Corridas da Fórmula 1`);
     
     // Funções auxiliares para tooltip
     function showTooltip(event, d) {
