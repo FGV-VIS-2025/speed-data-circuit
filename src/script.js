@@ -876,23 +876,37 @@ evolucaoSvg.append("g")
         .ticks(20)
         .tickFormat(d => posicaoParaPiloto[d]));
 
-// VELOCIDADE
-const velocidadeSvg = d3.select("#velocidade_chart");
-const velocidadeX = d3.scaleLinear().domain([0, d3.max(voltas)]).range([0, 460]);
-const velocidadeY = d3.scaleLinear().domain([0, d3.max(velocidades)]).range([280, 0]);
+// TEMPOS
+async function getRaceTimes(raceId, maxLap = null) {
+    const lapTimes = await loadCSVData(lapTimesFilePath);
+    const drivers = await loadCSVData(driversFilePath);
 
-velocidadeSvg.selectAll("path")
-    .data([velocidades])
-    .enter()
-    .append("path")
-    .attr("transform", `translate(0, ${auxChartMargin.top})`)
-    .attr("d", d3.line()
-        .x((d, i) => velocidadeX(i + 1))
-        .y(d => velocidadeY(d)))
-    .attr("fill", "none")
-    .attr("stroke", "orange")
-    .attr("stroke-width", 2);
+    let raceLapTimes = lapTimes.filter(l => Number(l.raceId) === Number(raceId));
+    if (maxLap !== null) {
+        raceLapTimes = raceLapTimes.filter(l => Number(l.lap) <= Number(maxLap));
+    }
 
+    const driversMap = Object.fromEntries(drivers.map(d => [d.driverId, d]));
+    const lapsByDriver = {};
+
+    raceLapTimes.forEach(lap => {
+        const driverId = lap.driverId;
+        if (!lapsByDriver[driverId]) {
+            lapsByDriver[driverId] = {
+                driverId,
+                driver: driversMap[driverId] || null,
+                laps: []
+            };
+        }
+        lapsByDriver[driverId].laps.push({
+            lap: Number(lap.lap),
+            time: lap.time,
+            milliseconds: lap.milliseconds ? Number(lap.milliseconds) : null
+        });
+    });
+
+    return Object.values(lapsByDriver);
+}
 
 
 
