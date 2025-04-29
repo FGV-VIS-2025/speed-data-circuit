@@ -474,7 +474,7 @@ const y = d3.scaleBand()
 const validYears = getAllValidSeasons();
 
 const auxChartWidth = window.innerWidth*0.32;
-const auxChartHeight = Math.max(auxChartWidth*3/4, 500);
+const auxChartHeight = Math.max(auxChartWidth*3/4, 600);
 const auxChartMargin = { top: auxChartWidth/8, right: auxChartWidth/8, bottom: auxChartWidth/8, left: Math.max(auxChartWidth/8, 70)};
 
 // Elementos HTML da página

@@ -204,7 +204,7 @@ svg text {
   font-family: F1;
 }
 
-#ranking_chart text, #evolucao_chart text, #velocidade_chart text {
+#ranking_chart text, #evolucao_chart text, #tempos_chart text {
   font-size: 14px;
   font-weight: bold;
   fill: #000;
