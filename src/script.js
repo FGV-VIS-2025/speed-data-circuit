@@ -1156,6 +1156,7 @@ async function createRankingChart(raceId) {
             .data(data)
             .enter()
             .append("rect")
+            .attr("class", "bar")
             .attr("x", auxChartMargin.left)
             .attr("y", d => rankingY(d.driver.code))
             .attr("width", d => rankingX(d.points))

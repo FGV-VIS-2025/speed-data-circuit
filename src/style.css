@@ -210,16 +210,7 @@ svg text {
   fill: #000;
 }
 
-.bar:hover {
-  fill: #000000;
-  cursor: pointer;
-}
-
-.label:hover {
-  cursor: pointer;
-}
-
-.sprite:hover {
+.bar:hover, .label:hover, .sprite:hover, .linha-piloto:hover, .linha-tempo:hover {
   cursor: pointer;
 }
 
