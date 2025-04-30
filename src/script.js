@@ -530,9 +530,50 @@ function tyreImageByString(compound) {
 
 
 function clearChart() {
-    g.selectAll("*").remove(); // Remove todos os elementos do grupo principal
-    d3.select("#tooltip").style("opacity", 0); // Esconde o tooltip
-    d3.select("h2").text("Visualização Interativa de Corridas da Fórmula 1"); // Reseta o título
+    g.selectAll("*").remove(); 
+    d3.select("#tooltip").style("opacity", 0); 
+
+    //
+    const rankingSvg = d3.select("#ranking_chart")
+        .attr("width", auxChartWidth)
+        .attr("height", auxChartHeight);
+    rankingSvg.selectAll("*").remove();
+    const titulo = rankingSvg.append("text")
+        .attr("x", 10)
+        .attr("y", 20)
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold");
+    titulo.append("tspan")
+        .attr("x", 10)
+        .attr("dy", "0em")
+        .text("Pontuação dos Pilotos No Campeonato Mundial");
+    titulo.append("tspan")
+        .attr("x", 10)
+        .attr("dy", "1.2em")
+
+    //
+    const evolucaoSvg = d3.select("#evolucao_chart")
+        .attr("width", auxChartWidth)
+        .attr("height", auxChartHeight);
+    evolucaoSvg.selectAll("*").remove();
+    evolucaoSvg.append("text")
+        .attr("x", 10)
+        .attr("y", 20)
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Posição dos Pilotos ao Longo da Corrida");
+
+    //
+    const temposSvg = d3.select("#tempos_chart")
+        .attr("width", auxChartWidth)
+        .attr("height", auxChartHeight);
+    temposSvg.selectAll("*").remove();
+    temposSvg.append("text")
+        .attr("x", 10)
+        .attr("y", 20)
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Tempo De Volta dos Pilotos por Volta");
 }
 
 // Insere os anos no select
@@ -545,6 +586,7 @@ validYears.forEach(eachYear => {
 
 // Insere corridas no select
 yearSelect.addEventListener("change", async () => {
+    clearChart();
     selectedYear = yearSelect.value;
     raceSelect.innerHTML = '<option value="">Selecione uma corrida</option>';
     raceSelect.disabled = false;
