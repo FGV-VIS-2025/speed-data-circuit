@@ -946,7 +946,6 @@ function renderLap(data, lapNum, raceId) {
         .attr("text-anchor", "start")
         .attr("alignment-baseline", "middle")
         .text(d => {
-            console.log(d.name, d.running);
             return d.name + (d.running === true ? "" : " ⚠️");
         });
 
@@ -985,7 +984,6 @@ function renderLap(data, lapNum, raceId) {
                 ? 1 : 0.3
         )
         .text(d => {
-            console.log(d.name, d.running);
             return d.name + (d.running === true ? "" : " (🚨)");
         });
 
@@ -1107,7 +1105,7 @@ function showTooltipAuxCharts1(event, d) {
     `);
 }
 
-function showTooltipAuxCharts2(event, d) {
+function showTooltipAuxCharts2(event, d, volta) {
     const flag = nationalityToFlagEmoji(d.driver.nationality);
     const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
     tooltip
@@ -1120,14 +1118,15 @@ function showTooltipAuxCharts2(event, d) {
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${teamLogo}${d.driver.teamName}<br>
                 Nacionalidade: ${flag ? flag + ' ' : ''}${d.driver.nationality}<br>
-                Posição: 1º<br>
-                Volta: 20
+                Posição: ${d.positions[volta]}º colocado<br>
+                Volta: ${volta + 1}/${d.positions.length}<br>
             </div>
         </div>
     `);
 }
 
-function showTooltipAuxCharts3(event, d) {
+function showTooltipAuxCharts3(event, d, lap = "Nada") {
+    console.log(d);
     const flag = nationalityToFlagEmoji(d.driver.nationality);
     const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
     tooltip
@@ -1140,8 +1139,8 @@ function showTooltipAuxCharts3(event, d) {
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${teamLogo}${d.driver.teamName}<br>
                 Nacionalidade: ${flag ? flag + ' ' : ''}${d.driver.nationality}<br>
-                Tempo de Volta: 1:40.583<br>
-                Volta: 20
+                ${lap != "Nada" ? `Tempo de Volta: ${d.laps[lap-1].time} min` : ""}<br>
+                ${lap != "Nada" ? `Volta: ${lap}/${d.laps.length}` : ""}<br>
             </div>
         </div>
     `);
@@ -1348,15 +1347,6 @@ async function createEvolutionChart(raceId) {
                 pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId)
                     ? 1 : 0.15
             )
-            .on("mouseover", (event, d) => showTooltipAuxCharts2(event, d))
-            .on("mousemove", event => {
-                tooltip
-                    .style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", () => {
-                tooltip.style("opacity", 0).style("visibility", "hidden");
-            })
             .on("click", (event, d) => {
                 togglePilotoSelecionado(d.driver.driverId, raceId, currentLapNum, currentData);
             });
@@ -1382,6 +1372,34 @@ async function createEvolutionChart(raceId) {
             const posIni = p.positions[0];
             if (posIni !== null) posicaoParaPiloto[Math.round(posIni)] = p.driver.code;
         });
+
+        // Desenha bolinhas em cada ponto
+        evolucaoData.forEach(piloto => {
+            evolucaoSvg.selectAll(`.ponto-${piloto.driver.driverId}`)
+            .data(piloto.positions.map((pos, i) => ({ pos, lap: i })))
+            .enter()
+            .filter(d => d.pos != null && !isNaN(d.pos))
+            .append("circle")
+            .attr("class", `ponto`)
+            .attr("cx", d => evolucaoX(d.lap))
+            .attr("cy", d => evolucaoY(d.pos))
+            .attr("r", 3)
+            .attr("fill", cores_equipes[selectedYear][piloto.driver.teamRef])
+            .style("opacity", pilotosSelecionados.length === 0 || pilotosSelecionados.includes(piloto.driver.driverId) ? 1 : 0.15)
+            .on("mouseover", (event, d) => showTooltipAuxCharts2(event, piloto, d.lap))
+            .on("mousemove", event => {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0).style("visibility", "hidden");
+            })
+            .on("click", (event, d) => {
+                togglePilotoSelecionado(piloto.driver.driverId, raceId, currentLapNum, currentData);
+            });
+        });
+
 
         evolucaoSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left}, 0)`)
@@ -1473,11 +1491,6 @@ async function createRaceTimesChart(raceId) {
                 pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driver.driverId)
                     ? 1 : 0.15
             )
-            .on("mouseover", (event, d) => showTooltipAuxCharts3(event, d))
-            .on("mousemove", event => {moveTooltip(event);})
-            .on("mouseout", () => {
-                tooltip.style("opacity", 0).style("visibility", "hidden");
-            })
             .on("click", (event, d) => {
                 togglePilotoSelecionado(d.driver.driverId, raceId, currentLapNum, currentData);
             });
@@ -1506,6 +1519,28 @@ async function createRaceTimesChart(raceId) {
             .attr("y", auxChartHeight - 10)
             .attr("font-size", "12px")
             .text("Voltas");
+
+        // Desenha bolinhas em cada ponto
+        temposData.forEach(piloto => {
+            temposSvg.selectAll(`.ponto-tempo-${piloto.driver.driverId}`)
+                .data(piloto.laps.filter(lap => lap.milliseconds != null && !isNaN(lap.milliseconds)))
+                .enter()
+                .append("circle")
+                .attr("class", "ponto")
+                .attr("cx", d => temposX(d.lap))
+                .attr("cy", d => temposY(d.milliseconds))
+                .attr("r", 2.5)
+                .attr("fill", cores_equipes[selectedYear][piloto.driver.teamRef])
+                .style("opacity", pilotosSelecionados.length === 0 || pilotosSelecionados.includes(piloto.driver.driverId) ? 1 : 0.15)
+                .on("mouseover", (event, d) => showTooltipAuxCharts3(event, piloto, d.lap))
+                .on("mousemove", moveTooltip)
+                .on("mouseout", () => {
+                    tooltip.style("opacity", 0).style("visibility", "hidden");
+                })
+                .on("click", (event, d) => {
+                    togglePilotoSelecionado(piloto.driver.driverId, raceId, currentLapNum, currentData);
+                });
+        });
 
         temposSvg.append("g")
             .attr("transform", `translate(${auxChartMargin.left},0)`)
