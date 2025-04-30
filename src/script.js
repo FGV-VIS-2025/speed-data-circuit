@@ -797,7 +797,10 @@ function renderLap(data, lapNum) {
         .attr("x", 0)
         .attr("width", 0)  // Inicialmente com largura 0 para animação
         .attr("fill", d => cores_equipes[d.constructorRef] || "#ccc")
-        .attr("fill-opacity", 1)
+        .style("fill-opacity", d => 
+            pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId) 
+            ? 1 : 0.5
+        )
         .on("mouseover", (event, d) => showTooltip(event, d))
         .on("mousemove", (event) => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
@@ -805,7 +808,11 @@ function renderLap(data, lapNum) {
         .transition().duration(500)
         .attr("width", d => x(d.score))  // Largura da barra de acordo com o score
         .attr("y", d => y(d.name))
-        .attr("fill", d => cores_equipes[selectedYear][d.constructorRef] || "#ccc");
+        .attr("fill", d => cores_equipes[selectedYear][d.constructorRef] || "#ccc")
+        .style("opacity", d => 
+            pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId) 
+            ? 1 : 0.05
+        );
     bars.exit().remove();
 
     // LABELS
@@ -836,7 +843,11 @@ function renderLap(data, lapNum) {
                 ? x(d.score) - estimatedTextWidth - 35
                 : x(d.score) + spriteWidth + 35;
         })
-        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5);
+        .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
+        .style("opacity", d => 
+            pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId) 
+            ? 1 : 0.25
+        );
     labels.exit().remove();
 
     // SPRITES
@@ -856,7 +867,11 @@ function renderLap(data, lapNum) {
           const posX = x(d.score) + 5;
           const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;  // Posicionamento corrigido
           return `translate(${posX + spriteWidth/2},${posY + spriteHeight/2}) rotate(90) translate(${-spriteWidth/2},${-spriteHeight/2})`;
-        });
+        })
+        .style("opacity", d => 
+            pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId) 
+            ? 1 : 0.05
+        );
 
     // Atualiza o título
     d3.select("h2").text(`Visualização Interativa de Corridas da Fórmula 1`);
