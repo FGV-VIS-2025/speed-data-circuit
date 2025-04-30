@@ -1474,17 +1474,23 @@ async function createRaceTimesChart(raceId) {
                     ? 1 : 0.15
             )
             .on("mouseover", (event, d) => showTooltipAuxCharts3(event, d))
-            .on("mousemove", event => {
-                tooltip
-                    .style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
+            .on("mousemove", event => {moveTooltip(event);})
             .on("mouseout", () => {
                 tooltip.style("opacity", 0).style("visibility", "hidden");
             })
             .on("click", (event, d) => {
                 togglePilotoSelecionado(d.driver.driverId, raceId, currentLapNum, currentData);
             });
+        
+        function moveTooltip(event) {
+            const tipW = tooltip.node().offsetWidth;
+            let left = event.pageX + 15;
+            if (left + tipW > window.innerWidth) {
+                left = event.pageX - tipW - 35;
+            }
+            tooltip.style("left", left + "px")
+                .style("top", (event.pageY - 28) + "px");
+        };
 
         // Eixos
         temposSvg.append("g")
