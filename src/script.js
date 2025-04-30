@@ -14,6 +14,20 @@ const lapTimesFilePath = "f1db/lap_times.csv";
 const circuitsFilePath = "f1db/circuits.csv";
 const tyreStintsFilePath = "f1db/tyre_stints.csv";
 
+// CACHE DE DADOS CSV EM MEMÓRIA
+const csvDataCache = {};
+
+function loadCSVData(filePath) {
+    if (csvDataCache[filePath]) {
+        // Retorna uma Promise resolvida com o cache
+        return Promise.resolve(csvDataCache[filePath]);
+    }
+    // Carrega e armazena no cache
+    return d3.csv(filePath).then(data => {
+        csvDataCache[filePath] = data;
+        return data;
+    });
+}
 
 function getAllValidSeasons() {
 return [
@@ -25,10 +39,6 @@ return [
     { year: '2023' },
     { year: '2024' },
 ];
-}
-
-function loadCSVData(filePath) {
-return d3.csv(filePath);
 }
 
 function filterValidRaces(data, raceIds) {
@@ -659,6 +669,13 @@ for (let lap = 1; lap < realNumberOfLaps; lap++) {
 
     const newLap = previousLap.map(driver => {
         const driverLaps = lapsTime[driver.driverId];
+        if (!driverLaps) {
+            // Piloto sem dados de volta: marca como não running
+            return {
+                ...driver,
+                running: false
+            };
+        }
         const currentLapData = driverLaps[lap];
         const previousLapData = driverLaps[lap - 1];
 
