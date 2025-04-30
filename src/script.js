@@ -506,6 +506,8 @@ const numberOfLaps = 20;
 let pilotosSelecionados = [];
 let currentData, currentLapNum, currentRaceId;
 
+const ANIMATION_DURATION = 500;
+
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
 function tyreImageByString(compound) {
@@ -772,10 +774,8 @@ function stopPlayback() {
 
 // Listener do botão de pause
 playPauseBtn.addEventListener("click", () => {
-
     if (isPlaying) {
         stopPlayback();
-
     } else {
         isPlaying = true;
         playPauseBtn.textContent = "⏸️ Pause";
@@ -788,7 +788,7 @@ playPauseBtn.addEventListener("click", () => {
             } else {
                 stopPlayback();
             }
-        }, 1500);
+        }, ANIMATION_DURATION);
     }
 });
 
@@ -848,7 +848,7 @@ function renderLap(data, lapNum, raceId) {
         });
 
     // Transição
-    barsMerge.transition().duration(500)
+    barsMerge.transition().duration(ANIMATION_DURATION)
         .attr("y", d => y(d.name))
         .attr("width", d => x(d.score))
         .style("opacity", d =>
@@ -883,7 +883,7 @@ function renderLap(data, lapNum, raceId) {
             togglePilotoSelecionado(d.driverId, raceId, lapNum, data);
         });
 
-    labelsMerge.transition().duration(500)
+    labelsMerge.transition().duration(ANIMATION_DURATION)
         .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
         .attr("x", d => {
             const estWidth = d.name.length * 10;
@@ -932,7 +932,7 @@ function renderLap(data, lapNum, raceId) {
             togglePilotoSelecionado(d.driverId, raceId, lapNum, data); // Adicione lapNum e data
         });
 
-    spritesMerge.transition().duration(500)
+    spritesMerge.transition().duration(ANIMATION_DURATION)
         .attr("transform", d => {
             const posX = x(d.score) + 5;
             const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
