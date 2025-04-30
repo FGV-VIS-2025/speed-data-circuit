@@ -4,15 +4,15 @@ import {
 
 // FUNÇÕES DOS DADOS --------------------------------------------------------------------------------------------------------------------------------
 
-const racesFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/races.csv";
-const pitStopsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/pit_stops.csv";
-const resultsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/results.csv";
-const driversFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/drivers.csv";
-const constructorsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/constructors.csv";
-const weatherDataFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/weather.csv";
-const lapTimesFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/lap_times.csv";
-const circuitsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/circuits.csv";
-const tyreStintsFilePath = "https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/main/f1db/tyre_stints.csv";
+const racesFilePath = "f1db/races.csv";
+const pitStopsFilePath = "f1db/pit_stops.csv";
+const resultsFilePath = "f1db/results.csv";
+const driversFilePath = "f1db/drivers.csv";
+const constructorsFilePath = "f1db/constructors.csv";
+const weatherDataFilePath = "f1db/weather.csv";
+const lapTimesFilePath = "f1db/lap_times.csv";
+const circuitsFilePath = "f1db/circuits.csv";
+const tyreStintsFilePath = "f1db/tyre_stints.csv";
 
 
 function getAllValidSeasons() {
@@ -500,11 +500,11 @@ let currentData, currentLapNum, currentRaceId;
 
 function tyreImageByString(compound) {
 const tyreImages = {
-  MEDIUM: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/MEDIUM.png" alt="Medium Tyre" style="width: 18px; vertical-align: middle;">',
-  HARD: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/HARD.png" alt="Hard Tyre" style="width: 18px; vertical-align: middle;">',
-  SOFT: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/SOFT.png" alt="Soft Tyre" style="width: 18px; vertical-align: middle;">',
-  INTERMEDIATE: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/INTERMEDIATE.png" alt="Intermediate Tyre" style="width: 18px; vertical-align: middle;">',
-  WET: '<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/tyres/WET.png" alt="Wet Tyre" style="width: 18px; vertical-align: middle;">'
+  MEDIUM: '<img src="assets/tyres/MEDIUM.png" alt="Medium Tyre" style="width: 18px; vertical-align: middle;">',
+  HARD: '<img src="assets/tyres/HARD.png" alt="Hard Tyre" style="width: 18px; vertical-align: middle;">',
+  SOFT: '<img src="assets/tyres/SOFT.png" alt="Soft Tyre" style="width: 18px; vertical-align: middle;">',
+  INTERMEDIATE: '<img src="assets/tyres/INTERMEDIATE.png" alt="Intermediate Tyre" style="width: 18px; vertical-align: middle;">',
+  WET: '<img src="assets/tyres/WET.png" alt="Wet Tyre" style="width: 18px; vertical-align: middle;">'
 };
 
 return tyreImages[compound.toUpperCase()] || '';
@@ -556,7 +556,7 @@ raceSelect.addEventListener("change", async () => {
     const clima = await getWeatherRace(raceID);
     const dateAndTime = await getDateAndTime(raceID);
 
-    climaIMG.innerHTML = `<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/weather/${clima.rainfall}.png" alt="">`;
+    climaIMG.innerHTML = `<img src="assets/weather/${clima.rainfall}.png" alt="">`;
     climaInfo.innerHTML = `
         <p>Data: ${formatDate(dateAndTime.date)}</p>
         <p>Horário: ${dateAndTime.time.split(":")[0]}:${dateAndTime.time.split(":")[1]} UTC</p>
@@ -567,7 +567,7 @@ raceSelect.addEventListener("change", async () => {
         <p>Clima: ${clima.rainfall ? "Chuva" : "Limpo"}`;
 
     const circuitId = await getCircuitIdByRaceId(raceID);
-    lapIMG.innerHTML = `<img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/circuits/${circuitId}.png" alt="">`;
+    lapIMG.innerHTML = `<img src="assets/circuits/${circuitId}.png" alt="">`;
 
     stopPlayback();
 
@@ -891,7 +891,7 @@ function renderLap(data, lapNum, raceId) {
         .attr("width", spriteWidth)
         .attr("height", spriteHeight)
         .attr("xlink:href", d =>
-            `https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/sprites/${d.constructorRef}.png`
+            `assets/${selectedYear}/sprites/${d.constructorRef}.png`
         );
 
     const spritesMerge = spritesEnter.merge(sprites);
@@ -926,7 +926,7 @@ function renderLap(data, lapNum, raceId) {
             .style("opacity", 1)
             .html(`
                 <div style="display:flex;align-items:center;background:white;border-radius:5px;padding:4px;">
-                    <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driverRef}.png"
+                    <img src="assets/${selectedYear}/drivers/${d.driverRef}.png"
                         alt="${d.name}" style="width:8vw;margin-right:10px;">
                     <div>
                         <strong>${d.name}</strong><br>
@@ -974,7 +974,7 @@ tooltip
     .style("visibility", "visible")
     .html(`
         <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
-            <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+            <img src="assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.teamName}<br>
@@ -991,7 +991,7 @@ tooltip
     .style("visibility", "visible")
     .html(`
         <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
-            <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+            <img src="assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.driver.teamName}<br>
@@ -1009,7 +1009,7 @@ tooltip
     .style("visibility", "visible")
     .html(`
         <div style="display: flex; align-items: center; background-color: white; border-radius: 5px; padding: 2px;">
-            <img src="https://raw.githubusercontent.com/FGV-VIS-2025/speed-data-circuit/refs/heads/main/assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
+            <img src="assets/${selectedYear}/drivers/${d.driver.driverRef}.png" alt="${d.driver.surname}" style="width:8vw; margin-right:10px;">
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.driver.teamName}<br>
@@ -1028,15 +1028,15 @@ try {
     const data2 = await getTeamsByRace(raceId);
 
     for (const driver of data) {
-        try {
-            driver.teamId = data2[driver.driverId].constructorId;
-            const teamName = await getConstructorDataByID(driver.teamId);
-            driver.teamRef = teamName[0].constructorRef;
-            driver.teamName = teamName[0].name;
-        } catch (err) {
-            console.warn(`Erro ao buscar dados para o piloto ${driver.driverId}:`, err);
+        const teamInfo = data2[driver.driverId];
+        if (!teamInfo) {
+            console.warn(`Dados de equipe não encontrados para o piloto ${driver.driverId}`);
             continue;
         }
+        driver.teamId = teamInfo.constructorId;
+        const teamName = await getConstructorDataByID(driver.teamId);
+        driver.teamRef = teamName[0].constructorRef;
+        driver.teamName = teamName[0].name;
     }
 
     if (data.length === 0) {
@@ -1203,6 +1203,7 @@ try {
         .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
 
     const line = d3.line()
+        .defined(d => d != null && !isNaN(d))
         .x((d, i) => evolucaoX(i))
         .y(d => evolucaoY(d));
 
@@ -1327,6 +1328,7 @@ try {
         .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
 
     const line = d3.line()
+        .defined(d => d.milliseconds != null && !isNaN(d.milliseconds))
         .x(d => temposX(d.lap))
         .y(d => temposY(d.milliseconds));
 
