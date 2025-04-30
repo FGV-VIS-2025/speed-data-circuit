@@ -506,7 +506,13 @@ const numberOfLaps = 20;
 let pilotosSelecionados = [];
 let currentData, currentLapNum, currentRaceId;
 
-const ANIMATION_DURATION = 500;
+const ANIMATION_DURATION = 150; // Reduzido para animação mais fluida
+const INTERPOLATION_STEPS = 20; // Aumentado para mais frames intermediários
+
+// Função de easing para suavizar a interpolação
+function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -779,12 +785,35 @@ playPauseBtn.addEventListener("click", () => {
     } else {
         isPlaying = true;
         playPauseBtn.textContent = "⏸️ Pause";
-        intervalId = setInterval(() => {
+        let animating = false;
+        intervalId = setInterval(async () => {
+            if (animating) return; // Evita sobreposição de animações
             if (currentLap < laps.length - 1) {
+                const prevLap = laps[currentLap];
+                const nextLap = laps[currentLap + 1];
+                animating = true;
+                for (let step = 1; step <= INTERPOLATION_STEPS; step++) {
+                    
+                    const tRaw = step / (INTERPOLATION_STEPS + 1);
+                    const t = easeInOutCubic(tRaw);
+                    const interpolated = prevLap.map((driver, idx) => {
+                        const next = nextLap[idx];
+                        if (!driver.running || !next.running) {
+                            return driver; // Não interpolar se o piloto não está correndo
+                        }
+                        return {
+                            ...driver,
+                            score: driver.score + (next.score - driver.score) * t
+                        };
+                    });
+                    renderLap(interpolated, currentLap); // Sempre renderiza, mesmo sem mudança
+                    await new Promise(res => setTimeout(res, ANIMATION_DURATION / (INTERPOLATION_STEPS + 1)));
+                }
                 currentLap++;
                 lapSlider.value = currentLap;
                 renderLap(laps[currentLap], currentLap);
                 updateUI();
+                animating = false;
             } else {
                 stopPlayback();
             }
@@ -849,6 +878,7 @@ function renderLap(data, lapNum, raceId) {
 
     // Transição
     barsMerge.transition().duration(ANIMATION_DURATION)
+        .ease(d3.easeCubic)
         .attr("y", d => y(d.name))
         .attr("width", d => x(d.score))
         .style("opacity", d =>
@@ -884,6 +914,7 @@ function renderLap(data, lapNum, raceId) {
         });
 
     labelsMerge.transition().duration(ANIMATION_DURATION)
+        .ease(d3.easeCubic)
         .attr("y", d => y(d.name) + y.bandwidth() / 2 + 5)
         .attr("x", d => {
             const estWidth = d.name.length * 10;
@@ -933,6 +964,7 @@ function renderLap(data, lapNum, raceId) {
         });
 
     spritesMerge.transition().duration(ANIMATION_DURATION)
+        .ease(d3.easeCubic)
         .attr("transform", d => {
             const posX = x(d.score) + 5;
             const posY = y(d.name) + (y.bandwidth() - spriteHeight) / 2;
