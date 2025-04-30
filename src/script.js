@@ -485,7 +485,7 @@ const validYears = getAllValidSeasons();
 
 const auxChartWidth = window.innerWidth * 0.32;
 const auxChartHeight = Math.max(auxChartWidth * 3 / 4, 600);
-const auxChartMargin = { top: auxChartWidth / 8, right: auxChartWidth / 8, bottom: auxChartWidth / 8, left: Math.max(auxChartWidth / 8, 70) };
+const auxChartMargin = { top: auxChartWidth / 8, right: auxChartWidth / 8, bottom: auxChartWidth / 8, left: Math.max(auxChartWidth / 8, 95) };
 
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
@@ -1244,8 +1244,8 @@ async function createRankingChart(raceId) {
 
         rankingSvg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("x", -auxChartMargin.top - (auxChartHeight - auxChartMargin.top - auxChartMargin.bottom) / 2)
-            .attr("y", 15)
+            .attr("x", - auxChartMargin.top - (auxChartHeight - auxChartMargin.top - auxChartMargin.bottom) / 2)
+            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .text("Pilotos");
@@ -1393,7 +1393,7 @@ async function createEvolutionChart(raceId) {
         evolucaoSvg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", 15)
+            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .text("Posição dos Pilotos");
@@ -1512,7 +1512,7 @@ async function createRaceTimesChart(raceId) {
             .attr("text-anchor", "middle")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", 15)
+            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
             .attr("font-size", "12px")
             .text("Tempo (s)");
 
