@@ -215,6 +215,14 @@ svg text {
   cursor: pointer;
 }
 
+.label:hover {
+  cursor: pointer;
+}
+
+.sprite:hover {
+  cursor: pointer;
+}
+
 #lapText{
   color: #ffffff;
 }
