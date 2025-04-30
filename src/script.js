@@ -1,5 +1,5 @@
 import {
-    cores_equipes
+    cores_equipes, nationalityToFlagEmoji
 } from "./mock-consts.js";
 
 // FUNÇÕES DOS DADOS --------------------------------------------------------------------------------------------------------------------------------
@@ -952,6 +952,7 @@ function renderLap(data, lapNum, raceId) {
     function showTooltip(event, d) {
         
         const tyreLabel = d.tyre ? (d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase()) : 'N/A';
+        const flag = nationalityToFlagEmoji(d.nationality);
         tooltip
             .style("opacity", 1)
             .html(`
@@ -962,7 +963,7 @@ function renderLap(data, lapNum, raceId) {
                         <strong>${d.name}</strong><br>
                         Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
-                        Nacionalidade: ${d.nationality}<br>
+                        Nacionalidade: ${flag ? flag + ' ' : ''}${d.nationality}<br>
                         Pneus: ${tyreLabel}<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min
@@ -999,6 +1000,7 @@ const tooltip = d3.select("body")
 .style("opacity", 0);
 
 function showTooltipAuxCharts1(event, d){
+const flag = nationalityToFlagEmoji(d.driver.nationality);
 tooltip
     .style("opacity", 1)
     .style("visibility", "visible")
@@ -1008,7 +1010,7 @@ tooltip
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.teamName}<br>
-                Nacionalidade: ${d.driver.nationality}<br>
+                Nacionalidade: ${flag ? flag + ' ' : ''}${d.driver.nationality}<br>
                 Pontos: ${d.points}<br>
             </div>
         </div>
@@ -1016,6 +1018,7 @@ tooltip
 }
 
 function showTooltipAuxCharts2(event, d){
+const flag = nationalityToFlagEmoji(d.driver.nationality);
 tooltip
     .style("opacity", 1)
     .style("visibility", "visible")
@@ -1025,7 +1028,7 @@ tooltip
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.driver.teamName}<br>
-                Nacionalidade: ${d.driver.nationality}<br>
+                Nacionalidade: ${flag ? flag + ' ' : ''}${d.driver.nationality}<br>
                 Posição: 1º<br>
                 Volta: 20
             </div>
@@ -1034,6 +1037,7 @@ tooltip
 }
 
 function showTooltipAuxCharts3(event, d){
+const flag = nationalityToFlagEmoji(d.driver.nationality);
 tooltip
     .style("opacity", 1)
     .style("visibility", "visible")
@@ -1043,7 +1047,7 @@ tooltip
             <div>
                 <strong>${d.driver.forename} ${d.driver.surname}</strong><br>
                 Equipe: ${d.driver.teamName}<br>
-                Nacionalidade: ${d.driver.nationality}<br>
+                Nacionalidade: ${flag ? flag + ' ' : ''}${d.driver.nationality}<br>
                 Tempo de Volta: 1:40.583<br>
                 Volta: 20
             </div>
