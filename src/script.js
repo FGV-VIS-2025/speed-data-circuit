@@ -736,12 +736,13 @@ function generateLaps(drivers, lapsTime, tyreData) {
             if (!driver.running) {
                 return {
                     ...driver,
-                    score: driver.score
+                    score: driver.score,
+                    voltasTomadas: leaderLapsCompleted - driver.lapsCompleted
                 };
             }
-
+        
             let score;
-
+        
             if (driver.lastAccumulated !== undefined) {
                 if (driver.lastAccumulated === leaderAccumulated) {
                     score = driver.lastAccumulated;
@@ -751,22 +752,23 @@ function generateLaps(drivers, lapsTime, tyreData) {
             } else {
                 score = leaderAccumulated - 100000;
             }
-
-            // Penalização pra quem tomou volta
+        
             const lapsBehind = leaderLapsCompleted - driver.lapsCompleted;
             if (lapsBehind > 0) {
                 score *= Math.pow(0.9, lapsBehind);
             }
-
+        
             return {
                 ...driver,
-                score: score
+                score: score,
+                voltasTomadas: lapsBehind
             };
         });
+        
 
         laps.push(finalLap);
     }
-
+    
     return laps;
 }
 
@@ -901,7 +903,10 @@ function renderLap(data, lapNum, raceId) {
         .attr("class", "label")
         .attr("text-anchor", "start")
         .attr("alignment-baseline", "middle")
-        .text(d => d.name);
+        .text(d => {
+            console.log(d.name, d.running);
+            return d.name + (d.running === true ? "" : " ⚠️");
+        });
 
     const labelsMerge = labelsEnter.merge(labels);
 
@@ -919,21 +924,28 @@ function renderLap(data, lapNum, raceId) {
         .attr("x", d => {
             const estWidth = d.name.length * 10;
             const margin = 50;
+            const afast = d.running ? 35 : 60;
             return x(d.score) > estWidth + margin
-                ? x(d.score) - estWidth - 35
-                : x(d.score) + spriteWidth + 35;
+                ? x(d.score) - estWidth - afast
+                : x(d.score) + spriteWidth + afast;
         })
         .attr("fill", d => {
-            const estWidth = d.name.length * 10;
+            const estWidth = d.name.length * 10
             const margin = 50;
-            return x(d.score) > estWidth + margin
-                ? "#ffffff"
-                : "#000000";
+            if (x(d.score) > estWidth + margin){
+                return "#ffffff";
+            } else {
+                return "#000000";
+            }
         })
         .style("opacity", d =>
             pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId)
                 ? 1 : 0.3
-        );
+        )
+        .text(d => {
+            console.log(d.name, d.running);
+            return d.name + (d.running === true ? "" : " (🚨)");
+        });
 
     labels.exit()
         .transition().duration(250)
@@ -949,9 +961,9 @@ function renderLap(data, lapNum, raceId) {
         .attr("class", "sprite")
         .attr("width", spriteWidth)
         .attr("height", spriteHeight)
-        .attr("xlink:href", d =>
-            `assets/${selectedYear}/sprites/${d.constructorRef}.png`
-        );
+        .attr("xlink:href", d => {
+            return `assets/${selectedYear}/sprites/${d.constructorRef}.png`;
+        });
 
     const spritesMerge = spritesEnter.merge(sprites);
 
@@ -972,8 +984,10 @@ function renderLap(data, lapNum, raceId) {
         })
         .style("opacity", d =>
             pilotosSelecionados.length === 0 || pilotosSelecionados.includes(d.driverId)
-                ? 1 : 0.05
-        );
+                ? 1 : 0.05)
+            .attr("xlink:href", d => {
+            return `assets/${selectedYear}/sprites/${d.constructorRef}.png`;
+        });
 
     sprites.exit()
         .transition().duration(250)
@@ -993,7 +1007,7 @@ function renderLap(data, lapNum, raceId) {
                     <img src="assets/${selectedYear}/drivers/${d.driverRef}.png"
                         alt="${d.name}" style="width:8vw;margin-right:10px;">
                     <div>
-                        <strong>${d.name}</strong><br>
+                        <strong>${d.name}${d.running ? "":" (DNF ou Laps Behind)"}</strong><br>
                         Idade: ${d.age} anos<br>
                         Equipe: ${teamLogo}${d.constructorName}<br>
                         Nacionalidade: ${flag ? flag + ' ' : ''}${d.nationality}<br>
