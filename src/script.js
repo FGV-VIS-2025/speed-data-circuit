@@ -560,7 +560,7 @@ stopPlayback();
 raceSelect.addEventListener("change", async () => {
     clearChart();
 
-    const raceChosen = raceSelect.textContent;
+    const raceChosen = raceSelect.options[raceSelect.selectedIndex].text;
     const raceID = raceSelect.value;
 
     const clima = await getWeatherRace(raceID);
@@ -608,6 +608,17 @@ raceSelect.addEventListener("change", async () => {
                 largerScore = each_driver.score;
             }
         }
+    }
+
+    if (laps.length === 0) {
+        lapSlider.disabled = true;
+        lapSlider.value = 0;
+        lapText.textContent = 'Sem voltas';
+    } else {
+        lapSlider.disabled = false;
+        lapSlider.max = laps.length - 1;
+        lapSlider.value = 0;
+        lapText.textContent = `Volta 1`;
     }
 
     if (raceChosen) {    // Forçar nova renderização removendo elementos persistentes
@@ -939,6 +950,8 @@ function renderLap(data, lapNum, raceId) {
 
     // --- Funções de tooltip ---
     function showTooltip(event, d) {
+        
+        const tyreLabel = d.tyre ? (d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase()) : 'N/A';
         tooltip
             .style("opacity", 1)
             .html(`
@@ -950,7 +963,7 @@ function renderLap(data, lapNum, raceId) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${d.constructorName}<br>
                         Nacionalidade: ${d.nationality}<br>
-                        Pneus: ${d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase()}<br>
+                        Pneus: ${tyreLabel}<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min
                     </div>
