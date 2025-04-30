@@ -985,7 +985,7 @@ function renderLap(data, lapNum, raceId) {
 
         const tyreLabel = d.tyre ? (d.tyre.charAt(0) + d.tyre.slice(1).toLowerCase()) : 'N/A';
         const flag = nationalityToFlagEmoji(d.nationality);
-        const teamLogo = d.constructorRef ? `<img src=\"assets/constructor_logos/${d.constructorRef}.png\" alt=\"${d.constructorName}\" style=\"height:22px;vertical-align:middle;margin-right:4px;\">` : '';
+        const teamLogo = d.constructorRef ? `<img src=\"assets/constructor_logos/${d.constructorRef}.png\" alt=\"${d.constructorName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
         tooltip
             .style("opacity", 1)
             .html(`
@@ -997,7 +997,7 @@ function renderLap(data, lapNum, raceId) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${teamLogo}${d.constructorName}<br>
                         Nacionalidade: ${flag ? flag + ' ' : ''}${d.nationality}<br>
-                        Pneus: ${tyreLabel}<br>
+                        Pneus: ${tyreLabel} (${tyreImageByString(tyreLabel)})<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min
                     </div>
@@ -1034,7 +1034,7 @@ const tooltip = d3.select("body")
 
 function showTooltipAuxCharts1(event, d) {
     const flag = nationalityToFlagEmoji(d.driver.nationality);
-    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.teamName}\" style=\"height:22px;vertical-align:middle;margin-right:4px;\">` : '';
+    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.teamName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
     tooltip
         .style("opacity", 1)
         .style("visibility", "visible")
@@ -1053,7 +1053,7 @@ function showTooltipAuxCharts1(event, d) {
 
 function showTooltipAuxCharts2(event, d) {
     const flag = nationalityToFlagEmoji(d.driver.nationality);
-    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:22px;vertical-align:middle;margin-right:4px;\">` : '';
+    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
     tooltip
         .style("opacity", 1)
         .style("visibility", "visible")
@@ -1073,7 +1073,7 @@ function showTooltipAuxCharts2(event, d) {
 
 function showTooltipAuxCharts3(event, d) {
     const flag = nationalityToFlagEmoji(d.driver.nationality);
-    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:22px;vertical-align:middle;margin-right:4px;\">` : '';
+    const teamLogo = d.driver.teamRef ? `<img src=\"assets/constructor_logos/${d.driver.teamRef}.png\" alt=\"${d.driver.teamName}\" style=\"height:18px;vertical-align:middle;margin-right:4px;\">` : '';
     tooltip
         .style("opacity", 1)
         .style("visibility", "visible")
@@ -1156,6 +1156,7 @@ async function createRankingChart(raceId) {
             .data(data)
             .enter()
             .append("rect")
+            .attr("class", "bar")
             .attr("x", auxChartMargin.left)
             .attr("y", d => rankingY(d.driver.code))
             .attr("width", d => rankingX(d.points))
