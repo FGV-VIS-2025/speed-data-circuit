@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import urllib.request
+from PIL import Image
 
 constructor_data = pd.read_csv("../f1db/constructors.csv")
 constructor_standings_data = pd.read_csv("../f1db/constructor_standings.csv")
@@ -48,6 +49,10 @@ for index, constructor in constructor_data.iterrows():
                 img_url = "https://en.wikipedia.org" + img_url
             try:
                 urllib.request.urlretrieve(img_url, logo_filename)
+                # Redimensiona a imagem mantendo proporção (máx 200x200)
+                with Image.open(logo_filename) as img:
+                    img.thumbnail((500, 500))
+                    img.save(logo_filename)
             except Exception as e:
                 print(f"Erro ao baixar imagem para {constructor_name}: {e}")
         else:
