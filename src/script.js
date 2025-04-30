@@ -997,7 +997,7 @@ function renderLap(data, lapNum, raceId) {
                         Idade: ${d.age} anos<br>
                         Equipe: ${teamLogo}${d.constructorName}<br>
                         Nacionalidade: ${flag ? flag + ' ' : ''}${d.nationality}<br>
-                        Pneus: ${tyreLabel}<br>
+                        Pneus: ${tyreLabel} (${tyreImageByString(tyreLabel)})<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min
                     </div>
