@@ -669,6 +669,13 @@ for (let lap = 1; lap < realNumberOfLaps; lap++) {
 
     const newLap = previousLap.map(driver => {
         const driverLaps = lapsTime[driver.driverId];
+        if (!driverLaps) {
+            // Piloto sem dados de volta: marca como não running
+            return {
+                ...driver,
+                running: false
+            };
+        }
         const currentLapData = driverLaps[lap];
         const previousLapData = driverLaps[lap - 1];
 
