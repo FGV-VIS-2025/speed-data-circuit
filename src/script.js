@@ -592,6 +592,8 @@ yearSelect.addEventListener("change", async () => {
     raceSelect.disabled = false;
 
     const validRaces = await getValidRacesByYear(parseInt(selectedYear));
+    
+    validRaces.sort((a, b) => new Number(a.round) - new Number(b.round));
 
     if (selectedYear && validRaces.length > 0) {
         validRaces.forEach(race => {
