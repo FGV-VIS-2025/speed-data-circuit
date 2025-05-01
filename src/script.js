@@ -720,10 +720,13 @@ function generateLaps(drivers, lapsTime, tyreData) {
         };
     });
 
-
     laps.push(JSON.parse(JSON.stringify(driversWithScore)));
 
-    const realNumberOfLaps = lapsTime[Number(drivers[0].driverId)].length;
+    
+    const lapArrays = Object.values(lapsTime).filter(arr => Array.isArray(arr) && arr.length > 0);
+    const realNumberOfLaps = lapArrays.length > 0
+        ? Math.max(...lapArrays.map(arr => arr.length))
+        : 0;
 
     for (let lap = 1; lap < realNumberOfLaps; lap++) {
         const previousLap = JSON.parse(JSON.stringify(laps[lap - 1]));
