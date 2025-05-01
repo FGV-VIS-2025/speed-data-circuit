@@ -485,13 +485,13 @@ const validYears = getAllValidSeasons();
 
 const auxChartWidth1 = window.innerWidth * 0.32;
 const auxChartHeight = 600;
-const auxChartMargin1 = { top: auxChartWidth1 / 8, right: auxChartWidth1 / 8, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth1 / 8, 95) };
+const auxChartMargin1 = { top: auxChartWidth1 / 8, right: auxChartWidth1 / 13, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth1 / 13, 80) };
 
 const auxChartWidth2 = window.innerWidth * 0.985;
 const auxChartMargin2 = { top: auxChartWidth2 / 20, right: auxChartWidth2 / 20, bottom: auxChartWidth2 / 20, left: Math.max(auxChartWidth2 / 20, 80) };
 
 const auxChartWidth3 = window.innerWidth * 0.66;
-const auxChartMargin3 = { top: auxChartWidth1 / 8, right: auxChartWidth3 / 10, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth3 / 10, 90) };
+const auxChartMargin3 = { top: auxChartWidth1 / 8, right: auxChartWidth3 / 15, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth3 / 10, 80) };
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
 const raceSelect = document.getElementById("raceSelect");
@@ -1558,7 +1558,7 @@ async function createRaceTimesChart(raceId) {
             .attr("text-anchor", "middle")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", Math.max(auxChartWidth3 / 8, 85)/3)
+            .attr("y", Math.max(auxChartWidth3 / 8, 95)/3)
             .attr("font-size", "12px")
             .text("Tempo (s)");
 
