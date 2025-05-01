@@ -483,10 +483,15 @@ const y = d3.scaleBand()
 
 const validYears = getAllValidSeasons();
 
-const auxChartWidth = window.innerWidth * 0.32;
-const auxChartHeight = Math.max(auxChartWidth * 3 / 4, 600);
-const auxChartMargin = { top: auxChartWidth / 8, right: auxChartWidth / 8, bottom: auxChartWidth / 8, left: Math.max(auxChartWidth / 8, 95) };
+const auxChartWidth1 = window.innerWidth * 0.32;
+const auxChartHeight = 600;
+const auxChartMargin1 = { top: auxChartWidth1 / 8, right: auxChartWidth1 / 8, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth1 / 8, 95) };
 
+const auxChartWidth2 = window.innerWidth * 0.985;
+const auxChartMargin2 = { top: auxChartWidth2 / 20, right: auxChartWidth2 / 20, bottom: auxChartWidth2 / 20, left: Math.max(auxChartWidth2 / 20, 80) };
+
+const auxChartWidth3 = window.innerWidth * 0.66;
+const auxChartMargin3 = { top: auxChartWidth3 / 10, right: auxChartWidth3 / 10, bottom: auxChartWidth3 / 10, left: Math.max(auxChartWidth3 / 10, 90) };
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
 const raceSelect = document.getElementById("raceSelect");
@@ -535,7 +540,7 @@ function clearChart() {
 
     //
     const rankingSvg = d3.select("#ranking_chart")
-        .attr("width", auxChartWidth)
+        .attr("width", auxChartWidth1)
         .attr("height", auxChartHeight);
     rankingSvg.selectAll("*").remove();
     const titulo = rankingSvg.append("text")
@@ -553,7 +558,7 @@ function clearChart() {
 
     //
     const evolucaoSvg = d3.select("#evolucao_chart")
-        .attr("width", auxChartWidth)
+        .attr("width", auxChartWidth2)
         .attr("height", auxChartHeight);
     evolucaoSvg.selectAll("*").remove();
     evolucaoSvg.append("text")
@@ -565,7 +570,7 @@ function clearChart() {
 
     //
     const temposSvg = d3.select("#tempos_chart")
-        .attr("width", auxChartWidth)
+        .attr("width", auxChartWidth3)
         .attr("height", auxChartHeight);
     temposSvg.selectAll("*").remove();
     temposSvg.append("text")
@@ -1176,7 +1181,7 @@ async function createRankingChart(raceId) {
         const valoresRanking = data.map(d => d.points);
 
         const rankingSvg = d3.select("#ranking_chart")
-            .attr("width", auxChartWidth)
+            .attr("width", auxChartWidth1)
             .attr("height", auxChartHeight);
 
         rankingSvg.selectAll("*").remove();
@@ -1200,11 +1205,11 @@ async function createRankingChart(raceId) {
 
         const rankingX = d3.scaleLinear()
             .domain([-10, d3.max(valoresRanking)])
-            .range([0, auxChartWidth - auxChartMargin.left - auxChartMargin.right]);
+            .range([0, auxChartWidth1 - auxChartMargin1.left - auxChartMargin1.right]);
 
         const rankingY = d3.scaleBand()
             .domain(pilotosOrdenadosGrid)
-            .range([auxChartMargin.top, auxChartHeight - auxChartMargin.bottom])
+            .range([auxChartMargin1.top, auxChartHeight - auxChartMargin1.bottom])
             .padding(0.1);
 
         rankingSvg.selectAll("rect")
@@ -1212,7 +1217,7 @@ async function createRankingChart(raceId) {
             .enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("x", auxChartMargin.left)
+            .attr("x", auxChartMargin1.left)
             .attr("y", d => rankingY(d.driver.code))
             .attr("width", d => rankingX(d.points))
             .attr("height", rankingY.bandwidth())
@@ -1236,27 +1241,27 @@ async function createRankingChart(raceId) {
 
         // Eixos
         rankingSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+            .attr("transform", `translate(${auxChartMargin1.left}, 0)`)
             .call(d3.axisLeft(rankingY).tickSize(0))
             .selectAll("text")
             .style("text-anchor", "end");
 
         rankingSvg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("x", - auxChartMargin.top - (auxChartHeight - auxChartMargin.top - auxChartMargin.bottom) / 2)
-            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
+            .attr("x", - auxChartMargin1.top - (auxChartHeight - auxChartMargin1.top - auxChartMargin1.bottom) / 2)
+            .attr("y", Math.max(auxChartWidth1 / 8, 85)/3)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .text("Pilotos");
 
         rankingSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left},${auxChartHeight - auxChartMargin.bottom})`)
+            .attr("transform", `translate(${auxChartMargin1.left},${auxChartHeight - auxChartMargin1.bottom})`)
             .call(d3.axisBottom(rankingX).ticks(5))
             .selectAll("text")
             .style("text-anchor", "middle");
 
         rankingSvg.append("text")
-            .attr("x", auxChartMargin.left + (auxChartWidth - auxChartMargin.left - auxChartMargin.right) / 2)
+            .attr("x", auxChartMargin1.left + (auxChartWidth1 - auxChartMargin1.left - auxChartMargin1.right) / 2)
             .attr("y", auxChartHeight - 10)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
@@ -1305,7 +1310,7 @@ async function createEvolutionChart(raceId) {
 
         // SVG setup
         const evolucaoSvg = d3.select("#evolucao_chart")
-            .attr("width", auxChartWidth)
+            .attr("width", auxChartWidth2)
             .attr("height", auxChartHeight);
 
         evolucaoSvg.selectAll("*").remove();
@@ -1322,11 +1327,11 @@ async function createEvolutionChart(raceId) {
         const numVoltas = evolucaoData[0].positions.length;
         const evolucaoX = d3.scaleLinear()
             .domain([0, numVoltas - 1])
-            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+            .range([auxChartMargin2.left, auxChartWidth2 - auxChartMargin2.right]);
 
         const evolucaoY = d3.scaleLinear()
             .domain([20.5, 0.5])
-            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+            .range([auxChartHeight - auxChartMargin2.bottom, auxChartMargin2.top]);
 
         const line = d3.line()
             .defined(d => d != null && !isNaN(d))
@@ -1353,14 +1358,14 @@ async function createEvolutionChart(raceId) {
 
         // Eixos
         evolucaoSvg.append("g")
-            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
+            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin2.bottom})`)
             .call(d3.axisBottom(evolucaoX)
                 .ticks(Math.ceil(numVoltas / 10))
                 .tickFormat(d => `${d + 1}`)
             );
 
         evolucaoSvg.append("text")
-            .attr("x", auxChartWidth / 2)
+            .attr("x", auxChartWidth2 / 2)
             .attr("y", auxChartHeight - 10)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
@@ -1402,7 +1407,7 @@ async function createEvolutionChart(raceId) {
 
 
         evolucaoSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left}, 0)`)
+            .attr("transform", `translate(${auxChartMargin2.left}, 0)`)
             .call(d3.axisLeft(evolucaoY)
                 .ticks(20)
                 .tickFormat(pos => posicaoParaPiloto[Math.round(pos)] || "")
@@ -1411,7 +1416,7 @@ async function createEvolutionChart(raceId) {
         evolucaoSvg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
+            .attr("y", Math.max(auxChartWidth2 / 8, 85)/3)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .text("Posição dos Pilotos");
@@ -1446,7 +1451,7 @@ async function createRaceTimesChart(raceId) {
 
         // SVG setup
         const temposSvg = d3.select("#tempos_chart")
-            .attr("width", auxChartWidth)
+            .attr("width", auxChartWidth3)
             .attr("height", auxChartHeight);
 
         temposSvg.selectAll("*").remove();
@@ -1466,11 +1471,11 @@ async function createRaceTimesChart(raceId) {
 
         const temposX = d3.scaleLinear()
             .domain([1, maxLapNumber])
-            .range([auxChartMargin.left, auxChartWidth - auxChartMargin.right]);
+            .range([auxChartMargin3.left, auxChartWidth3 - auxChartMargin3.right]);
 
         const temposY = d3.scaleLinear()
             .domain([minMilliseconds - 10, maxMilliseconds])
-            .range([auxChartHeight - auxChartMargin.bottom, auxChartMargin.top]);
+            .range([auxChartHeight - auxChartMargin3.bottom, auxChartMargin3.top]);
 
         const line = d3.line()
             .defined(d => d.milliseconds != null && !isNaN(d.milliseconds))
@@ -1507,7 +1512,7 @@ async function createRaceTimesChart(raceId) {
 
         // Eixos
         temposSvg.append("g")
-            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin.bottom})`)
+            .attr("transform", `translate(0,${auxChartHeight - auxChartMargin3.bottom})`)
             .call(d3.axisBottom(temposX)
                 .ticks(Math.floor(maxLapNumber / 10))
                 .tickFormat(d => `${d}`)
@@ -1515,7 +1520,7 @@ async function createRaceTimesChart(raceId) {
 
         temposSvg.append("text")
             .attr("text-anchor", "middle")
-            .attr("x", auxChartWidth / 2)
+            .attr("x", auxChartWidth3 / 2)
             .attr("y", auxChartHeight - 10)
             .attr("font-size", "12px")
             .text("Voltas");
@@ -1543,7 +1548,7 @@ async function createRaceTimesChart(raceId) {
         });
 
         temposSvg.append("g")
-            .attr("transform", `translate(${auxChartMargin.left},0)`)
+            .attr("transform", `translate(${auxChartMargin3.left},0)`)
             .call(d3.axisLeft(temposY)
                 .ticks(6)
                 .tickFormat(d => `${Math.round(d / 1000)}`)
@@ -1553,7 +1558,7 @@ async function createRaceTimesChart(raceId) {
             .attr("text-anchor", "middle")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", Math.max(auxChartWidth / 8, 85)/3)
+            .attr("y", Math.max(auxChartWidth3 / 8, 85)/3)
             .attr("font-size", "12px")
             .text("Tempo (s)");
 
