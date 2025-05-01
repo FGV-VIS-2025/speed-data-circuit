@@ -491,7 +491,7 @@ const auxChartWidth2 = window.innerWidth * 0.985;
 const auxChartMargin2 = { top: auxChartWidth2 / 20, right: auxChartWidth2 / 20, bottom: auxChartWidth2 / 20, left: Math.max(auxChartWidth2 / 20, 80) };
 
 const auxChartWidth3 = window.innerWidth * 0.66;
-const auxChartMargin3 = { top: auxChartWidth3 / 10, right: auxChartWidth3 / 10, bottom: auxChartWidth3 / 10, left: Math.max(auxChartWidth3 / 10, 90) };
+const auxChartMargin3 = { top: auxChartWidth1 / 8, right: auxChartWidth3 / 10, bottom: auxChartWidth1 / 8, left: Math.max(auxChartWidth3 / 10, 90) };
 // Elementos HTML da página
 const yearSelect = document.getElementById("yearSelect");
 const raceSelect = document.getElementById("raceSelect");
@@ -1416,7 +1416,7 @@ async function createEvolutionChart(raceId) {
         evolucaoSvg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("x", -auxChartHeight / 2)
-            .attr("y", Math.max(auxChartWidth2 / 8, 85)/3)
+            .attr("y", -auxChartMargin2.left + 100)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .text("Posição dos Pilotos");
