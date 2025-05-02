@@ -511,16 +511,27 @@ const numberOfLaps = 20;
 let pilotosSelecionados = [];
 let currentData, currentLapNum, currentRaceId;
 
-let ANIMATION_DURATION = 250; // Reduzido para animação mais fluida
+let ANIMATION_DURATION = 225; // Reduzido para animação mais fluida
 let INTERPOLATION_STEPS = 15; // Aumentado para mais frames intermediários
 
 // --- Controle de velocidade da animação ---
 const speedSelect = document.getElementById("speedSelect");
 speedSelect.addEventListener("change", () => {
     const speed = parseFloat(speedSelect.value);
-    // Valor base: 250ms (1x). Divide pelo fator de velocidade.
-    ANIMATION_DURATION = 250 / Math.sqrt(speed);
+
+    ANIMATION_DURATION = 225 / Math.sqrt(speed);
     INTERPOLATION_STEPS = Math.ceil(15 / Math.sqrt(speed));
+
+    const estavaTocando = isPlaying;
+    if (isPlaying) {
+        stopPlayback();
+        
+        setTimeout(() => {
+            if (estavaTocando) {
+                playPauseBtn.click();
+            }
+        }, 30);
+    }
 });
 
 // Função de easing para suavizar a interpolação
