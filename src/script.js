@@ -511,8 +511,28 @@ const numberOfLaps = 20;
 let pilotosSelecionados = [];
 let currentData, currentLapNum, currentRaceId;
 
-const ANIMATION_DURATION = 150; // Reduzido para animação mais fluida
-const INTERPOLATION_STEPS = 20; // Aumentado para mais frames intermediários
+let ANIMATION_DURATION = 225; // Reduzido para animação mais fluida
+let INTERPOLATION_STEPS = 15; // Aumentado para mais frames intermediários
+
+// --- Controle de velocidade da animação ---
+const speedSelect = document.getElementById("speedSelect");
+speedSelect.addEventListener("change", () => {
+    const speed = parseFloat(speedSelect.value);
+
+    ANIMATION_DURATION = 225 / Math.sqrt(speed);
+    INTERPOLATION_STEPS = Math.ceil(15 / Math.sqrt(speed));
+
+    const estavaTocando = isPlaying;
+    if (isPlaying) {
+        stopPlayback();
+        
+        setTimeout(() => {
+            if (estavaTocando) {
+                playPauseBtn.click();
+            }
+        }, 30);
+    }
+});
 
 // Função de easing para suavizar a interpolação
 function easeInOutCubic(t) {
@@ -688,7 +708,7 @@ raceSelect.addEventListener("change", async () => {
         const existingSprites = g.selectAll(".sprite").data([], d => d.name);
         existingSprites.exit().remove();
         currentLap = 0;
-        renderLap(laps[currentLap], currentLap);
+        renderLap(laps[currentLap], currentLap, raceID);
         createRankingChart(raceID);
         createEvolutionChart(raceID);
         createRaceTimesChart(raceID);
@@ -860,12 +880,12 @@ playPauseBtn.addEventListener("click", () => {
                             score: driver.score + (next.score - driver.score) * t
                         };
                     });
-                    renderLap(interpolated, currentLap); // Sempre renderiza, mesmo sem mudança
+                    renderLap(interpolated, currentLap, currentRaceId);
                     await new Promise(res => setTimeout(res, ANIMATION_DURATION / (INTERPOLATION_STEPS + 1)));
                 }
                 currentLap++;
                 lapSlider.value = currentLap;
-                renderLap(laps[currentLap], currentLap);
+                renderLap(laps[currentLap], currentLap, currentRaceId);
                 updateUI();
                 animating = false;
             } else {
@@ -878,7 +898,7 @@ playPauseBtn.addEventListener("click", () => {
 // Listener no slicer
 lapSlider.addEventListener("input", () => {
     currentLap = parseInt(lapSlider.value);
-    renderLap(laps[currentLap], currentLap);
+    renderLap(laps[currentLap], currentLap, currentRaceId);
     updateUI();
     stopPlayback();
 });
@@ -927,7 +947,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data); // Adicione lapNum e data
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData); // Usa currentRaceId e currentLapNum
         });
 
     // Transição
@@ -966,7 +986,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data);
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData);
         });
 
     labelsMerge.transition().duration(ANIMATION_DURATION)
@@ -1022,7 +1042,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data); // Adicione lapNum e data
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData);
         });
 
     spritesMerge.transition().duration(ANIMATION_DURATION)
@@ -1289,6 +1309,16 @@ function togglePilotoSelecionado(driverId, raceId, lapNum, data) {
     createRaceTimesChart(raceId);
     renderLap(data, lapNum, raceId);
 }
+
+// Evento de clique no botão de resetar pilotos
+const resetPilotsBtn = document.getElementById("resetPilotsBtn");
+resetPilotsBtn.addEventListener("click", () => {
+    pilotosSelecionados = [];
+    createRankingChart(currentRaceId);
+    createEvolutionChart(currentRaceId);
+    createRaceTimesChart(currentRaceId);
+    renderLap(currentData, currentLapNum, currentRaceId);
+});
 
 // Função do gráfico de evolução de posições
 async function createEvolutionChart(raceId) {
