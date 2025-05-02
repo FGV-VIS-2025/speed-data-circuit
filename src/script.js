@@ -1310,6 +1310,16 @@ function togglePilotoSelecionado(driverId, raceId, lapNum, data) {
     renderLap(data, lapNum, raceId);
 }
 
+// Evento de clique no botão de resetar pilotos
+const resetPilotsBtn = document.getElementById("resetPilotsBtn");
+resetPilotsBtn.addEventListener("click", () => {
+    pilotosSelecionados = [];
+    createRankingChart(currentRaceId);
+    createEvolutionChart(currentRaceId);
+    createRaceTimesChart(currentRaceId);
+    renderLap(currentData, currentLapNum, currentRaceId);
+});
+
 // Função do gráfico de evolução de posições
 async function createEvolutionChart(raceId) {
     try {
