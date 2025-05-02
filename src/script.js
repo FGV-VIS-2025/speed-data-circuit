@@ -708,7 +708,7 @@ raceSelect.addEventListener("change", async () => {
         const existingSprites = g.selectAll(".sprite").data([], d => d.name);
         existingSprites.exit().remove();
         currentLap = 0;
-        renderLap(laps[currentLap], currentLap);
+        renderLap(laps[currentLap], currentLap, raceID);
         createRankingChart(raceID);
         createEvolutionChart(raceID);
         createRaceTimesChart(raceID);
@@ -880,12 +880,12 @@ playPauseBtn.addEventListener("click", () => {
                             score: driver.score + (next.score - driver.score) * t
                         };
                     });
-                    renderLap(interpolated, currentLap); // Sempre renderiza, mesmo sem mudança
+                    renderLap(interpolated, currentLap, currentRaceId);
                     await new Promise(res => setTimeout(res, ANIMATION_DURATION / (INTERPOLATION_STEPS + 1)));
                 }
                 currentLap++;
                 lapSlider.value = currentLap;
-                renderLap(laps[currentLap], currentLap);
+                renderLap(laps[currentLap], currentLap, currentRaceId);
                 updateUI();
                 animating = false;
             } else {
@@ -898,7 +898,7 @@ playPauseBtn.addEventListener("click", () => {
 // Listener no slicer
 lapSlider.addEventListener("input", () => {
     currentLap = parseInt(lapSlider.value);
-    renderLap(laps[currentLap], currentLap);
+    renderLap(laps[currentLap], currentLap, currentRaceId);
     updateUI();
     stopPlayback();
 });
@@ -947,7 +947,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data); // Adicione lapNum e data
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData); // Usa currentRaceId e currentLapNum
         });
 
     // Transição
@@ -986,7 +986,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data);
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData);
         });
 
     labelsMerge.transition().duration(ANIMATION_DURATION)
@@ -1042,7 +1042,7 @@ function renderLap(data, lapNum, raceId) {
         .on("mousemove", event => moveTooltip(event))
         .on("mouseout", () => hideTooltip())
         .on("click", (event, d) => {
-            togglePilotoSelecionado(d.driverId, raceId, lapNum, data); // Adicione lapNum e data
+            togglePilotoSelecionado(d.driverId, currentRaceId, currentLapNum, currentData);
         });
 
     spritesMerge.transition().duration(ANIMATION_DURATION)
