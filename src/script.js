@@ -658,8 +658,11 @@ raceSelect.addEventListener("change", async () => {
 
     stopPlayback();
 
-    pilotosSelecionados = [];
+    // Carrega status dos pilotos para exibir em caso de abandono
+    const statusData = await loadCSVData('f1db/status.csv');
+    const statusMap = Object.fromEntries(statusData.map(s => [Number(s.statusId), s.status]));
 
+    pilotosSelecionados = [];
     const raceDrivers = await getDriversByRace(parseInt(raceID));
     const raceAges = await getAgesByRace(parseInt(raceID));
     const raceTeams = await getTeamsByRace(parseInt(raceID));
@@ -668,6 +671,7 @@ raceSelect.addEventListener("change", async () => {
         driver.constructorId = raceTeams[parseInt(driver.driverId)].constructorId;
         driver.grid = raceTeams[parseInt(driver.driverId)].grid;
         driver.fastestLap = raceTeams[parseInt(driver.driverId)].fastestLapTime;
+        driver.status = statusMap[Number(raceTeams[parseInt(driver.driverId)].statusId)] || null; // corrigido
         const teste2 = await getConstructorDataByID(parseInt(driver.constructorId));
         driver.constructorRef = teste2[0].constructorRef;
         driver.constructorName = teste2[0].name;
@@ -1077,13 +1081,14 @@ function renderLap(data, lapNum, raceId) {
                     <img src="assets/${selectedYear}/drivers/${d.driverRef}.png"
                         alt="${d.name}" style="width:8vw;margin-right:10px;">
                     <div>
-                        <strong>${d.name}${d.running ? "":" (DNF ou Laps Behind)"}</strong><br>
+                        <strong>${d.name}${d.running ? "" : " (DNF ou Laps Behind)"}</strong><br>
                         Idade: ${d.age} anos<br>
                         Equipe: ${teamLogo}${d.constructorName}<br>
                         Nacionalidade: ${flag ? flag + ' ' : ''}${d.nationality}<br>
                         Pneus: ${tyreLabel} (${tyreImageByString(tyreLabel)})<br>
                         Largada: ${d.grid}º<br>
                         VMR: ${d.fastestLap} min
+                        ${!d.running && d.status ? `<br><strong>Status:</strong> ${d.status}` : ''}
                     </div>
                 </div>
             `);
